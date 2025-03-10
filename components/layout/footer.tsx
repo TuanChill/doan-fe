@@ -120,7 +120,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="bg-olive-950 py-4">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col gap-2 justify-between items-center">
             <p className="text-gray-400 text-sm">
               © {new Date().getFullYear()} Bảo tàng Lịch sử Quân sự Việt Nam.
               Tất cả các quyền được bảo lưu.
@@ -132,6 +132,7 @@ export default function Footer() {
               >
                 Chính sách bảo mật
               </Link>
+              <span>|</span>
               <Link
                 href="/dieu-khoan-su-dung"
                 className="text-gray-400 text-sm hover:text-white"

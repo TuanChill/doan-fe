@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,9 +19,20 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUserStore } from "@/stores/user-store";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { isAuthenticated } = useUserStore();
+
+  if (!mounted) return null;
 
   return (
     <header className="bg-olive-900 text-white sticky top-0 z-50">
@@ -79,11 +90,20 @@ export default function Header() {
           </nav>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="flex items-center gap-2">
             <Search />
-            <Button className="bg-red-700 hover:bg-red-800">
-              <Ticket className="h-4 w-4 mr-2" /> Mua vé
-            </Button>
+            {isAuthenticated() ? (
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            ) : (
+              <Link href="/dang-nhap">
+                <Button className="bg-red-700 hover:bg-red-800">
+                  Đăng nhập
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button and Search */}
