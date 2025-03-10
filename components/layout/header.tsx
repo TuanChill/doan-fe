@@ -98,7 +98,7 @@ export default function Header() {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             ) : (
-              <Link href="/dang-nhap">
+              <Link href="/login">
                 <Button className="bg-red-700 hover:bg-red-800">
                   Đăng nhập
                 </Button>
