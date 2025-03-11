@@ -16,6 +16,7 @@ import {
   Image,
   Info,
   Clock,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
@@ -87,6 +88,11 @@ export default function Header() {
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-4 w-4" />}
             />
+            <NavItem
+              href="/contact"
+              label="Liên hệ"
+              icon={<Mail className="h-4 w-4" />}
+            />
           </nav>
 
           {/* Right Side Actions */}
@@ -153,6 +159,11 @@ export default function Header() {
             <MobileNavItem
               href="/ai-agent"
               label="AI Hỏi đáp"
+              icon={<MessageSquareText className="h-5 w-5" />}
+            />
+            <MobileNavItem
+              href="/contact"
+              label="Liên hệ "
               icon={<MessageSquareText className="h-5 w-5" />}
             />
           </nav>
