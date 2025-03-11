@@ -1,3 +1,5 @@
+"use client";
+
 import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useRouter as useNextRouter, usePathname } from 'next/navigation';
 import NProgress from 'nprogress';

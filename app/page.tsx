@@ -13,8 +13,16 @@ import {
 import { motion } from "framer-motion";
 import AnimatedSection from "@/components/ui/animated-section";
 import StaggeredChildren from "@/components/ui/staggered-children";
+import { useRouter } from "@/hooks/use-router";
+import { APP_ROUTES } from "@/const/route";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleMuaVe = () => {
+    router.push(APP_ROUTES.MUA_VE);
+  };
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section with Animation */}
@@ -53,6 +61,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   className="bg-red-700 hover:bg-red-800 text-white"
+                  onClick={handleMuaVe}
                 >
                   Mua vé tham quan <Ticket className="ml-2 h-5 w-5" />
                 </Button>
@@ -598,7 +607,10 @@ export default function Home() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="w-full bg-red-700 hover:bg-red-800 text-white">
+                  <Button
+                    onClick={handleMuaVe}
+                    className="w-full bg-red-700 hover:bg-red-800 text-white"
+                  >
                     Mua vé
                   </Button>
                 </motion.div>
@@ -676,7 +688,10 @@ export default function Home() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                  <Button
+                    onClick={handleMuaVe}
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                  >
                     Mua vé
                   </Button>
                 </motion.div>
@@ -747,7 +762,10 @@ export default function Home() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button
+                    onClick={handleMuaVe}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
                     Mua vé
                   </Button>
                 </motion.div>
