@@ -1,11 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "@/hooks/use-router";
+import { useLoadingStore } from "@/stores/loading-store";
+import { register } from "@/request/auth";
+import { useSnackBarStore } from "@/stores/snackbar-store";
+import { APP_ROUTES } from "@/const/route";
+import { useUserStore } from "@/stores/user-store";
+import Link from "next/link";
 
 export default function RegisterForm() {
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -21,9 +26,17 @@ export default function RegisterForm() {
     confirmPassword: "",
     agreeTerms: "",
   });
-  const [apiError, setApiError] = useState("");
-  const router = useRouter();
 
+  const [showLoading, hideLoading] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
+  const router = useRouter();
+  const [success, error] = useSnackBarStore((state) => [
+    state.success,
+    state.error,
+  ]);
+  const [setAuth] = useUserStore((state) => [state.setAuth]);
   const validateForm = () => {
     let valid = true;
     const newErrors = {
@@ -86,7 +99,7 @@ export default function RegisterForm() {
     return valid;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
 
     // Loại bỏ khoảng trắng cho username, email và password
@@ -101,22 +114,16 @@ export default function RegisterForm() {
         [name]: value,
       });
     }
-
     // Xóa lỗi khi người dùng bắt đầu nhập lại
-    if (errors[name]) {
+    if (errors[name as keyof typeof errors]) {
       setErrors({
         ...errors,
         [name]: "",
       });
     }
-
-    // Xóa lỗi API khi người dùng thay đổi dữ liệu
-    if (apiError) {
-      setApiError("");
-    }
   };
 
-  const handleCheckboxChange = (e) => {
+  const handleCheckboxChange = (e: any) => {
     setFormData({
       ...formData,
       agreeTerms: e.target.checked,
@@ -131,81 +138,34 @@ export default function RegisterForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    setApiError("");
-
     try {
-      // Gọi API đăng ký
-      const response = await fetch(
-        "http://14.225.211.42/api/auth/local/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: formData.username,
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
+      showLoading();
+      const response = await register(
+        formData.username,
+        formData.email,
+        formData.password
       );
 
-      const data = await response.json();
+      success("Đăng ký thành công!");
 
-      if (!response.ok) {
-        // Xử lý lỗi từ API
-        if (data.error && data.error.message) {
-          setApiError(data.error.message);
-        } else {
-          setApiError("Đăng ký không thành công. Vui lòng thử lại sau.");
-        }
-        return;
-      }
-
-      // Đăng ký thành công
-      // Lưu token nếu API trả về
-      if (data.jwt) {
-        localStorage.setItem("authToken", data.jwt);
-
-        // Lưu thông tin người dùng nếu cần
-        if (data.user) {
-          localStorage.setItem("user", JSON.stringify(data.user));
-        }
-      }
-
-      // Hiển thị thông báo thành công
-      alert("Đăng ký thành công!");
-
-      // Chuyển hướng đến trang đăng nhập
-      router.push("/login");
-    } catch (error) {
-      console.error("Lỗi khi đăng ký:", error);
-      setApiError(
-        "Đã xảy ra lỗi khi kết nối đến máy chủ. Vui lòng thử lại sau."
-      );
+      setAuth(response.user, response.jwt);
+      router.push(APP_ROUTES.HOME);
+    } catch (err) {
+      console.error(err);
+      error("Đăng ký không thành công");
     } finally {
-      setIsLoading(false);
+      hideLoading();
     }
   };
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
-        {apiError && (
-          <div
-            className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-            role="alert"
-          >
-            <span className="block sm:inline">{apiError}</span>
-          </div>
-        )}
-
         <div>
           <label
             htmlFor="username"
@@ -220,7 +180,6 @@ export default function RegisterForm() {
             placeholder="Nhập tên người dùng..."
             value={formData.username}
             onChange={handleChange}
-            disabled={isLoading}
             className={`mt-1 block w-full px-3 py-2 bg-white border ${
               errors.username ? "border-red-500" : "border-gray-300"
             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
@@ -244,7 +203,6 @@ export default function RegisterForm() {
             placeholder="email@example.com"
             value={formData.email}
             onChange={handleChange}
-            disabled={isLoading}
             className={`mt-1 block w-full px-3 py-2 bg-white border ${
               errors.email ? "border-red-500" : "border-gray-300"
             } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
@@ -269,7 +227,6 @@ export default function RegisterForm() {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              disabled={isLoading}
               className={`block w-full px-3 py-2 bg-white border ${
                 errors.password ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-10`}
@@ -302,7 +259,6 @@ export default function RegisterForm() {
               placeholder="••••••••"
               value={formData.confirmPassword}
               onChange={handleChange}
-              disabled={isLoading}
               className={`block w-full px-3 py-2 bg-white border ${
                 errors.confirmPassword ? "border-red-500" : "border-gray-300"
               } rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm pr-10`}
@@ -330,7 +286,6 @@ export default function RegisterForm() {
               type="checkbox"
               checked={formData.agreeTerms}
               onChange={handleCheckboxChange}
-              disabled={isLoading}
               className="h-4 w-4 mt-1 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
             <label
@@ -354,28 +309,20 @@ export default function RegisterForm() {
 
         <button
           type="submit"
-          disabled={isLoading}
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
         >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Đang xử lý...
-            </>
-          ) : (
-            "Đăng ký"
-          )}
+          Đăng ký
         </button>
       </form>
 
-      <div className="mt-4 text-center text-sm text-gray-600">
-        Đã có tài khoản?{" "}
-        <a
-          href="/login"
+      <div className="mt-4 text-center text-sm text-gray-600 flex gap-2 justify-center">
+        <span>Đã có tài khoản?</span>
+        <Link
+          href={APP_ROUTES.LOGIN}
           className="font-medium text-indigo-600 hover:text-indigo-500"
         >
           Đăng nhập
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -22,16 +22,18 @@ import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
+import { APP_ROUTES } from "@/const/route";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const { isAuthenticated } = useUserStore();
+  const { isAuthenticated, clear } = useUserStore();
 
   if (!mounted) return null;
 
@@ -99,12 +101,32 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <Search />
             {isAuthenticated() ? (
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden">
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        clear();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <Link href="/login">
+              <Link href={APP_ROUTES.LOGIN}>
                 <Button className="bg-red-700 hover:bg-red-800">
                   Đăng nhập
                 </Button>
