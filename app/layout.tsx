@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NextTopLoader } from "@/components/common/next-top-loading";
 import { SnackBar } from "@/components/common/snack-bar";
+import { Loading } from "@/components/common/loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <SnackBar />
+          <Loading />
         </ThemeProvider>
         <NextTopLoader />
       </body>
