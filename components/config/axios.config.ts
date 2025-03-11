@@ -1,18 +1,18 @@
-import { useUserStore } from "@/stores/user-store";
+import { useUserStore } from '@/stores/user-store';
 import Axios, {
   AxiosError,
   AxiosResponse,
   InternalAxiosRequestConfig,
-} from "axios";
+} from 'axios';
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3001/api/v1/";
+  process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:1337/api';
 
 const axiosOptions = {
   baseURL: baseUrl,
   timeout: 60000 * 5, // 5 minutes
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   maxContentLength: 1024 * 1024 * 1024, // 1GB limit
   maxBodyLength: 1024 * 1024 * 1024, // 1GB limit

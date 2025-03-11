@@ -3,5 +3,7 @@ export const APP_ROUTES = {
   MUA_VE: "/mua-ve",
   VR360: "/vr360",
   AI_AGENT: "/ai-agent",
+  LOGIN: "/login",
+  REGISTER: "/register",
 };
 
