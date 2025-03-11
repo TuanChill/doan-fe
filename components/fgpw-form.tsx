@@ -29,12 +29,12 @@ export default function ForgotPasswordForm() {
     return true;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setEmail(e.target.value);
     if (error) validateEmail();
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!validateEmail()) return;
@@ -55,10 +55,7 @@ export default function ForgotPasswordForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        // Xử lý các loại lỗi khác nhau
         if (data.error === "Email không tồn tại") {
-          // Không hiển thị lỗi này để tránh tiết lộ thông tin
-          // Thay vào đó, vẫn hiển thị màn hình thành công
           setIsSubmitted(true);
         } else {
           throw new Error(
@@ -66,7 +63,6 @@ export default function ForgotPasswordForm() {
           );
         }
       } else {
-        // Hiển thị thông báo thành công
         setIsSubmitted(true);
       }
     } catch (error) {
@@ -77,8 +73,7 @@ export default function ForgotPasswordForm() {
     }
   };
 
-  // Giả lập xử lý quên mật khẩu trực tiếp (không qua API)
-  const handleSubmitDirect = async (e) => {
+  const handleSubmitDirect = async (e: any) => {
     e.preventDefault();
 
     if (!validateEmail()) return;

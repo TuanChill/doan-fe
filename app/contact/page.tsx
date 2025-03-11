@@ -177,8 +177,10 @@ export default function ContactPage() {
                       }
                     />
                   )}
-                  {errors[key] && (
-                    <p className="text-red-500 text-xs">{errors[key]}</p>
+                  {errors[key as keyof typeof errors] && (
+                    <p className="text-red-500 text-xs">
+                      {errors[key as keyof typeof errors]}
+                    </p>
                   )}
                 </div>
               ))}

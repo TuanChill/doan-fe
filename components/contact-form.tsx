@@ -77,7 +77,7 @@ export default function ContactForm() {
     return valid;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -85,7 +85,7 @@ export default function ContactForm() {
     });
 
     // Clear error when user types
-    if (errors[name]) {
+    if (errors[name as keyof typeof errors]) {
       setErrors({
         ...errors,
         [name]: "",
@@ -93,7 +93,7 @@ export default function ContactForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -102,10 +102,8 @@ export default function ContactForm() {
     setSubmitError("");
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Reset form on success
       setFormData({
         name: "",
         email: "",
@@ -116,7 +114,6 @@ export default function ContactForm() {
 
       setSubmitSuccess(true);
 
-      // Hide success message after 5 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 5000);

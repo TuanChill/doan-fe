@@ -51,7 +51,7 @@ export default function ResetPasswordForm() {
     return valid;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -59,7 +59,7 @@ export default function ResetPasswordForm() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     if (!validateForm()) return;
