@@ -16,21 +16,24 @@ import {
   Image,
   Info,
   Clock,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
+import { APP_ROUTES } from "@/const/route";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const { isAuthenticated } = useUserStore();
+  const { isAuthenticated, clear } = useUserStore();
 
   if (!mounted) return null;
 
@@ -87,18 +90,43 @@ export default function Header() {
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-4 w-4" />}
             />
+            <NavItem
+              href="/contact"
+              label="Liên hệ"
+              icon={<Mail className="h-4 w-4" />}
+            />
           </nav>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
             <Search />
             {isAuthenticated() ? (
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden">
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        clear();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <Link href="/dang-nhap">
+              <Link href={APP_ROUTES.LOGIN}>
                 <Button className="bg-red-700 hover:bg-red-800">
                   Đăng nhập
                 </Button>
@@ -153,6 +181,11 @@ export default function Header() {
             <MobileNavItem
               href="/ai-agent"
               label="AI Hỏi đáp"
+              icon={<MessageSquareText className="h-5 w-5" />}
+            />
+            <MobileNavItem
+              href="/contact"
+              label="Liên hệ "
               icon={<MessageSquareText className="h-5 w-5" />}
             />
           </nav>

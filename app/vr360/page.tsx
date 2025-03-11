@@ -1,10 +1,16 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { APP_ROUTES } from "@/const/route";
+import { useRouter } from "@/hooks/use-router";
 import { Info, MapIcon as Map360, Eye } from "lucide-react";
 import Link from "next/link";
 
 export default function VR360Page() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section */}
@@ -176,7 +182,10 @@ export default function VR360Page() {
                 <p className="text-gray-700 mb-4">
                   Bạn muốn tham quan bảo tàng trực tiếp? Hãy mua vé ngay!
                 </p>
-                <Button className="w-full bg-red-700 hover:bg-red-800 text-white">
+                <Button
+                  onClick={() => router.push(APP_ROUTES.MUA_VE)}
+                  className="w-full bg-red-700 hover:bg-red-800 text-white"
+                >
                   Mua vé tham quan
                 </Button>
               </div>
