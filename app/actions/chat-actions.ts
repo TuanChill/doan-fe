@@ -25,6 +25,8 @@ Thông tin về bảo tàng:
 Hãy trả lời bằng tiếng Việt, ngắn gọn, súc tích và thân thiện. Nếu bạn không biết câu trả lời, hãy thành thật nói rằng bạn không có thông tin về vấn đề đó và đề nghị người dùng liên hệ trực tiếp với bảo tàng để biết thêm chi tiết.
 `
 
+const apiKey = process.env.OPENAI_API_KEY
+
 export async function chatWithAI(messages: Message[]): Promise<string> {
   try {
     // Prepare the messages array with the system prompt
