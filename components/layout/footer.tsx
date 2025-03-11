@@ -1,3 +1,5 @@
+"use client";
+
 import type React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -10,8 +12,11 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-
+import { useRouter } from "@/hooks/use-router";
+import { APP_ROUTES } from "@/const/route";
 export default function Footer() {
+  const router = useRouter();
+
   return (
     <footer className="bg-olive-900 text-white">
       <div className="container mx-auto px-4 py-12">
@@ -80,7 +85,10 @@ export default function Footer() {
               </li>
             </ul>
             <div className="mt-4 pt-4 border-t border-olive-800">
-              <Button className="w-full bg-red-700 hover:bg-red-800">
+              <Button
+                onClick={() => router.push(APP_ROUTES.MUA_VE)}
+                className="w-full bg-red-700 hover:bg-red-800"
+              >
                 Mua vé tham quan
               </Button>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -9,7 +9,11 @@ import {
   ThumbsUp,
   ThumbsDown,
   Lightbulb,
+  Bot,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { chatWithAI } from "@/app/actions/chat-actions";
+import AnimatedSection from "@/components/ui/animated-section";
 
 type Message = {
   role: "user" | "assistant";
@@ -36,8 +40,14 @@ export default function AIAgentPage() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = () => {
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     // Add user message
@@ -51,22 +61,50 @@ export default function AIAgentPage() {
     setInputValue("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse: Message = {
-        role: "assistant",
-        content: getSimulatedResponse(inputValue),
-        timestamp: new Date(),
-      };
+    try {
+      // Get all previous messages in the format expected by the API
+      const messageHistory = messages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      }));
 
-      setMessages((prev) => [...prev, aiResponse]);
+      // Add the new user message
+      messageHistory.push({
+        role: "user",
+        content: userMessage.content,
+      });
+
+      // Call the AI service
+      const aiResponse = await chatWithAI(messageHistory);
+
+      // Add AI response to messages
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: aiResponse,
+          timestamp: new Date(),
+        },
+      ]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+
+      // Add error message
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleSuggestedQuestion = (question: string) => {
     setInputValue(question);
-    handleSendMessage();
   };
 
   return (
@@ -75,11 +113,13 @@ export default function AIAgentPage() {
       <section className="bg-blue-600 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">AI Hỏi Đáp</h1>
-            <p className="text-xl">
-              Trò chuyện với trợ lý ảo thông minh của Bảo tàng Lịch sử Quân sự
-              Việt Nam
-            </p>
+            <AnimatedSection animation="fadeUp">
+              <h1 className="text-4xl font-bold mb-4">AI Hỏi Đáp</h1>
+              <p className="text-xl">
+                Trò chuyện với trợ lý ảo thông minh của Bảo tàng Lịch sử Quân sự
+                Việt Nam
+              </p>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -110,19 +150,21 @@ export default function AIAgentPage() {
                         }`}
                       >
                         <div
-                          className={`max-w-[80%] p-3 rounded-lg ${
+                          className={cn(
+                            "max-w-[80%] p-3 rounded-lg",
                             message.role === "user"
                               ? "bg-blue-600 text-white"
                               : "bg-white border border-gray-200"
-                          }`}
+                          )}
                         >
                           <p>{message.content}</p>
                           <div
-                            className={`text-xs mt-1 ${
+                            className={cn(
+                              "text-xs mt-1",
                               message.role === "user"
                                 ? "text-blue-100"
                                 : "text-gray-500"
-                            }`}
+                            )}
                           >
                             {message.timestamp.toLocaleTimeString([], {
                               hour: "2-digit",
@@ -155,6 +197,8 @@ export default function AIAgentPage() {
                         </div>
                       </div>
                     )}
+
+                    <div ref={messagesEndRef} />
                   </div>
 
                   {/* Chat Input */}
@@ -211,7 +255,10 @@ export default function AIAgentPage() {
                 {/* Info Card */}
                 <Card className="shadow-md bg-blue-50">
                   <div className="p-4">
-                    <h3 className="font-bold mb-2">Về trợ lý ảo</h3>
+                    <h3 className="font-bold mb-2 flex items-center">
+                      <Bot className="h-5 w-5 mr-2 text-blue-600" />
+                      Về trợ lý ảo
+                    </h3>
                     <p className="text-sm text-gray-700 mb-4">
                       Trợ lý ảo của Bảo tàng Lịch sử Quân sự Việt Nam được phát
                       triển để cung cấp thông tin chính xác về bảo tàng, hiện
@@ -231,41 +278,4 @@ export default function AIAgentPage() {
       </section>
     </div>
   );
-}
-
-// Helper function to simulate AI responses
-function getSimulatedResponse(question: string): string {
-  const lowerQuestion = question.toLowerCase();
-
-  if (
-    lowerQuestion.includes("khu vực") ||
-    lowerQuestion.includes("trưng bày")
-  ) {
-    return "Bảo tàng có nhiều khu vực trưng bày khác nhau, bao gồm: Khu trưng bày về chiến tranh chống Pháp, Khu trưng bày về chiến tranh chống Mỹ, Khu trưng bày vũ khí, Khu trưng bày hiện vật lịch sử, và Khu trưng bày ngoài trời với nhiều vũ khí, phương ti��n quân sự lớn.";
-  }
-
-  if (lowerQuestion.includes("giờ") || lowerQuestion.includes("mở cửa")) {
-    return "Bảo tàng mở cửa từ 8:00 đến 17:00 từ Thứ Hai đến Thứ Sáu, 8:00 đến 18:00 vào Thứ Bảy và Chủ Nhật, và 9:00 đến 16:00 vào các ngày lễ. Bảo tàng đóng cửa vào một số ngày lễ đặc biệt, vui lòng kiểm tra trang web chính thức để biết thông tin cập nhật nhất.";
-  }
-
-  if (lowerQuestion.includes("hiện vật") || lowerQuestion.includes("nổi bật")) {
-    return "Một số hiện vật nổi bật tại bảo tàng bao gồm: Xe tăng T-54 đầu tiên tiến vào Dinh Độc Lập ngày 30/4/1975, máy bay MiG-21 của Anh hùng Phạm Tuân, đại bác thần công thời Nguyễn, và nhiều vũ khí, trang thiết bị quân sự từ các thời kỳ lịch sử khác nhau.";
-  }
-
-  if (
-    lowerQuestion.includes("lịch sử") ||
-    lowerQuestion.includes("hình thành")
-  ) {
-    return "Bảo tàng Lịch sử Quân sự Việt Nam được thành lập ngày 17/7/1956, là một trong những bảo tàng đầu tiên của Việt Nam. Ban đầu, bảo tàng có tên là Bảo tàng Quân đội, sau đó đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam vào năm 2002. Bảo tàng hiện đang lưu giữ và trưng bày hơn 15.000 hiện vật, tài liệu quý giá về lịch sử quân sự của dân tộc Việt Nam.";
-  }
-
-  if (lowerQuestion.includes("đến") || lowerQuestion.includes("phương tiện")) {
-    return "Bảo tàng nằm tại địa chỉ 28A Điện Biên Phủ, Ba Đình, Hà Nội. Bạn có thể đến bảo tàng bằng nhiều phương tiện công cộng như xe buýt (các tuyến 09, 22, 45 đều có điểm dừng gần bảo tàng). Nếu đi bằng taxi hoặc xe riêng, bạn có thể dễ dàng tìm thấy bảo tàng gần Lăng Chủ tịch Hồ Chí Minh và Quảng trường Ba Đình.";
-  }
-
-  if (lowerQuestion.includes("vé") || lowerQuestion.includes("giá")) {
-    return "Giá vé tham quan bảo tàng như sau: Vé thường: 30.000 VNĐ/người, Vé VIP (có hướng dẫn viên riêng): 50.000 VNĐ/người, Vé đoàn (từ 20 người trở lên): 25.000 VNĐ/người. Trẻ em dưới 6 tuổi, người cao tuổi trên 70 tuổi, và thương binh được miễn phí vé vào cửa.";
-  }
-
-  return "Cảm ơn câu hỏi của bạn. Tôi là trợ lý ảo của Bảo tàng Lịch sử Quân sự Việt Nam. Tôi có thể cung cấp thông tin về giờ mở cửa, giá vé, các khu vực trưng bày, và thông tin chi tiết về các hiện vật trong bảo tàng. Bạn có thể hỏi tôi bất kỳ câu hỏi nào liên quan đến bảo tàng.";
 }
