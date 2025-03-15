@@ -8,7 +8,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-
+import { resetPassword } from "@/request/auth";
+import { useSnackBarStore } from "@/stores/snackbar-store";
 export default function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -26,6 +27,8 @@ export default function ResetPasswordForm() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
+
+  const { success, error } = useSnackBarStore();
 
   const validateForm = () => {
     let valid = true;
@@ -67,20 +70,18 @@ export default function ResetPasswordForm() {
     setIsLoading(true);
 
     try {
-      // Gọi API đặt lại mật khẩu ở đây
-      // Ví dụ:
-      // await resetPassword(token, formData.password)
+      if (!token) {
+        error("Liên kết không hợp lệ");
+        return;
+      }
 
-      // Giả lập API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await resetPassword(token, formData.password);
 
-      // Hiển thị thông báo thành công
       setIsSubmitted(true);
-    } catch (error) {
+    } catch (err: any) {
       setErrors({
         ...errors,
-        password:
-          "Không thể đặt lại mật khẩu. Vui lòng thử lại sau hoặc yêu cầu liên kết mới.",
+        password: err.response.data.message,
       });
     } finally {
       setIsLoading(false);
