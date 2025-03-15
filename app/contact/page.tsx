@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Clock, Phone, Mail, ChevronDown } from "lucide-react";
-
+import { ChevronDown } from "lucide-react";
+import { useSnackBarStore } from "@/stores/snackbar-store";
+import { sendContact } from "@/request/contact";
 const faqs = [
   {
     question: "Bảo tàng có những khu vực trưng bày nào?",
@@ -77,6 +78,8 @@ export default function ContactPage() {
 
   const [errors, setErrors] = useState({});
 
+  const { success, error } = useSnackBarStore();
+
   const validate = () => {
     let newErrors: any = {};
     if (!form.name.trim()) newErrors.name = "Họ và tên không được để trống";
@@ -91,10 +94,16 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      alert("Gửi thông tin thành công!");
+      try {
+        await sendContact(form);
+        success("Gửi thông tin thành công!");
+      } catch (err: any) {
+        console.log(err);
+        error("Gửi thông tin thất bại");
+      }
     }
   };
 
