@@ -109,10 +109,10 @@ export default function Header() {
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden">
                     <Link
-                      href="/profile"
+                      href={APP_ROUTES.PROFILE}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Profile
+                      Tài khoản
                     </Link>
                     <button
                       onClick={() => {
@@ -120,7 +120,7 @@ export default function Header() {
                       }}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Logout
+                      Đăng xuất
                     </button>
                   </div>
                 )}

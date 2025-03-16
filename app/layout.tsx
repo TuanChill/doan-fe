@@ -8,6 +8,7 @@ import { Inter } from "next/font/google";
 import { NextTopLoader } from "@/components/common/next-top-loading";
 import { SnackBar } from "@/components/common/snack-bar";
 import { Loading } from "@/components/common/loading";
+import { UserProvider } from "@/hoc/user-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,11 +32,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <SnackBar />
-          <Loading />
+          <UserProvider>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+            <SnackBar />
+            <Loading />
+          </UserProvider>
         </ThemeProvider>
         <NextTopLoader />
       </body>

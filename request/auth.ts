@@ -28,3 +28,12 @@ export const resetPassword = async (
   return response.data;
 };
 
+export const getMe = async () => {
+  const response = await fdAxios.get(API_ROUTES.ME);
+  return response.data;
+};
+
+export const updateUser = async (id: number, data: any) => {
+  const response = await fdAxios.put(`${API_ROUTES.USERS}/${id}`, data);
+  return response.data;
+};
