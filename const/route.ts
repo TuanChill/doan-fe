@@ -5,5 +5,11 @@ export const APP_ROUTES = {
   AI_AGENT: "/ai-agent",
   LOGIN: "/login",
   REGISTER: "/register",
+  PROFILE: "/profile",
+};
+
+export const PRIVATE_ROUTES = {
+  PROFILE: "/profile",
+  MUA_VE: "/mua-ve",
 };
 
