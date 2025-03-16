@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useSnackBarStore } from "@/stores/snackbar-store";
 import { sendContact } from "@/request/contact";
+import { useUserStore } from "@/stores/user-store";
+import { get } from "lodash";
 const faqs = [
   {
     question: "Bảo tàng có những khu vực trưng bày nào?",
@@ -68,13 +70,25 @@ function FAQAccordion() {
 }
 
 export default function ContactPage() {
+  const { user } = useUserStore();
+
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
+    name: get(user, "fullName", "") || "",
+    email: get(user, "email", "") || "",
+    phone: get(user, "phoneNumber", "") || "",
     subject: "",
     message: "",
   });
+
+  useEffect(() => {
+    setForm({
+      name: get(user, "fullName", "") || "",
+      email: get(user, "email", "") || "",
+      phone: get(user, "phoneNumber", "") || "",
+      subject: "",
+      message: "",
+    });
+  }, [user]);
 
   const [errors, setErrors] = useState({});
 
