@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, SkipForward, SkipBack, X } from "lucide-react";
+import { Play, Pause, SkipForward, SkipBack, X, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TextToSpeechPlayerProps {
@@ -17,7 +17,7 @@ export default function TextToSpeechPlayer({
   sections,
 }: TextToSpeechPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] =
@@ -251,7 +251,7 @@ export default function TextToSpeechPlayer({
               onClick={stopAndClose}
               className="text-gray-500 hover:text-gray-700"
             >
-              <X size={16} />
+              <Minimize2 size={16} />
             </button>
           </div>
 
