@@ -58,7 +58,7 @@ export const articles = [
   {
     id: 2,
     slug: "vu-khi-khang-chien-chong-phap",
-    title: "Khám phá khu trưng bày vũ khí thời kỳ kháng chiến chống Pháp",
+    title: "Hành trình lịch sử vũ trang kháng chiến chống Pháp",
     excerpt:
       "Khám phá những vũ khí tự chế và chiến lợi phẩm của quân dân Việt Nam trong cuộc kháng chiến chống thực dân Pháp (1945-1954). Một góc nhìn chân thực về sự sáng tạo và lòng dũng cảm của dân tộc.",
     date: "14/03/2025",
@@ -112,14 +112,15 @@ export const articles = [
       "TS. Nguyễn Văn Hùng là chuyên gia nghiên cứu về lịch sử quân sự Việt Nam, hiện đang công tác tại Viện Lịch sử Quân sự Việt Nam.",
     category: "Bảo tàng",
     tags: ["Quân sự Việt Nam", "Bảo tàng", "Lịch sử", "Di tích"],
-    image: "/placeholder.svg?text=Bảo+tàng+Quân+sự+VN&height=500&width=1000",
+    image:
+      "https://images2.thanhnien.vn/528068263637045248/2024/1/1/phoicanh-bt1-1704089998507139365405.jpg",
     imageCaption: "Toàn cảnh Bảo tàng Lịch sử Quân sự Việt Nam",
     content: [
       {
         heading: "Giới thiệu về Bảo tàng Lịch sử Quân sự Việt Nam",
         text: "Bảo tàng Lịch sử Quân sự Việt Nam nằm trên đường Điện Biên Phủ, Hà Nội, là một trong những bảo tàng quân sự lớn nhất Việt Nam. Bảo tàng trưng bày hàng ngàn hiện vật quý giá, phản ánh quá trình đấu tranh dựng nước và giữ nước của dân tộc Việt Nam. Các khu trưng bày chính bao gồm: khu vũ khí, khu chiến dịch Điện Biên Phủ, khu trưng bày về chiến tranh Việt Nam và khu tái hiện các trận đánh quan trọng.",
         image:
-          "/placeholder.svg?text=Hiện+vật+Bảo+tàng+Quân+sự&height=400&width=800",
+          "https://baoxaydung.com.vn/stores/news_dataimages/2024/112024/02/18/image03720241102183300.jpg?rt=20241102184651",
         imageCaption: "Hiện vật tại Bảo tàng Lịch sử Quân sự Việt Nam",
       },
       {
@@ -129,7 +130,8 @@ export const articles = [
       {
         heading: "Những nỗ lực trong công tác bảo tồn và phát huy giá trị",
         text: "Trong những năm gần đây, Bảo tàng Lịch sử Quân sự Việt Nam đã thực hiện nhiều dự án trùng tu và nâng cấp hệ thống trưng bày. Các hiện vật quan trọng như xe tăng T-54B tham gia chiến dịch Hồ Chí Minh, máy bay MIG-21, và khẩu pháo 105mm tại Điện Biên Phủ được bảo dưỡng định kỳ. Ngoài ra, bảo tàng cũng ứng dụng công nghệ thực tế ảo (VR) để tái hiện các trận đánh lịch sử, giúp du khách có trải nghiệm chân thực hơn.",
-        image: "/placeholder.svg?text=Trưng+bày+vũ+khí&height=400&width=800",
+        image:
+          "https://kenh14cdn.com/203336854389633024/2024/11/12/20241112113620-17314090652121046693200.jpg",
         imageCaption:
           "Khu trưng bày vũ khí tại Bảo tàng Lịch sử Quân sự Việt Nam",
       },
