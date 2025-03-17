@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { MapPin, Clock, Phone, Mail, ChevronDown } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { useSnackBarStore } from "@/stores/snackbar-store";
+import { sendContact } from "@/request/contact";
+import { useUserStore } from "@/stores/user-store";
+import { get } from "lodash";
 const faqs = [
   {
     question: "Bảo tàng có những khu vực trưng bày nào?",
@@ -67,15 +70,29 @@ function FAQAccordion() {
 }
 
 export default function ContactPage() {
+  const { user } = useUserStore();
+
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
+    name: get(user, "fullName", "") || "",
+    email: get(user, "email", "") || "",
+    phone: get(user, "phoneNumber", "") || "",
     subject: "",
     message: "",
   });
 
+  useEffect(() => {
+    setForm({
+      name: get(user, "fullName", "") || "",
+      email: get(user, "email", "") || "",
+      phone: get(user, "phoneNumber", "") || "",
+      subject: "",
+      message: "",
+    });
+  }, [user]);
+
   const [errors, setErrors] = useState({});
+
+  const { success, error } = useSnackBarStore();
 
   const validate = () => {
     let newErrors: any = {};
@@ -91,10 +108,16 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      alert("Gửi thông tin thành công!");
+      try {
+        await sendContact(form);
+        success("Gửi thông tin thành công!");
+      } catch (err: any) {
+        console.log(err);
+        error("Gửi thông tin thất bại");
+      }
     }
   };
 

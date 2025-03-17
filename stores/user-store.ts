@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { getMe } from '@/request/auth';
 import { User } from '@/types/user';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -13,6 +14,7 @@ type Actions = {
   isAuthenticated: () => boolean;
   setUserInfo: (user: User) => void;
   setAuth: (user: User, jwt: string) => void;
+  reload: () => void;
 };
 
 // Default value for state
@@ -37,6 +39,10 @@ export const useUserStore = create<State & Actions>()(
       },
       isAuthenticated: () => {
         return !!getItem().jwt;
+      },
+      reload: async () => {
+        const user = await getMe();
+        set({ user });
       },
     }),
     { name: 'user-doan-storage' }
