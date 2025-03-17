@@ -8,24 +8,30 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { articles } from "@/lib/articles-data";
 import TextToSpeechPlayer from "@/components/text-to-speech";
+import { getPostDetail } from "@/request/post";
+import { get } from "lodash";
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
   const [article, setArticle] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const handleGetPost = async () => {
+    try {
+      setIsLoading(true);
+      const res = await getPostDetail(params.slug);
+
+      const post = get(res, "data", null);
+
+      setArticle(post);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // In a real app, you would fetch the article from an API
-    // For this demo, we're using the mock data
-    const foundArticle = articles.find((a) => a.slug === params.slug);
-
-    if (foundArticle) {
-      setArticle(foundArticle);
-    } else {
-      setError("Không tìm thấy bài viết");
-    }
-
-    setIsLoading(false);
+    handleGetPost();
   }, [params.slug]);
 
   if (isLoading) {
@@ -42,12 +48,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     );
   }
 
-  if (error || !article) {
+  if (!article) {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
-            {error || "Không tìm thấy bài viết"}
+            {"Không tìm thấy bài viết"}
           </h1>
           <Link href="/tin-tuc">
             <Button>Quay lại trang tin tức</Button>
@@ -60,7 +66,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   // Prepare sections for text-to-speech
   const speechSections = [
     { title: article.title, content: article.excerpt },
-    ...article.content.map((section: any) => ({
+    ...article.content.content.map((section: any) => ({
       title: section.heading || "Nội dung",
       content: section.text,
     })),
@@ -91,7 +97,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           </div>
           <div className="flex items-center">
             <Tag className="mr-2 h-4 w-4" />
-            {article.tags.join(", ")}
+            {article.tag.name}
           </div>
         </div>
 
@@ -119,7 +125,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
           <Separator className="my-8" />
 
-          {article.content.map((section: any, index: number) => (
+          {article.content.content.map((section: any, index: number) => (
             <div key={index} className="mb-8">
               {section.heading && (
                 <h2 className="text-2xl font-bold mb-4">{section.heading}</h2>
@@ -146,11 +152,11 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         <div className="flex justify-between items-center border-t border-b py-4 mb-8">
           <div>
             <span className="text-sm text-muted-foreground">Thẻ: </span>
-            {article.tags.map((tag: string) => (
-              <Badge key={tag} variant="outline" className="mr-2">
-                {tag}
-              </Badge>
-            ))}
+            {/* {article.tags.map((tag: string) => ( */}
+            <Badge variant="outline" className="mr-2">
+              {article.tag.name}
+            </Badge>
+            {/* ))} */}
           </div>
           <Button variant="ghost" size="sm">
             <Share2 className="mr-2 h-4 w-4" /> Chia sẻ
