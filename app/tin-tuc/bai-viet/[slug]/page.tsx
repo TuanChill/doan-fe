@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ChevronLeft, Calendar, User, Tag, Share2 } from "lucide-react";
+import {
+  ChevronLeft,
+  Calendar,
+  User,
+  Tag,
+  Share2,
+  ChevronUp,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -28,6 +35,13 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const firstViewRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScrollToFirst = () => {
+    if (!firstViewRef.current) return;
+    firstViewRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   useEffect(() => {
@@ -73,7 +87,8 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   ];
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 relative">
+      <div ref={firstViewRef}></div>
       <div className="mb-6">
         <Link href="/tin-tuc">
           <Button variant="ghost" className="pl-0">
@@ -170,7 +185,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           </p>
         </div>
       </article>
-
+      <div
+        onClick={handleScrollToFirst}
+        className="fixed bottom-[80px] size-12 flex justify-center items-center rounded-full right-4 bg-gray-100 cursor-pointer shadow-md"
+      >
+        <ChevronUp size={24} color="black" />
+      </div>
       {/* Text-to-speech player */}
       <TextToSpeechPlayer sections={speechSections} />
     </div>
