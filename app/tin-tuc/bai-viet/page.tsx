@@ -34,7 +34,8 @@ export default function NewsPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
               <Badge className="mb-2 bg-red-600 w-fit">Tin nổi bật</Badge>
               <h2 className="text-2xl font-bold text-white mb-2">
-                Triển lãm đặc biệt: "75 năm Quân đội Nhân dân Việt Nam"
+                Triển lãm đặc biệt: &quot;75 năm Quân đội Nhân dân Việt
+                Nam&quot;
               </h2>
               <p className="text-gray-200 mb-4">
                 Triển lãm trưng bày hơn 500 hiện vật, tài liệu quý giá về lịch
