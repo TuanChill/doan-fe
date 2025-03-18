@@ -112,7 +112,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           </div>
           <div className="flex items-center">
             <Tag className="mr-2 h-4 w-4" />
-            {article.tag.name}
+            {get(article, "tag.name", "--")}
           </div>
         </div>
 
@@ -120,7 +120,11 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           {article.image && (
             <>
               <img
-                src={article.image || "/placeholder.svg"}
+                src={`${process.env.NEXT_PUBLIC_API_URL}${get(
+                  article,
+                  "image.url",
+                  ""
+                )}`}
                 alt={article.title}
                 className="w-full h-[400px] object-cover rounded-lg"
               />
@@ -169,7 +173,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             <span className="text-sm text-muted-foreground">Thẻ: </span>
             {/* {article.tags.map((tag: string) => ( */}
             <Badge variant="outline" className="mr-2">
-              {article.tag.name}
+              {get(article, "tag.name", "--")}
             </Badge>
             {/* ))} */}
           </div>
