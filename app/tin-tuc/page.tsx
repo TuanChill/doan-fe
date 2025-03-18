@@ -11,10 +11,29 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "@/hooks/use-router";
-
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getPostList } from "@/request/post";
+import { get } from "lodash";
 export default function HomePage() {
+  const [latestArticles, setLatestArticles] = useState([]);
+
+  const handleGetLatestArticles = async () => {
+    try {
+      const res = await getPostList({ page: 1, limit: 4 });
+      const posts = get(res, "data", []);
+
+      setLatestArticles(posts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const router = useRouter();
+
+  useEffect(() => {
+    handleGetLatestArticles();
+  }, []);
 
   return (
     <div className="container mx-auto py-8">
@@ -31,7 +50,7 @@ export default function HomePage() {
               Sự kiện nổi bật
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              Triển lãm đặc biệt: "75 năm Quân đội Nhân dân Việt Nam"
+              Triển lãm đặc biệt: &quot;75 năm Quân đội Nhân dân Việt Nam&quot;
             </h1>
             <p className="text-gray-200 mb-4">
               Triển lãm trưng bày hơn 500 hiện vật, tài liệu quý giá về lịch sử
@@ -103,33 +122,45 @@ export default function HomePage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {latestArticles.map((article) => (
-            <Card key={article.id}>
+            <Card key={get(article, "id", "")}>
               <div
                 className="relative h-40 cursor-pointer"
-                onClick={() => router.push(`/tin-tuc/bai-viet/${article.slug}`)}
+                onClick={() =>
+                  router.push(
+                    `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
+                  )
+                }
               >
                 <img
-                  src={article.image || "/placeholder.svg"}
-                  alt={article.title}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${get(
+                    article,
+                    "image.url",
+                    ""
+                  )}`}
+                  alt={get(article, "title", "")}
                   className="w-full h-full object-cover"
                 />
               </div>
               <CardHeader className="p-4 pb-2">
                 <div className="flex justify-between items-start mb-2">
-                  <Badge variant="outline">{article.category}</Badge>
+                  <Badge variant="outline">
+                    {get(article, "tag.name", "")}
+                  </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {article.date}
+                    {get(article, "date", "")}
                   </span>
                 </div>
-                <CardTitle className="text-base">{article.title}</CardTitle>
+                <CardTitle className="text-base">
+                  {get(article, "title", "")}
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-4 pt-0">
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  {article.excerpt}
+                  {get(article, "excerpt", "")}
                 </p>
               </CardContent>
               <CardFooter className="p-4 pt-0">
-                <Link href={`/tin-tuc/bai-viet/${article.slug}`}>
+                <Link href={`/tin-tuc/bai-viet/${get(article, "id", "")}`}>
                   <Button variant="link" className="p-0">
                     Đọc tiếp
                   </Button>
