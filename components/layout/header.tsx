@@ -99,7 +99,9 @@ export default function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            <Search />
+            <div className="hidden md:block">
+              <Search />
+            </div>
             {isAuthenticated() ? (
               <div className="relative">
                 <Avatar onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -135,8 +137,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button and Search */}
-          <div className="lg:hidden flex items-center space-x-2">
-            <Search />
+          <div className="lg:hidden flex items-center">
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -159,6 +160,9 @@ export default function Header() {
         )}
       >
         <div className="container mx-auto px-4 py-4 space-y-4">
+          <div className="mb-4">
+            <Search />
+          </div>
           <nav className="flex flex-col space-y-2">
             <MobileNavItem href="/" label="Trang chủ" />
             <MobileNavItem href="/gioi-thieu" label="Giới thiệu" />
@@ -186,7 +190,7 @@ export default function Header() {
             <MobileNavItem
               href="/contact"
               label="Liên hệ "
-              icon={<MessageSquareText className="h-5 w-5" />}
+              icon={<Mail className="h-5 w-5" />}
             />
           </nav>
 
