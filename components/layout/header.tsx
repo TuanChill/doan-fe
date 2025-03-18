@@ -42,16 +42,16 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          {/* <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
               <span className="font-bold text-lg">VM</span>
             </div>
             <span className="font-bold text-xl hidden md:inline-block">
               Bảo tàng LSQS Việt Nam
             </span>
-          </Link> */}
+          </Link>
 
-          <Link href="/" className="flex items-center space-x-2">
+          {/* <Link href="/" className="flex items-center space-x-2">
             <img
               src=""
               alt="Logo Bảo tàng LSQS Việt Nam"
@@ -60,7 +60,7 @@ export default function Header() {
             <span className="font-bold text-xl hidden md:inline-block">
               Bảo tàng LSQS Việt Nam
             </span>
-          </Link>
+          </Link> */}
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
