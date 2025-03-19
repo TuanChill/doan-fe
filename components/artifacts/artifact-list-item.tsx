@@ -5,34 +5,32 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Calendar, MapPin, Layers, Volume2, Heart } from "lucide-react";
+import { Eye, Calendar, MapPin, Layers, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ArtifactListItemProps {
-  artifact: {
-    id: number;
-    name: string;
-    description: string;
-    image: string;
-    category: string;
-    period: string;
-    year: number;
-    location: string;
-    has3D: boolean;
-    hasAudio: boolean;
-  };
-  onView3D: (id: number) => void;
+  artifact: any;
   onToggleCompare: (id: number) => void;
   isInCompare: boolean;
 }
 
 export default function ArtifactListItem({
   artifact,
-  onView3D,
   onToggleCompare,
   isInCompare,
 }: ArtifactListItemProps) {
   const [isFavorite, setIsFavorite] = useState(false);
+
+  // Đảm bảo các trường dữ liệu phù hợp với API
+  const {
+    id,
+    name,
+    description,
+    image_url,
+    category_name,
+    year,
+    location_name,
+  } = artifact;
 
   return (
     <motion.div
@@ -44,19 +42,10 @@ export default function ArtifactListItem({
           <div className="flex flex-col sm:flex-row">
             <div className="relative h-48 sm:h-auto sm:w-48 bg-gray-100 flex-shrink-0">
               <img
-                src={artifact.image || "/placeholder.svg?height=400&width=400"}
-                alt={artifact.name}
+                src={image_url || "/placeholder.svg?height=400&width=400"}
+                alt={name}
                 className="w-full h-full object-cover"
               />
-
-              {/* Badges */}
-              <div className="absolute top-2 left-2 flex flex-col gap-1">
-                {artifact.hasAudio && (
-                  <Badge className="bg-blue-500 hover:bg-blue-600">
-                    <Volume2 className="h-3 w-3 mr-1" /> Audio
-                  </Badge>
-                )}
-              </div>
 
               {/* Favorite button */}
               <button
@@ -87,40 +76,40 @@ export default function ArtifactListItem({
             <div className="p-4 flex-1">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-bold text-lg mb-1">{artifact.name}</h3>
-                  <p className="text-gray-600 text-sm mb-3">
-                    {artifact.description}
-                  </p>
+                  <h3 className="font-bold text-lg mb-1">{name}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{description}</p>
                 </div>
-                <div className="flex gap-1 ml-2"></div>
               </div>
 
               <div className="flex flex-wrap gap-x-6 gap-y-1 mb-3">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Calendar className="h-4 w-4 mr-1 flex-shrink-0" />
-                  <span>{artifact.year}</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-                  <span>{artifact.location}</span>
-                </div>
+                {year && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Calendar className="h-4 w-4 mr-1 flex-shrink-0" />
+                    <span>{year}</span>
+                  </div>
+                )}
+                {location_name && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                    <span>{location_name}</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-between items-center mt-2">
                 <div>
-                  <Badge variant="outline" className="mr-2">
-                    {artifact.category}
-                  </Badge>
-                  <Badge variant="outline">{artifact.period}</Badge>
+                  {category_name && (
+                    <Badge variant="outline" className="mr-2">
+                      {category_name}
+                    </Badge>
+                  )}
                 </div>
 
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() =>
-                      (window.location.href = `/hien-vat/${artifact.id}`)
-                    }
+                    onClick={() => (window.location.href = `/hien-vat/${id}`)}
                   >
                     <Eye className="h-4 w-4 mr-1" /> Chi tiết
                   </Button>
@@ -130,7 +119,7 @@ export default function ArtifactListItem({
                     className={
                       isInCompare ? "bg-olive-800 hover:bg-olive-900" : ""
                     }
-                    onClick={() => onToggleCompare(artifact.id)}
+                    onClick={() => onToggleCompare(id)}
                   >
                     <Layers className="h-4 w-4 mr-1" />{" "}
                     {isInCompare ? "Đã thêm" : "So sánh"}

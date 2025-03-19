@@ -19,38 +19,72 @@ import {
 } from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import { cn } from "@/lib/utils";
-import { artifactsData, locations, periods } from "@/lib/artifacts-data";
 import ArtifactSpotlight from "@/components/artifacts/artifact-spotlight";
-import ArtifactTimeline from "@/components/artifacts/artifact-timeline";
-import ArtifactCompare from "@/components/artifacts/artifact-compare";
 import ArtifactCard from "@/components/artifacts/artifact-card";
 import ArtifactListItem from "@/components/artifacts/artifact-list-item";
 import { getCategoryArtifact, getExhibitList } from "@/request/exhibit";
 import { get } from "lodash";
 
 export default function ArtifactsPage() {
-  const [categoryArtifact, setCategoryArtifact] = useState<any[]>([]);
+  // State cho dữ liệu từ API
+  const [artifacts, setArtifacts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [featuredArtifact, setFeaturedArtifact] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // State for search and filtering
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<
-    "grid" | "list" | "timeline" | "compare"
-  >("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [filteredArtifacts, setFilteredArtifacts] = useState(artifactsData);
+  const [filteredArtifacts, setFilteredArtifacts] = useState<any[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(true);
   const [compareItems, setCompareItems] = useState<number[]>([]);
 
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedPeriods, setSelectedPeriods] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [yearRange, setYearRange] = useState([1000, 2000]);
 
   // Ref for scroll position
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Fetch categories
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategoryArtifact();
+      const categoryData = get(response, "data", []);
+      setCategories(categoryData);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  // Fetch artifacts
+  const fetchArtifacts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getExhibitList(currentPage, itemsPerPage);
+      const artifactData = get(response, "data", []);
+      setArtifacts(artifactData);
+      setFilteredArtifacts(artifactData);
+
+      // Set featured artifact (first item or a specific featured one if API provides that info)
+      if (artifactData.length > 0) {
+        setFeaturedArtifact(artifactData[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching artifacts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchCategories();
+    fetchArtifacts();
+  }, []);
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -61,38 +95,11 @@ export default function ArtifactsPage() {
   );
   const totalPages = Math.ceil(filteredArtifacts.length / itemsPerPage);
 
-  const handleGetCategoryArtifact = async () => {
-    try {
-      const response = await getCategoryArtifact();
-
-      const categoryArtifact = get(response, "data", []);
-
-      setCategoryArtifact(categoryArtifact);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleGetArtifact = async () => {
-    try {
-      const res = await getExhibitList();
-
-      const artifacts = get(res, "data", []);
-
-      setFilteredArtifacts(artifacts);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    handleGetCategoryArtifact();
-    handleGetArtifact();
-  }, []);
-
   // Handle search and filtering
   useEffect(() => {
-    let results = artifactsData;
+    if (!artifacts.length) return;
+
+    let results = [...artifacts];
 
     // Search query filter
     if (searchQuery) {
@@ -106,36 +113,21 @@ export default function ArtifactsPage() {
     // Category filter
     if (selectedCategories.length > 0) {
       results = results.filter((item) =>
-        selectedCategories.includes(item.category)
+        selectedCategories.includes(item.category_id)
       );
     }
 
-    // Period filter
-    if (selectedPeriods.length > 0) {
-      results = results.filter((item) => selectedPeriods.includes(item.period));
-    }
-
-    // Location filter
-    if (selectedLocations.length > 0) {
-      results = results.filter((item) =>
-        selectedLocations.includes(item.location)
-      );
-    }
-
-    // Year range filter
-    results = results.filter(
-      (item) => item.year >= yearRange[0] && item.year <= yearRange[1]
-    );
+    // Year range filter - Adjust based on your actual data structure
+    results = results.filter((item) => {
+      if (item.year) {
+        return item.year >= yearRange[0] && item.year <= yearRange[1];
+      }
+      return true; // If year is not available, don't filter it out
+    });
 
     setFilteredArtifacts(results);
     setCurrentPage(1);
-  }, [
-    searchQuery,
-    selectedCategories,
-    selectedPeriods,
-    selectedLocations,
-    yearRange,
-  ]);
+  }, [artifacts, searchQuery, selectedCategories, yearRange]);
 
   // Handle page change
   const handlePageChange = (page: number) => {
@@ -157,18 +149,10 @@ export default function ArtifactsPage() {
     }
   };
 
-  // Handle 3D viewer
-  const open3DViewer = (id: number) => {
-    // 3D functionality removed
-    console.log("3D functionality has been removed", id);
-  };
-
   // Reset filters
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedCategories([]);
-    setSelectedPeriods([]);
-    setSelectedLocations([]);
     setYearRange([1000, 2000]);
   };
 
@@ -240,15 +224,8 @@ export default function ArtifactsPage() {
             >
               <Filter className="h-5 w-5 mr-2" />
               Bộ lọc
-              {selectedCategories.length +
-                selectedPeriods.length +
-                selectedLocations.length >
-                0 &&
-                `(${
-                  selectedCategories.length +
-                  selectedPeriods.length +
-                  selectedLocations.length
-                })`}
+              {selectedCategories.length > 0 &&
+                `(${selectedCategories.length})`}
             </Button>
 
             {/* View Mode Toggle */}
@@ -279,241 +256,123 @@ export default function ArtifactsPage() {
           </div>
 
           {/* Filter Panel */}
-          {isFilterOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-bold text-lg">Lọc hiện vật</h3>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={resetFilters}
-                    className="text-gray-600"
-                  >
-                    <RotateCw className="h-4 w-4 mr-1" /> Đặt lại
-                  </Button>
+          <AnimatePresence>
+            {isFilterOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-lg">Lọc hiện vật</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={resetFilters}
+                      className="text-gray-600"
+                    >
+                      <RotateCw className="h-4 w-4 mr-1" /> Đặt lại
+                    </Button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Categories */}
+                    <div>
+                      <h4 className="font-medium mb-2">Loại hiện vật</h4>
+                      <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                        {categories.map((category) => (
+                          <div key={category.id} className="flex items-center">
+                            <Checkbox
+                              id={`category-${category.id}`}
+                              checked={selectedCategories.includes(category.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedCategories([
+                                    ...selectedCategories,
+                                    category.id,
+                                  ]);
+                                } else {
+                                  setSelectedCategories(
+                                    selectedCategories.filter(
+                                      (id) => id !== category.id
+                                    )
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor={`category-${category.id}`}
+                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                            >
+                              {category.name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Year Range */}
+                    <div>
+                      <h4 className="font-medium mb-2">
+                        Năm (từ {yearRange[0]} đến {yearRange[1]})
+                      </h4>
+                      <Slider
+                        defaultValue={[1000, 2000]}
+                        min={1000}
+                        max={2000}
+                        step={10}
+                        value={yearRange}
+                        onValueChange={setYearRange}
+                        className="my-6"
+                      />
+                      <div className="flex justify-between text-sm text-gray-600">
+                        <span>1000</span>
+                        <span>2000</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Applied Filters */}
+                  {selectedCategories.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <h4 className="font-medium mb-2">Bộ lọc đã chọn:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedCategories.map((catId) => {
+                          const category = categories.find(
+                            (c) => c.id === catId
+                          );
+                          return (
+                            <Badge
+                              key={catId}
+                              variant="secondary"
+                              className="flex items-center gap-1"
+                            >
+                              {category?.name}
+                              <button
+                                onClick={() =>
+                                  setSelectedCategories(
+                                    selectedCategories.filter(
+                                      (id) => id !== catId
+                                    )
+                                  )
+                                }
+                                className="ml-1 hover:text-gray-700"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Categories */}
-                  <div>
-                    <h4 className="font-medium mb-2">Loại hiện vật</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                      {categoryArtifact?.map((category) => (
-                        <div key={category.id} className="flex items-center">
-                          <Checkbox
-                            id={`category-${category.id}`}
-                            checked={selectedCategories.includes(category.id)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedCategories([
-                                  ...selectedCategories,
-                                  category.id,
-                                ]);
-                              } else {
-                                setSelectedCategories(
-                                  selectedCategories.filter(
-                                    (id) => id !== category.id
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor={`category-${category.id}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                          >
-                            {category.name}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Time Periods */}
-                  {/* <div>
-                    <h4 className="font-medium mb-2">Thời kỳ</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                      {periods.map((period) => (
-                        <div key={period.id} className="flex items-center">
-                          <Checkbox
-                            id={`period-${period.id}`}
-                            checked={selectedPeriods.includes(period.id)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedPeriods([
-                                  ...selectedPeriods,
-                                  period.id,
-                                ]);
-                              } else {
-                                setSelectedPeriods(
-                                  selectedPeriods.filter(
-                                    (id) => id !== period.id
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor={`period-${period.id}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                          >
-                            {period.name}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div> */}
-
-                  {/* Locations */}
-                  {/* <div>
-                    <h4 className="font-medium mb-2">Khu vực trưng bày</h4>
-                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                      {locations.map((location) => (
-                        <div key={location.id} className="flex items-center">
-                          <Checkbox
-                            id={`location-${location.id}`}
-                            checked={selectedLocations.includes(location.id)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedLocations([
-                                  ...selectedLocations,
-                                  location.id,
-                                ]);
-                              } else {
-                                setSelectedLocations(
-                                  selectedLocations.filter(
-                                    (id) => id !== location.id
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor={`location-${location.id}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                          >
-                            {location.name}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div> */}
-
-                  {/* Year Range */}
-                  <div>
-                    <h4 className="font-medium mb-2">
-                      Năm (từ {yearRange[0]} đến {yearRange[1]})
-                    </h4>
-                    <Slider
-                      defaultValue={[1000, 2000]}
-                      min={1000}
-                      max={2000}
-                      step={10}
-                      value={yearRange}
-                      onValueChange={setYearRange}
-                      className="my-6"
-                    />
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>1000</span>
-                      <span>2000</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Applied Filters */}
-                {(selectedCategories.length > 0 ||
-                  selectedPeriods.length > 0 ||
-                  selectedLocations.length > 0) && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <h4 className="font-medium mb-2">Bộ lọc đã chọn:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCategories.map((catId) => {
-                        const category = categoryArtifact.find(
-                          (c) => c.id === catId
-                        );
-                        return (
-                          <Badge
-                            key={catId}
-                            variant="secondary"
-                            className="flex items-center gap-1"
-                          >
-                            {category?.name}
-                            <button
-                              onClick={() =>
-                                setSelectedCategories(
-                                  selectedCategories.filter(
-                                    (id) => id !== catId
-                                  )
-                                )
-                              }
-                              className="ml-1 hover:text-gray-700"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        );
-                      })}
-
-                      {selectedPeriods.map((periodId) => {
-                        const period = periods.find((p) => p.id === periodId);
-                        return (
-                          <Badge
-                            key={periodId}
-                            variant="secondary"
-                            className="flex items-center gap-1"
-                          >
-                            {period?.name}
-                            <button
-                              onClick={() =>
-                                setSelectedPeriods(
-                                  selectedPeriods.filter(
-                                    (id) => id !== periodId
-                                  )
-                                )
-                              }
-                              className="ml-1 hover:text-gray-700"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        );
-                      })}
-
-                      {selectedLocations.map((locId) => {
-                        const location = locations.find((l) => l.id === locId);
-                        return (
-                          <Badge
-                            key={locId}
-                            variant="secondary"
-                            className="flex items-center gap-1"
-                          >
-                            {location?.name}
-                            <button
-                              onClick={() =>
-                                setSelectedLocations(
-                                  selectedLocations.filter((id) => id !== locId)
-                                )
-                              }
-                              className="ml-1 hover:text-gray-700"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
 
@@ -521,150 +380,117 @@ export default function ArtifactsPage() {
       <section className="py-12" ref={resultsRef}>
         <div className="container mx-auto px-4">
           {/* Artifact of the Day Spotlight */}
-          {showSpotlight &&
-            viewMode !== "compare" &&
-            viewMode !== "timeline" && (
-              <div className="relative">
-                <ArtifactSpotlight artifact={artifactsData[0]} />
-                <button
-                  className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors z-20"
-                  onClick={() => setShowSpotlight(false)}
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            )}
-
-          {/* Compare View */}
-          {viewMode === "compare" && (
-            <ArtifactCompare
-              artifacts={artifactsData.filter((item) =>
-                compareItems.includes(item.id)
-              )}
-              onClose={() => setViewMode("grid")}
-              onRemove={(id) => toggleCompareItem(id)}
-            />
-          )}
-
-          {/* Timeline View */}
-          {viewMode === "timeline" && (
-            <ArtifactTimeline
-              artifacts={filteredArtifacts}
-              onView3D={open3DViewer}
-              onToggleCompare={toggleCompareItem}
-              compareItems={compareItems}
-            />
-          )}
-
-          {/* Results Count and Sort */}
-          {/* {viewMode !== "compare" && viewMode !== "timeline" && (
-            <div className="flex justify-between items-center mb-6">
-              <div className="text-gray-600">
-                Hiển thị {filteredArtifacts.length} hiện vật
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Sắp xếp theo:</span>
-                <select className="border border-gray-300 rounded-md px-2 py-1 text-sm">
-                  <option value="relevance">Độ liên quan</option>
-                  <option value="newest">Mới nhất</option>
-                  <option value="oldest">Cũ nhất</option>
-                  <option value="name_asc">Tên (A-Z)</option>
-                  <option value="name_desc">Tên (Z-A)</option>
-                </select>
-              </div>
-            </div>
-          )} */}
-
-          {/* Grid View */}
-          {viewMode === "grid" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
-              {currentItems.map((artifact) => (
-                <ArtifactCard
-                  key={artifact.id}
-                  artifact={artifact}
-                  onView3D={open3DViewer}
-                  onToggleCompare={toggleCompareItem}
-                  isInCompare={compareItems.includes(artifact.id)}
-                />
-              ))}
+          {showSpotlight && featuredArtifact && (
+            <div className="relative mb-12">
+              <ArtifactSpotlight artifact={featuredArtifact} />
+              <button
+                className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors z-20"
+                onClick={() => setShowSpotlight(false)}
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
           )}
 
-          {/* List View */}
-          {viewMode === "list" && (
-            <div className="space-y-4 mt-4">
-              {currentItems.map((artifact) => (
-                <ArtifactListItem
-                  key={artifact.id}
-                  artifact={artifact}
-                  onView3D={open3DViewer}
-                  onToggleCompare={toggleCompareItem}
-                  isInCompare={compareItems.includes(artifact.id)}
-                />
-              ))}
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="w-12 h-12 border-4 border-olive-800 border-t-transparent rounded-full animate-spin"></div>
+              <span className="ml-3 text-olive-800">Đang tải hiện vật...</span>
             </div>
-          )}
-
-          {/* Empty State */}
-          {filteredArtifacts.length === 0 && (
-            <div className="max-w-md mx-auto">
-              <Search className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-xl font-bold mb-2">
-                Không tìm thấy hiện vật
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Không có hiện vật nào phù hợp với tiêu chí tìm kiếm của bạn. Vui
-                lòng thử lại với các bộ lọc khác.
-              </p>
-              <Button onClick={resetFilters}>
-                <RotateCw className="h-4 w-4 mr-2" /> Đặt lại bộ lọc
-              </Button>
-            </div>
-          )}
-
-          {/* Pagination */}
-          {(viewMode === "grid" || viewMode === "list") &&
-            filteredArtifacts.length > 0 && (
-              <div className="mt-8 flex justify-center">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                    (page) => (
-                      <Button
-                        key={page}
-                        variant={currentPage === page ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(page)}
-                        className={
-                          currentPage === page
-                            ? "bg-olive-800 hover:bg-olive-900"
-                            : ""
-                        }
-                      >
-                        {page}
-                      </Button>
-                    )
-                  )}
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+          ) : (
+            <>
+              {/* Grid View */}
+              {viewMode === "grid" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
+                  {currentItems.map((artifact) => (
+                    <ArtifactCard
+                      key={artifact.id}
+                      artifact={artifact}
+                      onToggleCompare={toggleCompareItem}
+                      isInCompare={compareItems.includes(artifact.id)}
+                    />
+                  ))}
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* List View */}
+              {viewMode === "list" && (
+                <div className="space-y-4 mt-4">
+                  {currentItems.map((artifact) => (
+                    <ArtifactListItem
+                      key={artifact.id}
+                      artifact={artifact}
+                      onToggleCompare={toggleCompareItem}
+                      isInCompare={compareItems.includes(artifact.id)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Empty State */}
+              {!isLoading && filteredArtifacts.length === 0 && (
+                <div className="text-center py-12">
+                  <div className="max-w-md mx-auto">
+                    <Search className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-xl font-bold mb-2">
+                      Không tìm thấy hiện vật
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Không có hiện vật nào phù hợp với tiêu chí tìm kiếm của
+                      bạn. Vui lòng thử lại với các bộ lọc khác.
+                    </p>
+                    <Button onClick={resetFilters}>
+                      <RotateCw className="h-4 w-4 mr-2" /> Đặt lại bộ lọc
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {filteredArtifacts.length > 0 && (
+                <div className="mt-8 flex justify-center">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className={
+                            currentPage === page
+                              ? "bg-olive-800 hover:bg-olive-900"
+                              : ""
+                          }
+                        >
+                          {page}
+                        </Button>
+                      )
+                    )}
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
     </div>
