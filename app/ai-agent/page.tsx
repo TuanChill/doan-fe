@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AnimatedSection from "@/components/ui/animated-section";
-import { chatWithAI } from "@/lib/openai";
 import { Loading } from "@/components/common/loading";
+import { sendChatMessage, getChatHistory } from "@/request/chat";
+import { useSessionStore } from "@/stores/user-store";
+import { v4 as uuidv4 } from "uuid";
 
 type Message = {
   role: "user" | "assistant";
@@ -32,6 +34,9 @@ const SUGGESTED_QUESTIONS = [
 
 export default function AIAgentPage() {
   const [isMounted, setIsMounted] = useState(false);
+
+  const { sessionId, setSessionId } = useSessionStore();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -43,11 +48,14 @@ export default function AIAgentPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -64,6 +72,13 @@ export default function AIAgentPage() {
     setIsLoading(true);
 
     try {
+      // Ensure we have a sessionId before making the API call
+      let currentSessionId = sessionId;
+      if (!currentSessionId) {
+        currentSessionId = uuidv4();
+        setSessionId(currentSessionId);
+      }
+
       // Get all previous messages in the format expected by the API
       const messageHistory = messages.map((msg) => ({
         role: msg.role,
@@ -76,8 +91,12 @@ export default function AIAgentPage() {
         content: userMessage.content,
       });
 
-      // Call the AI service
-      const aiResponse = await chatWithAI(messageHistory);
+      // Call the AI service with the guaranteed sessionId
+      const aiResponse = await sendChatMessage(
+        currentSessionId,
+        userMessage.content
+      );
+
       // Add AI response to messages
       setMessages((prev) => [
         ...prev,
@@ -108,6 +127,28 @@ export default function AIAgentPage() {
   const handleSuggestedQuestion = (question: string) => {
     setInputValue(question);
   };
+
+  const handleGetChatHistory = async () => {
+    // Ensure we have a sessionId before making the API call
+    let currentSessionId = sessionId;
+    if (!currentSessionId) {
+      currentSessionId = uuidv4();
+      setSessionId(currentSessionId);
+    }
+    try {
+      const chatHistory = await getChatHistory(currentSessionId);
+
+      if (chatHistory.length > 0) {
+        setMessages(chatHistory);
+      }
+    } catch (error) {
+      console.error("Error getting chat history:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetChatHistory();
+  }, [isMounted]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -147,7 +188,10 @@ export default function AIAgentPage() {
                   </div>
 
                   {/* Chat Messages */}
-                  <div className="p-4 h-[500px] overflow-y-auto flex flex-col space-y-4 bg-gray-50">
+                  <div
+                    ref={chatContainerRef}
+                    className="custom-scrollbar p-4 h-[500px] overflow-y-auto flex flex-col space-y-4 bg-gray-50"
+                  >
                     {messages.map((message, index) => (
                       <div
                         key={index}

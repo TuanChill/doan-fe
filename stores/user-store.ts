@@ -52,3 +52,23 @@ export const useUserStore = create<State & Actions>()(
     { name: 'user-doan-storage' }
   )
 );
+
+type SessionState = {
+  sessionId: string | null;
+};
+
+type SessionActions = {
+  setSessionId: (sessionId: string) => void;
+};
+
+export const useSessionStore = create<SessionState & SessionActions>()(
+  persist(
+    (set) => ({
+      sessionId: null,
+      setSessionId: (sessionId: string) => {
+        set({ sessionId });
+      },
+    }),
+    { name: 'session-doan-storage' }
+  )
+);
