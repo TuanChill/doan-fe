@@ -26,7 +26,7 @@ export default function HomePage() {
               Sự kiện nổi bật
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              Triển lãm đặc biệt: "75 năm Quân đội Nhân dân Việt Nam"
+              Triển lãm đặc biệt: &quot;75 năm Quân đội Nhân dân Việt Nam&quot;
             </h1>
             <p className="text-gray-200 mb-4">
               Triển lãm trưng bày hơn 500 hiện vật, tài liệu quý giá về lịch sử

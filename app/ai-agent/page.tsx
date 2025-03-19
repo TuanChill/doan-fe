@@ -12,8 +12,11 @@ import {
   Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { chatWithAI } from "@/app/actions/chat-actions";
 import AnimatedSection from "@/components/ui/animated-section";
+import { Loading } from "@/components/common/loading";
+import { sendChatMessage, getChatHistory } from "@/request/chat";
+import { useSessionStore } from "@/stores/user-store";
+import { v4 as uuidv4 } from "uuid";
 
 type Message = {
   role: "user" | "assistant";
@@ -30,6 +33,10 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function AIAgentPage() {
+  const [isMounted, setIsMounted] = useState(false);
+
+  const { sessionId, setSessionId } = useSessionStore();
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -41,10 +48,13 @@ export default function AIAgentPage() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -62,6 +72,13 @@ export default function AIAgentPage() {
     setIsLoading(true);
 
     try {
+      // Ensure we have a sessionId before making the API call
+      let currentSessionId = sessionId;
+      if (!currentSessionId) {
+        currentSessionId = uuidv4();
+        setSessionId(currentSessionId);
+      }
+
       // Get all previous messages in the format expected by the API
       const messageHistory = messages.map((msg) => ({
         role: msg.role,
@@ -74,15 +91,19 @@ export default function AIAgentPage() {
         content: userMessage.content,
       });
 
-      // Call the AI service
-      const aiResponse = await chatWithAI(messageHistory);
+      // Call the AI service with the guaranteed sessionId
+      const aiResponse = await sendChatMessage(
+        currentSessionId,
+        userMessage.content
+      );
 
       // Add AI response to messages
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: aiResponse,
+          content:
+            aiResponse || "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
           timestamp: new Date(),
         },
       ]);
@@ -107,6 +128,34 @@ export default function AIAgentPage() {
     setInputValue(question);
   };
 
+  const handleGetChatHistory = async () => {
+    // Ensure we have a sessionId before making the API call
+    let currentSessionId = sessionId;
+    if (!currentSessionId) {
+      currentSessionId = uuidv4();
+      setSessionId(currentSessionId);
+    }
+    try {
+      const chatHistory = await getChatHistory(currentSessionId);
+
+      if (chatHistory.length > 0) {
+        setMessages(chatHistory);
+      }
+    } catch (error) {
+      console.error("Error getting chat history:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetChatHistory();
+  }, [isMounted]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return <Loading />;
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section */}
@@ -127,7 +176,7 @@ export default function AIAgentPage() {
       {/* Chat Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Main Chat */}
               <div className="md:w-3/4">
@@ -139,7 +188,10 @@ export default function AIAgentPage() {
                   </div>
 
                   {/* Chat Messages */}
-                  <div className="p-4 h-[500px] overflow-y-auto flex flex-col space-y-4 bg-gray-50">
+                  <div
+                    ref={chatContainerRef}
+                    className="custom-scrollbar p-4 h-[500px] overflow-y-auto flex flex-col space-y-4 bg-gray-50"
+                  >
                     {messages.map((message, index) => (
                       <div
                         key={index}

@@ -8,5 +8,6 @@ export const API_ROUTES = {
   SEND_CONTACT: `${API_BASE}/contact`,
   ME: `${API_BASE}/users/me`,
   USERS: `${API_BASE}/users`,
+  POST: `${API_BASE}/posts`,
 };
 
