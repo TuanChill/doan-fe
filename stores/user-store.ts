@@ -41,8 +41,12 @@ export const useUserStore = create<State & Actions>()(
         return !!getItem().jwt;
       },
       reload: async () => {
-        const user = await getMe();
-        set({ user });
+        try {
+          const user = await getMe();
+          set({ user });
+        } catch (error) {
+          console.error(error);
+        }
       },
     }),
     { name: 'user-doan-storage' }

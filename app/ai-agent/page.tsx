@@ -12,8 +12,9 @@ import {
   Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { chatWithAI } from "@/app/actions/chat-actions";
 import AnimatedSection from "@/components/ui/animated-section";
+import { chatWithAI } from "@/lib/openai";
+import { Loading } from "@/components/common/loading";
 
 type Message = {
   role: "user" | "assistant";
@@ -30,6 +31,7 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 export default function AIAgentPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -43,9 +45,9 @@ export default function AIAgentPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -76,13 +78,13 @@ export default function AIAgentPage() {
 
       // Call the AI service
       const aiResponse = await chatWithAI(messageHistory);
-
       // Add AI response to messages
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: aiResponse,
+          content:
+            aiResponse || "Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.",
           timestamp: new Date(),
         },
       ]);
@@ -107,6 +109,12 @@ export default function AIAgentPage() {
     setInputValue(question);
   };
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return <Loading />;
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section */}
@@ -127,7 +135,7 @@ export default function AIAgentPage() {
       {/* Chat Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Main Chat */}
               <div className="md:w-3/4">

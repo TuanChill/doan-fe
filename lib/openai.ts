@@ -1,7 +1,5 @@
-"use server"
-
-import { CoreMessage, generateText } from "ai"
-import { openai } from "@ai-sdk/openai"
+import { OpenAI } from "openai"
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs"
 
 // Define the message type
 type Message = {
@@ -25,25 +23,27 @@ Thông tin về bảo tàng:
 Hãy trả lời bằng tiếng Việt, ngắn gọn, súc tích và thân thiện. Nếu bạn không biết câu trả lời, hãy thành thật nói rằng bạn không có thông tin về vấn đề đó và đề nghị người dùng liên hệ trực tiếp với bảo tàng để biết thêm chi tiết.
 `
 
-const apiKey = process.env.OPENAI_API_KEY
-
-export async function chatWithAI(messages: Message[]): Promise<string> {
+export async function chatWithAI(messages: Message[]){
   try {
-    // Prepare the messages array with the system prompt
-    const fullMessages = [{ role: "system", content: systemPrompt }, ...messages]
-
-    // Generate response using the AI SDK
-    const { text } = await generateText({
-      model: openai("gpt-4o"),
-      messages: fullMessages as CoreMessage[],
-      temperature: 0.7,
-      maxTokens: 500,
+    const openai = new OpenAI({
+      apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      dangerouslyAllowBrowser: true,
     })
 
-    return text
+    // Prepend the system prompt to the messages array
+    const messagesWithSystemPrompt = [
+      { role: "system", content: systemPrompt },
+      ...messages,
+    ]
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: messagesWithSystemPrompt as ChatCompletionMessageParam[],
+      temperature: 0.7,
+    })
+
+    return response.choices[0].message.content || "Không có câu trả lời từ AI."
   } catch (error) {
     console.error("Error in AI chat:", error)
-    throw new Error("Không thể kết nối với dịch vụ AI. Vui lòng thử lại sau.")
   }
 }
-
