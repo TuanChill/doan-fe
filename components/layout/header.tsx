@@ -51,6 +51,17 @@ export default function Header() {
             </span>
           </Link>
 
+          {/* <Link href="/" className="flex items-center space-x-2">
+            <img
+              src=""
+              alt="Logo Bảo tàng LSQS Việt Nam"
+              className="w-12 h-12 object-contain"
+            />
+            <span className="font-bold text-xl hidden md:inline-block">
+              Bảo tàng LSQS Việt Nam
+            </span>
+          </Link> */}
+
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
             <NavItem href="/" label="Trang chủ" />

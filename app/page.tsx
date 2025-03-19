@@ -235,7 +235,7 @@ export default function Home() {
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
                     backgroundImage:
-                      "url('/placeholder.svg?height=400&width=600')",
+                      "url('https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/468914568_122117903312604010_6064694651255731049_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YKvgtqDAiH4Q7kNvgFgXBYu&_nc_oc=AdjkSzAmhbIsjoKdaYqp7NYzMyWqmqTSn47vce6aeSl1Qks48lWBeMzBbgKCoI1V83w&_nc_zt=23&_nc_ht=scontent.fhan17-1.fna&_nc_gid=jmTGQXSTK7huc5gjlwT3SA&oh=00_AYETOW3SE0TH6azL9pZcJtv4iHDEr53o42d-5W2CIRYpFQ&oe=67DE12D2')",
                   }}
                 ></div>
                 <motion.div
@@ -271,7 +271,7 @@ export default function Home() {
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
                     backgroundImage:
-                      "url('/placeholder.svg?height=400&width=600')",
+                      "url('https://media.vietnamplus.vn/images/7255a701687d11cb8c6bbc58a6c80785e1b319bced8b2064350f15811336cc4af157f8ff81572e4e5dd2a44f7a6d0aea527e5a3af85f2df55b4bf78ab4a21a2015c84708a094c1f5316c563199de65fe/bao-tang-quan-su-viet-nam-7-4992.jpg.webp')",
                   }}
                 ></div>
                 <motion.div
@@ -307,7 +307,7 @@ export default function Home() {
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
                     backgroundImage:
-                      "url('/placeholder.svg?height=400&width=600')",
+                      "url('https://bizweb.dktcdn.net/100/380/059/files/prompt-hoi-dap.png?v=1701331008334')",
                   }}
                 ></div>
                 <motion.div
@@ -343,7 +343,7 @@ export default function Home() {
                   className="absolute inset-0 bg-cover bg-center"
                   style={{
                     backgroundImage:
-                      "url('/placeholder.svg?height=400&width=600')",
+                      "url('https://cdnphoto.dantri.com.vn/n9RVComUc3taeuKd2MWR-tdi2lE=/thumb_w/1920/2024/10/03/bao-tang-lich-su-quan-su-viet-nam39-1727960239206.jpg')",
                   }}
                 ></div>
                 <motion.div

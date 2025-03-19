@@ -160,7 +160,9 @@ export default function HomePage() {
                 </p>
               </CardContent>
               <CardFooter className="p-4 pt-0">
-                <Link href={`/tin-tuc/bai-viet/${get(article, "id", "")}`}>
+                <Link
+                  href={`/tin-tuc/bai-viet/${get(article, "documentId", "")}`}
+                >
                   <Button variant="link" className="p-0">
                     Đọc tiếp
                   </Button>
