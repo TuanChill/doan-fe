@@ -41,10 +41,34 @@ export const useUserStore = create<State & Actions>()(
         return !!getItem().jwt;
       },
       reload: async () => {
-        const user = await getMe();
-        set({ user });
+        try {
+          const user = await getMe();
+          set({ user });
+        } catch (error) {
+          console.error(error);
+        }
       },
     }),
     { name: 'user-doan-storage' }
+  )
+);
+
+type SessionState = {
+  sessionId: string | null;
+};
+
+type SessionActions = {
+  setSessionId: (sessionId: string) => void;
+};
+
+export const useSessionStore = create<SessionState & SessionActions>()(
+  persist(
+    (set) => ({
+      sessionId: null,
+      setSessionId: (sessionId: string) => {
+        set({ sessionId });
+      },
+    }),
+    { name: 'session-doan-storage' }
   )
 );
