@@ -7,6 +7,7 @@ import { persist } from 'zustand/middleware';
 type State = {
   jwt: string | null;
   user: User | null;
+  redirectTo: string | null;
 };
 
 type Actions = {
@@ -15,12 +16,14 @@ type Actions = {
   setUserInfo: (user: User) => void;
   setAuth: (user: User, jwt: string) => void;
   reload: () => void;
+  setRedirectTo: (redirectTo: string | null) => void;
 };
 
 // Default value for state
 const defaultStates: State = {
   jwt: null,
   user: null,
+  redirectTo: null,
 };
 
 // create store using zustands
@@ -47,6 +50,9 @@ export const useUserStore = create<State & Actions>()(
         } catch (error) {
           console.error(error);
         }
+      },
+      setRedirectTo: (redirectTo: string | null) => {
+        set({ redirectTo });
       },
     }),
     { name: 'user-doan-storage' }

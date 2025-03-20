@@ -280,30 +280,6 @@ export default function AIAgentPage() {
 
               {/* Sidebar */}
               <div className="md:w-1/4">
-                {/* Suggested Questions */}
-                <Card className="shadow-md mb-6">
-                  <div className="p-4 border-b">
-                    <h3 className="font-bold flex items-center">
-                      <Lightbulb className="h-5 w-5 mr-2 text-amber-500" />
-                      Câu hỏi gợi ý
-                    </h3>
-                  </div>
-                  <div className="p-4">
-                    <ul className="space-y-2">
-                      {SUGGESTED_QUESTIONS.map((question, index) => (
-                        <li key={index}>
-                          <button
-                            onClick={() => handleSuggestedQuestion(question)}
-                            className="text-left text-blue-600 hover:text-blue-800 hover:underline w-full"
-                          >
-                            {question}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Card>
-
                 {/* Info Card */}
                 <Card className="shadow-md bg-blue-50">
                   <div className="p-4">

@@ -21,9 +21,14 @@ import AnimatedSection from "@/components/ui/animated-section";
 import { cn } from "@/lib/utils";
 import ArtifactSpotlight from "@/components/artifacts/artifact-spotlight";
 import ArtifactCard from "@/components/artifacts/artifact-card";
-import ArtifactListItem from "@/components/artifacts/artifact-list-item";
-import { getCategoryArtifact, getExhibitList } from "@/request/exhibit";
+import {
+  getCategoryArtifact,
+  getExhibitList,
+  getFeaturedArtifact,
+} from "@/request/exhibit";
 import { get } from "lodash";
+import { searchExhibitions } from "@/lib/melisearch";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function ArtifactsPage() {
   // State cho dữ liệu từ API
@@ -36,11 +41,8 @@ export default function ArtifactsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [filteredArtifacts, setFilteredArtifacts] = useState<any[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(true);
-  const [compareItems, setCompareItems] = useState<number[]>([]);
 
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -60,74 +62,61 @@ export default function ArtifactsPage() {
     }
   };
 
-  // Fetch artifacts
-  const fetchArtifacts = async () => {
+  const handleGetFeaturedArtifact = async () => {
+    try {
+      const response = await getFeaturedArtifact();
+      const artifactData = get(response, "data", []);
+      setFeaturedArtifact(artifactData[0]);
+    } catch (error) {
+      console.error("Error fetching featured artifact:", error);
+    }
+  };
+
+  const handleSearchExhibition = useDebouncedCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await getExhibitList(currentPage, itemsPerPage);
-      const artifactData = get(response, "data", []);
-      setArtifacts(artifactData);
-      setFilteredArtifacts(artifactData);
-
-      // Set featured artifact (first item or a specific featured one if API provides that info)
-      if (artifactData.length > 0) {
-        setFeaturedArtifact(artifactData[0]);
+      if (searchQuery.length === 0) {
+        const response = await getExhibitList(
+          currentPage,
+          12,
+          selectedCategories
+        );
+        const artifactData = get(response, "data", []);
+        setArtifacts(artifactData);
+      } else {
+        console.log(yearRange);
+        const response = await searchExhibitions(
+          currentPage,
+          12,
+          searchQuery,
+          selectedCategories,
+          yearRange
+        );
+        const artifactData = get(response, "hits", []);
+        setArtifacts(artifactData);
       }
     } catch (error) {
       console.error("Error fetching artifacts:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, 500);
+
+  useEffect(() => {
+    handleSearchExhibition();
+  }, [searchQuery]);
 
   // Initial data fetch
   useEffect(() => {
     fetchCategories();
-    fetchArtifacts();
+    handleGetFeaturedArtifact();
   }, []);
 
   // Calculate pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredArtifacts.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(filteredArtifacts.length / itemsPerPage);
-
-  // Handle search and filtering
-  useEffect(() => {
-    if (!artifacts.length) return;
-
-    let results = [...artifacts];
-
-    // Search query filter
-    if (searchQuery) {
-      results = results.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Category filter
-    if (selectedCategories.length > 0) {
-      results = results.filter((item) =>
-        selectedCategories.includes(item.category_id)
-      );
-    }
-
-    // Year range filter - Adjust based on your actual data structure
-    results = results.filter((item) => {
-      if (item.year) {
-        return item.year >= yearRange[0] && item.year <= yearRange[1];
-      }
-      return true; // If year is not available, don't filter it out
-    });
-
-    setFilteredArtifacts(results);
-    setCurrentPage(1);
-  }, [artifacts, searchQuery, selectedCategories, yearRange]);
+  const indexOfLastItem = currentPage * 12;
+  const indexOfFirstItem = indexOfLastItem - 12;
+  const currentItems = artifacts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(artifacts.length / 12);
 
   // Handle page change
   const handlePageChange = (page: number) => {
@@ -135,17 +124,6 @@ export default function ArtifactsPage() {
     // Scroll to results
     if (resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  // Toggle artifact in compare list
-  const toggleCompareItem = (id: number) => {
-    if (compareItems.includes(id)) {
-      setCompareItems(compareItems.filter((itemId) => itemId !== id));
-    } else {
-      if (compareItems.length < 3) {
-        setCompareItems([...compareItems, id]);
-      }
     }
   };
 
@@ -204,17 +182,25 @@ export default function ArtifactsPage() {
                 placeholder="Tìm kiếm hiện vật..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-800 focus:border-transparent"
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-olive-800 focus:border-transparent "
               />
               {searchQuery && (
                 <button
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-2.5  h-5 w-5 text-gray-400"
                   onClick={() => setSearchQuery("")}
                 >
                   <X className="h-5 w-5" />
                 </button>
               )}
             </div>
+
+            <Button
+              variant="outline"
+              className="border-olive-800 bg-olive-800 text-white"
+              onClick={() => handleSearchExhibition()}
+            >
+              Tìm kiếm
+            </Button>
 
             {/* Filter Button */}
             <Button
@@ -404,32 +390,13 @@ export default function ArtifactsPage() {
               {viewMode === "grid" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
                   {currentItems.map((artifact) => (
-                    <ArtifactCard
-                      key={artifact.id}
-                      artifact={artifact}
-                      onToggleCompare={toggleCompareItem}
-                      isInCompare={compareItems.includes(artifact.id)}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {/* List View */}
-              {viewMode === "list" && (
-                <div className="space-y-4 mt-4">
-                  {currentItems.map((artifact) => (
-                    <ArtifactListItem
-                      key={artifact.id}
-                      artifact={artifact}
-                      onToggleCompare={toggleCompareItem}
-                      isInCompare={compareItems.includes(artifact.id)}
-                    />
+                    <ArtifactCard key={artifact.id} artifact={artifact} />
                   ))}
                 </div>
               )}
 
               {/* Empty State */}
-              {!isLoading && filteredArtifacts.length === 0 && (
+              {!isLoading && artifacts.length === 0 && (
                 <div className="text-center py-12">
                   <div className="max-w-md mx-auto">
                     <Search className="h-12 w-12 mx-auto text-gray-400 mb-4" />
@@ -448,7 +415,7 @@ export default function ArtifactsPage() {
               )}
 
               {/* Pagination */}
-              {filteredArtifacts.length > 0 && (
+              {artifacts.length > 0 && (
                 <div className="mt-8 flex justify-center">
                   <div className="flex items-center gap-2">
                     <Button

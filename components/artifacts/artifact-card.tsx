@@ -4,21 +4,15 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Calendar, MapPin, Layers, Info, Heart } from "lucide-react";
+import { Eye, Calendar, MapPin, Info, ChartBarStacked } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { get } from "lodash";
 
 interface ArtifactCardProps {
   artifact: any;
-  onToggleCompare: (id: number) => void;
-  isInCompare: boolean;
 }
 
-export default function ArtifactCard({
-  artifact,
-  onToggleCompare,
-  isInCompare,
-}: ArtifactCardProps) {
+export default function ArtifactCard({ artifact }: ArtifactCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -74,17 +68,23 @@ export default function ArtifactCard({
           </p>
 
           <div className="mt-auto space-y-1 text-sm text-gray-600">
+            {get(artifact, "category_artifact.name", null) && (
+              <div className="flex items-center">
+                <ChartBarStacked className="h-4 w-4 mr-1 flex-shrink-0" />
+                <span>{get(artifact, "category_artifact.name", "--")}</span>
+              </div>
+            )}
             {get(artifact, "year", null) && (
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1 flex-shrink-0" />
                 <span>{get(artifact, "year", "--")}</span>
               </div>
             )}
-            {get(artifact, "location_name", null) && (
+            {get(artifact, "location", null) && (
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
                 <span className="truncate">
-                  {get(artifact, "location_name", "--")}
+                  {get(artifact, "location", "--")}
                 </span>
               </div>
             )}

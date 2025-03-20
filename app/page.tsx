@@ -13,7 +13,7 @@ import {
 import { motion } from "framer-motion";
 import AnimatedSection from "@/components/ui/animated-section";
 import StaggeredChildren from "@/components/ui/staggered-children";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/const/route";
 
 export default function Home() {
@@ -514,6 +514,7 @@ export default function Home() {
               <div className="mt-4 flex">
                 <input
                   type="text"
+                  disabled
                   placeholder="Nhập câu hỏi của bạn..."
                   className="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -521,6 +522,8 @@ export default function Home() {
                   className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={handleAIHoiDap}
+                  disabled
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

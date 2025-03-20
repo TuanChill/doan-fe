@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { APP_ROUTES } from "@/const/route";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 import { Info, MapIcon as Map360, Eye } from "lucide-react";
 import Link from "next/link";
 

@@ -50,14 +50,12 @@ export default function TicketPurchasePage() {
   const totalTickets =
     Number(watchAdultTickets || 0) +
     Number(watchChildTickets || 0) +
-    Number(watchSeniorTickets || 0) +
     Number(watchGroupTickets || 0);
 
   const totalPrice =
     Number(watchAdultTickets || 0) * ticketTypes[0].price +
     Number(watchChildTickets || 0) * ticketTypes[1].price +
-    Number(watchSeniorTickets || 0) * ticketTypes[2].price +
-    Number(watchGroupTickets || 0) * ticketTypes[3].price;
+    Number(watchGroupTickets || 0) * ticketTypes[2].price;
 
   // Form submission handler
   const onSubmit = async (data: TicketFormValues) => {
