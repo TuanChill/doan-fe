@@ -12,7 +12,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/const/route";
 export default function Footer() {
   const router = useRouter();

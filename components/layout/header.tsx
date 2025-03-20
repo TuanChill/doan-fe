@@ -110,7 +110,7 @@ export default function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <Search />
             </div>
             {isAuthenticated() ? (

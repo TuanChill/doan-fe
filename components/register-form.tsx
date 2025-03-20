@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 import { useLoadingStore } from "@/stores/loading-store";
 import { register } from "@/request/auth";
 import { useSnackBarStore } from "@/stores/snackbar-store";
@@ -36,7 +36,12 @@ export default function RegisterForm() {
     state.success,
     state.error,
   ]);
-  const [setAuth] = useUserStore((state) => [state.setAuth]);
+  const [setAuth, redirectTo, setRedirectTo] = useUserStore((state) => [
+    state.setAuth,
+    state.redirectTo,
+    state.setRedirectTo,
+  ]);
+
   const validateForm = () => {
     let valid = true;
     const newErrors = {
@@ -154,7 +159,12 @@ export default function RegisterForm() {
       success("Đăng ký thành công!");
 
       setAuth(response.user, response.jwt);
-      router.push(APP_ROUTES.HOME);
+      if (redirectTo) {
+        setRedirectTo(null);
+        router.push(redirectTo);
+      } else {
+        router.push(APP_ROUTES.HOME);
+      }
     } catch (err) {
       console.error(err);
       error("Đăng ký không thành công");

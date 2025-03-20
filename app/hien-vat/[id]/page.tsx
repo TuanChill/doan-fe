@@ -14,8 +14,6 @@ import {
   Volume2,
   Download,
   Info,
-  ChevronRight,
-  ChevronLeft,
 } from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import { cn } from "@/lib/utils";
@@ -102,6 +100,14 @@ export default function ArtifactDetailPage() {
     };
   }, [params.id]);
 
+  const handleDownloadImage = () => {
+    const imageUrl = get(artifact, "image.url", "");
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = `${get(artifact, "name", "")}.jpg`;
+    link.click();
+  };
+
   // Handle back navigation
   const handleBack = () => {
     router.back();
@@ -175,22 +181,17 @@ export default function ArtifactDetailPage() {
             </AnimatedSection>
             <AnimatedSection animation="fadeUp" delay={0.5}>
               <div className="flex flex-wrap gap-3 mb-6">
-                {get(artifact, "category_name", null) && (
+                {get(artifact, "category.name", null) && (
                   <Badge className="bg-white/20 hover:bg-white/30 text-white">
-                    {get(artifact, "category_name", "--")}
+                    {get(artifact, "category.name", "--")}
                   </Badge>
                 )}
-                {get(artifact, "period_name", null) && (
+                {get(artifact, "period", null) && (
                   <Badge className="bg-white/20 hover:bg-white/30 text-white">
-                    {get(artifact, "period_name", "--")}
+                    {get(artifact, "period", "--")}
                   </Badge>
                 )}
-                {get(artifact, "has_3d_model", null) && (
-                  <Badge className="bg-amber-500 hover:bg-amber-600">
-                    <Cube className="h-3 w-3 mr-1" /> Mô hình 3D
-                  </Badge>
-                )}
-                {get(artifact, "has_audio", null) && (
+                {get(artifact, "audio.url", null) && (
                   <Badge className="bg-blue-500 hover:bg-blue-600">
                     <Volume2 className="h-3 w-3 mr-1" /> Thuyết minh
                   </Badge>
@@ -204,7 +205,7 @@ export default function ArtifactDetailPage() {
       {/* Main Content */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Left Column - Image and Actions */}
               <div className="lg:w-2/5">
@@ -216,7 +217,7 @@ export default function ArtifactDetailPage() {
                         "image.url",
                         ""
                       )}`}
-                      additionalImages={get(artifact, "images", []).map(
+                      additionalImages={get(artifact, "images", [])?.map(
                         (img: any) =>
                           `${process.env.NEXT_PUBLIC_API_URL}${img.url}`
                       )}
@@ -244,7 +245,11 @@ export default function ArtifactDetailPage() {
                       <Button variant="outline" className="flex-1">
                         <Share2 className="h-4 w-4 mr-2" /> Chia sẻ
                       </Button>
-                      <Button variant="outline" className="flex-1">
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={handleDownloadImage}
+                      >
                         <Download className="h-4 w-4 mr-2" /> Tải ảnh
                       </Button>
                     </div>
@@ -252,7 +257,7 @@ export default function ArtifactDetailPage() {
                 </AnimatedSection>
 
                 {/* Audio Player (if available) */}
-                {get(artifact, "has_audio", null) && isAudioPlaying && (
+                {get(artifact, "audio.url", null) && isAudioPlaying && (
                   <AnimatedSection
                     animation="fadeLeft"
                     delay={0.2}
@@ -305,29 +310,29 @@ export default function ArtifactDetailPage() {
                           </span>
                         </div>
                       )}
-                      {get(artifact, "period_name", null) && (
+                      {get(artifact, "period", null) && (
                         <div className="flex justify-between">
                           <span className="text-gray-600">Thời kỳ:</span>
                           <span className="font-medium">
-                            {get(artifact, "period_name", "--")}
+                            {get(artifact, "period", "--")}
                           </span>
                         </div>
                       )}
-                      {get(artifact, "category_name", null) && (
+                      {get(artifact, "category_artifact", null) && (
                         <div className="flex justify-between">
                           <span className="text-gray-600">Loại hiện vật:</span>
                           <span className="font-medium">
-                            {get(artifact, "category_name", "--")}
+                            {get(artifact, "category_artifact.name", "--")}
                           </span>
                         </div>
                       )}
-                      {get(artifact, "location_name", null) && (
+                      {get(artifact, "location", null) && (
                         <div className="flex justify-between">
                           <span className="text-gray-600">
                             Khu vực trưng bày:
                           </span>
                           <span className="font-medium">
-                            {get(artifact, "location_name", "--")}
+                            {get(artifact, "location", "--")}
                           </span>
                         </div>
                       )}
@@ -396,24 +401,6 @@ export default function ArtifactDetailPage() {
                           <p className="text-gray-700 mb-6">
                             {get(artifact, "description", "--")}
                           </p>
-
-                          <div className="flex items-center space-x-4 mb-6">
-                            {get(artifact, "year", null) && (
-                              <div className="flex items-center text-gray-600">
-                                <Calendar className="h-5 w-5 mr-2" />
-                                <span>{get(artifact, "year", "--")}</span>
-                              </div>
-                            )}
-                            {get(artifact, "location_name", null) && (
-                              <div className="flex items-center text-gray-600">
-                                <MapPin className="h-5 w-5 mr-2" />
-                                <span>
-                                  {get(artifact, "location_name", "--")}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-
                           <div className="prose max-w-none">
                             {get(artifact, "overview_content", null) && (
                               <div
@@ -538,6 +525,9 @@ export default function ArtifactDetailPage() {
                             {get(relatedArtifact, "name", "--")}
                           </h4>
                           <p className="text-xs text-gray-600 mt-1">
+                            {get(relatedArtifact, "description", "--")}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-1 flex gap-2">
                             <Badge className="bg-amber-500 hover:bg-amber-600">
                               {get(
                                 relatedArtifact,
@@ -545,7 +535,7 @@ export default function ArtifactDetailPage() {
                                 "--"
                               )}
                             </Badge>
-                            •{" "}
+                            •
                             <Badge className="bg-blue-500 hover:bg-blue-600">
                               {get(relatedArtifact, "year", "--")}
                             </Badge>
