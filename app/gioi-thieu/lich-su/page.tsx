@@ -7,8 +7,55 @@ import { Button } from "@/components/ui/button";
 import { Clock, Calendar, Award, BookOpen, History } from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import Link from "next/link";
+import TextToSpeechPlayer from "@/components/text-to-speech";
 
-export default function MuseumHistoryPage() {
+export default function Page() {
+  // Define content sections for the text-to-speech player
+  const contentSections = [
+    {
+      id: "intro",
+      title: "Lịch Sử Hình Thành và Phát Triển",
+      content: "",
+      // "Bảo tàng Lịch sử Quân sự Việt Nam được thành lập ngày 17/7/1956, là một trong những bảo tàng đầu tiên của Việt Nam. Ban đầu, bảo tàng có tên là Bảo tàng Quân đội, sau đó đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam vào năm 2002.",
+    },
+    {
+      id: "establishment",
+      title: "Sự Thành Lập",
+      content:
+        "Bảo tàng Lịch sử Quân sự Việt Nam được thành lập ngày 17/7/1956, là một trong những bảo tàng đầu tiên của Việt Nam. Ban đầu, bảo tàng có tên là Bảo tàng Quân đội, sau đó đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam vào năm 2002. Bảo tàng được xây dựng với mục đích lưu giữ, trưng bày và giới thiệu các hiện vật, tài liệu quý giá về lịch sử quân sự của dân tộc Việt Nam, từ thời kỳ dựng nước đến các cuộc kháng chiến chống ngoại xâm và bảo vệ Tổ quốc.",
+    },
+    {
+      id: "development",
+      title: "Phát Triển Qua Các Thời Kỳ",
+      content:
+        "Trải qua hơn 65 năm xây dựng và phát triển, Bảo tàng Lịch sử Quân sự Việt Nam đã không ngừng được mở rộng và nâng cấp. Từ một bảo tàng nhỏ ban đầu, đến nay bảo tàng đã trở thành một trong những bảo tàng lớn nhất Việt Nam với diện tích trưng bày rộng lớn và hàng chục nghìn hiện vật quý giá. Năm 1998, bảo tàng được xây dựng lại với quy mô lớn hơn tại địa điểm 28A Điện Biên Phủ, Ba Đình, Hà Nội. Đến năm 2002, bảo tàng chính thức đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam.",
+    },
+    {
+      id: "new-location",
+      title: "Địa Điểm Mới Từ Tháng 11/2023",
+      content:
+        "Từ ngày 1/11/2023, Bảo tàng Lịch sử Quân sự Việt Nam đã chuyển đến địa điểm mới tại số 2 Lê Đức Thọ, phường Mỹ Đình 2, quận Nam Từ Liêm, Hà Nội. Đây là một công trình hiện đại, được xây dựng với quy mô lớn hơn, đáp ứng nhu cầu trưng bày và bảo quản ngày càng nhiều hiện vật quý giá của bảo tàng. Tại địa điểm mới, bảo tàng mở cửa đón khách tham quan miễn phí, tạo điều kiện thuận lợi cho người dân và du khách tìm hiểu về lịch sử quân sự hào hùng của dân tộc Việt Nam.",
+    },
+    {
+      id: "collection",
+      title: "Bộ Sưu Tập Hiện Vật",
+      content:
+        "Bảo tàng hiện đang lưu giữ và trưng bày hơn 15.000 hiện vật, tài liệu quý giá về lịch sử quân sự của dân tộc Việt Nam. Trong đó có nhiều hiện vật độc đáo và có giá trị lịch sử cao như: Xe tăng T-54 số hiệu 843 đã húc đổ cổng Dinh Độc Lập vào trưa ngày 30/4/1975. Máy bay MiG-21 do Anh hùng Phạm Tuân điều khiển bắn rơi máy bay B-52 của Mỹ. Đại bác thần công được đúc dưới triều Nguyễn. Bộ sưu tập vũ khí từ thời kỳ đồ đồng đến hiện đại. Các hiện vật, tài liệu về chiến tranh chống Pháp và chống Mỹ",
+    },
+    {
+      id: "significance",
+      title: "Ý Nghĩa Lịch Sử và Giáo Dục",
+      content:
+        "Bảo tàng Lịch sử Quân sự Việt Nam không chỉ là nơi lưu giữ và trưng bày các hiện vật lịch sử, mà còn là một trung tâm giáo dục truyền thống yêu nước và chủ nghĩa anh hùng cách mạng cho các thế hệ người Việt Nam, đặc biệt là thế hệ trẻ. Hàng năm, bảo tàng đón tiếp hàng trăm nghìn lượt khách tham quan, trong đó có nhiều đoàn khách quốc tế. Bảo tàng cũng thường xuyên tổ chức các hoạt động giáo dục, triển lãm chuyên đề và sự kiện văn hóa nhằm giới thiệu rộng rãi hơn về lịch sử quân sự Việt Nam đến công chúng.",
+    },
+    {
+      id: "history",
+      title: "Các mốc lịch sử quan trọng",
+      content:
+        "Năm 1956: Thành lập Bảo tàng: Ngày 17/7/1956, Bảo tàng Quân đội (tiền thân của Bảo tàng Lịch sử Quân sự Việt Nam) được thành lập, là một trong những bảo tàng đầu tiên của Việt Nam. Năm 1998: Xây dựng lại với quy mô lớn hơn: Bảo tàng được xây dựng lại với quy mô lớn hơn tại địa điểm 28A Điện Biên Phủ, Ba Đình, Hà Nội. Năm 2002: Đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam: Bảo tàng chính thức đổi tên thành Bảo tàng Lịch sử Quân sự Việt Nam, đánh dấu sự phát triển mới trong lịch sử của bảo tàng. Năm 2023: Chuyển đến địa điểm mới: Từ ngày 1/11/2023, Bảo tàng chuyển đến địa điểm mới tại số 2 Lê Đức Thọ, phường Mỹ Đình 2, quận Nam Từ Liêm, Hà Nội và mở cửa đón khách tham quan miễn phí.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section */}
@@ -292,6 +339,9 @@ export default function MuseumHistoryPage() {
           </div>
         </div>
       </section>
+
+      {/* Text-to-Speech Player */}
+      <TextToSpeechPlayer sections={contentSections} />
     </div>
   );
 }

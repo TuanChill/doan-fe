@@ -51,6 +51,17 @@ export default function Header() {
             </span>
           </Link>
 
+          {/* <Link href="/" className="flex items-center space-x-2">
+            <img
+              src=""
+              alt="Logo Bảo tàng LSQS Việt Nam"
+              className="w-12 h-12 object-contain"
+            />
+            <span className="font-bold text-xl hidden md:inline-block">
+              Bảo tàng LSQS Việt Nam
+            </span>
+          </Link> */}
+
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
             <NavItem href="/" label="Trang chủ" />
@@ -63,7 +74,7 @@ export default function Header() {
                   icon: <Info className="h-4 w-4" />,
                 },
                 {
-                  href: "/gioi-thieu/thong-tin",
+                  href: "/gioi-thieu/thong-tin-tham-quan",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-4 w-4" />,
                 },
@@ -99,7 +110,9 @@ export default function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            <Search />
+            <div className="hidden lg:block">
+              <Search />
+            </div>
             {isAuthenticated() ? (
               <div className="relative">
                 <Avatar onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -135,8 +148,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button and Search */}
-          <div className="lg:hidden flex items-center space-x-2">
-            <Search />
+          <div className="lg:hidden flex items-center">
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -159,6 +171,9 @@ export default function Header() {
         )}
       >
         <div className="container mx-auto px-4 py-4 space-y-4">
+          <div className="mb-4">
+            <Search />
+          </div>
           <nav className="flex flex-col space-y-2">
             <MobileNavItem href="/" label="Trang chủ" />
             <MobileNavItem href="/gioi-thieu" label="Giới thiệu" />
@@ -186,7 +201,7 @@ export default function Header() {
             <MobileNavItem
               href="/contact"
               label="Liên hệ "
-              icon={<MessageSquareText className="h-5 w-5" />}
+              icon={<Mail className="h-5 w-5" />}
             />
           </nav>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { APP_ROUTES, PRIVATE_ROUTES } from "@/const/route";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/user-store";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect } from "react";
@@ -11,7 +11,7 @@ type UserProviderProps = {
 };
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  const { isAuthenticated, user, reload } = useUserStore();
+  const { isAuthenticated, reload, setRedirectTo } = useUserStore();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -22,6 +22,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
     if (Object.values(PRIVATE_ROUTES).includes(pathname)) {
       if (!isAuthenticated()) {
+        setRedirectTo(pathname);
         router.push(APP_ROUTES.LOGIN);
       }
     }

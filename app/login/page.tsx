@@ -10,13 +10,13 @@ export default function LoginPage() {
             Đăng nhập tài khoản
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Hoặc{" "}
-            <Link
+            Đăng nhập vào hệ thống để trải nghiệm tham quan
+            {/* <Link
               href="/register"
               className="font-medium text-indigo-600 hover:text-indigo-500"
             >
               Bạn chưa có tài khoản?
-            </Link>
+            </Link> */}
           </p>
         </div>
         <LoginForm />

@@ -8,7 +8,7 @@ import { useLoadingStore } from "@/stores/loading-store";
 import { useSnackBarStore } from "@/stores/snackbar-store";
 import { useUserStore } from "@/stores/user-store";
 import { APP_ROUTES } from "@/const/route";
-import { useRouter } from "@/hooks/use-router";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,9 +30,12 @@ export default function LoginForm() {
     state.success,
     state.error,
   ]);
-  const [setAuth] = useUserStore((state) => [state.setAuth]);
+  const [setAuth, redirectTo, setRedirectTo] = useUserStore((state) => [
+    state.setAuth,
+    state.redirectTo,
+    state.setRedirectTo,
+  ]);
   const router = useRouter();
-
   const validateForm = () => {
     let valid = true;
     const newErrors = { identifier: "", password: "" };
@@ -103,7 +106,12 @@ export default function LoginForm() {
       success("Đăng nhập thành công!");
 
       setAuth(response.user, response.jwt);
-      router.push(APP_ROUTES.HOME);
+      if (redirectTo) {
+        setRedirectTo(null);
+        router.push(redirectTo);
+      } else {
+        router.push(APP_ROUTES.HOME);
+      }
     } catch (err) {
       console.error("Lỗi khi đăng nhập:", err);
       error("Đăng nhập không thành công");
