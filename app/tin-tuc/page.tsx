@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getPostList } from "@/request/post";
 import { get } from "lodash";
+import { motion } from "framer-motion";
 export default function HomePage() {
   const [latestArticles, setLatestArticles] = useState([]);
 
@@ -23,9 +24,18 @@ export default function HomePage() {
       const res = await getPostList({ page: 1, limit: 4 });
       const posts = get(res, "data", []);
 
-      setLatestArticles(posts);
+      // If we got posts from the API, use them
+      if (posts && posts.length > 0) {
+        setLatestArticles(posts);
+      } else {
+        // Otherwise, use the static data as fallback
+        console.log("Using fallback data for latest articles");
+        setLatestArticles(latestArticles);
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Error in handleGetLatestArticles:", error);
+      // Use static data as fallback
+      setLatestArticles(latestArticles);
     }
   };
 
@@ -37,8 +47,18 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto py-8">
-      <section className="mb-12">
-        <div className="relative overflow-hidden rounded-xl mb-8">
+      <motion.section
+        className="mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="relative overflow-hidden rounded-xl mb-8"
+          initial={{ scale: 0.95 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.7 }}
+        >
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 z-10" />
           <img
             src="https://bcp.cdnchinhphu.vn/334894974524682240/2023/5/10/trien-lam-1683690565933459273790.jpg"
@@ -56,168 +76,268 @@ export default function HomePage() {
               Triển lãm trưng bày hơn 500 hiện vật, tài liệu quý giá về lịch sử
               hình thành và phát triển của Quân đội Nhân dân Việt Nam
             </p>
-            <Link href="/tin-tuc/bai-viet/75-nam-quan-doi-nhan-dan">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button>
                 Xem chi tiết <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-            </Link>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
+        >
           {featuredArticles.map((article) => (
-            <Card key={article.id} className="overflow-hidden">
-              <div
-                className="relative h-48 cursor-pointer"
-                onClick={() => router.push(`/tin-tuc/bai-viet/${article.slug}`)}
-              >
-                <img
-                  src={article.image || "/placeholder.svg"}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <CardHeader className="p-4 pb-2">
-                <div className="flex justify-between items-start mb-2">
-                  <Badge
-                    variant={
-                      article.category === "Triển lãm"
-                        ? "default"
-                        : article.category === "Di tích"
-                        ? "secondary"
-                        : "outline"
+            <motion.div
+              key={article.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="h-full"
+            >
+              <Card className="overflow-hidden h-full flex flex-col">
+                <div className="relative h-48 overflow-hidden">
+                  <motion.img
+                    src={article.image || "/placeholder.svg"}
+                    alt={article.title}
+                    className="w-full h-full object-cover cursor-pointer"
+                    whileHover={{
+                      filter: "brightness(1.1) contrast(1.1)",
+                      transition: { duration: 0.3 },
+                    }}
+                    onClick={() =>
+                      router.push(`/tin-tuc/bai-viet/${article.slug}`)
                     }
-                  >
-                    {article.category}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {article.date}
-                  </span>
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-primary/0"
+                    whileHover={{
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      transition: { duration: 0.3 },
+                    }}
+                  />
                 </div>
-                <CardTitle className="text-lg">{article.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {article.excerpt}
-                </p>
-              </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link href={`/tin-tuc/bai-viet/${article.slug}`}>
-                  <Button variant="link" className="p-0">
-                    Đọc tiếp
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start mb-2">
+                    <Badge
+                      variant={
+                        article.category === "Triển lãm"
+                          ? "default"
+                          : article.category === "Di tích"
+                          ? "secondary"
+                          : "outline"
+                      }
+                    >
+                      {article.category}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {article.date}
+                    </span>
+                  </div>
+                  <CardTitle className="text-lg">{article.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex-grow">
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {article.excerpt}
+                  </p>
+                </CardContent>
+                <CardFooter className="p-4 pt-0">
+                  <Link href={`/tin-tuc/bai-viet/${article.slug}`}>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button variant="link" className="p-0">
+                        Đọc tiếp
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
-      <section className="mb-12">
+      <motion.section
+        className="mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Tin tức mới nhất</h2>
           <Link href="/tin-tuc">
-            <Button variant="outline">Xem tất cả</Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline">Xem tất cả</Button>
+            </motion.div>
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
+        >
           {latestArticles.map((article) => (
-            <Card key={get(article, "id", "")}>
-              <div
-                className="relative h-40 cursor-pointer"
-                onClick={() =>
-                  router.push(
-                    `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
-                  )
-                }
-              >
-                <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${get(
-                    article,
-                    "image.url",
-                    ""
-                  )}`}
-                  alt={get(article, "title", "")}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <CardHeader className="p-4 pb-2">
-                <div className="flex justify-between items-start mb-2">
-                  <Badge variant="outline">
-                    {get(article, "tag.name", "")}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {get(article, "date", "")}
-                  </span>
+            <motion.div
+              key={get(article, "id", "")}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.4 }}
+              className="h-full"
+            >
+              <Card className="overflow-hidden h-full flex flex-col">
+                <div className="relative h-40 overflow-hidden">
+                  <motion.img
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${get(
+                      article,
+                      "image.url",
+                      ""
+                    )}`}
+                    alt={get(article, "title", "")}
+                    className="w-full h-full object-cover cursor-pointer"
+                    whileHover={{
+                      filter: "brightness(1.1) contrast(1.1)",
+                      transition: { duration: 0.3 },
+                    }}
+                    onClick={() =>
+                      router.push(
+                        `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
+                      )
+                    }
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-primary/0"
+                    whileHover={{
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      transition: { duration: 0.3 },
+                    }}
+                  />
                 </div>
-                <CardTitle className="text-base">
-                  {get(article, "title", "")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {get(article, "excerpt", "")}
-                </p>
-              </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link
-                  href={`/tin-tuc/bai-viet/${get(article, "documentId", "")}`}
-                >
-                  <Button variant="link" className="p-0">
-                    Đọc tiếp
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start mb-2">
+                    <Badge variant="outline">
+                      {get(article, "tag.name", "")}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {get(article, "date", "")}
+                    </span>
+                  </div>
+                  <CardTitle className="text-base">
+                    {get(article, "title", "")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex-grow">
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {get(article, "excerpt", "")}
+                  </p>
+                </CardContent>
+                <CardFooter className="p-4 pt-0">
+                  <Link
+                    href={`/tin-tuc/bai-viet/${get(article, "documentId", "")}`}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button variant="link" className="p-0">
+                        Đọc tiếp
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
-      <section>
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Sự kiện sắp diễn ra</h2>
           <Link href="/su-kien">
-            <Button variant="outline">Xem tất cả</Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline">Xem tất cả</Button>
+            </motion.div>
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
+        >
           {upcomingEvents.map((event) => (
-            <Card key={event.id}>
-              <div className="relative h-40">
-                <img
-                  src={event.image || "/placeholder.svg"}
-                  alt={event.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <CardHeader className="p-4 pb-2">
-                <div className="flex justify-between items-start mb-2">
-                  <Badge variant="secondary">{event.type}</Badge>
-                  <span className="text-xs font-medium text-red-600">
-                    {event.date}
-                  </span>
+            <motion.div
+              key={event.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.4 }}
+              className="h-full"
+            >
+              <Card className="overflow-hidden h-full flex flex-col">
+                <div className="relative h-40 overflow-hidden">
+                  <motion.img
+                    src={event.image || "/placeholder.svg"}
+                    alt={event.title}
+                    className="w-full h-full object-cover"
+                    whileHover={{
+                      filter: "brightness(1.1) contrast(1.1)",
+                      transition: { duration: 0.3 },
+                    }}
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-primary/0"
+                    whileHover={{
+                      backgroundColor: "rgba(0, 0, 0, 0.2)",
+                      transition: { duration: 0.3 },
+                    }}
+                  />
                 </div>
-                <CardTitle className="text-lg">{event.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-sm text-muted-foreground mb-2">
-                  {event.location}
-                </p>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {event.description}
-                </p>
-              </CardContent>
-              <CardFooter className="p-4 pt-0">
-                <Link href={`/su-kien/${event.slug}`}>
-                  <Button variant="link" className="p-0">
-                    Chi tiết
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start mb-2">
+                    <Badge variant="secondary">{event.type}</Badge>
+                    <span className="text-xs font-medium text-red-600">
+                      {event.date}
+                    </span>
+                  </div>
+                  <CardTitle className="text-lg">{event.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex-grow">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {event.location}
+                  </p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {event.description}
+                  </p>
+                </CardContent>
+                <CardFooter className="p-4 pt-0">
+                  <Link href={`/su-kien/${event.slug}`}>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button variant="link" className="p-0">
+                        Chi tiết
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
     </div>
   );
 }

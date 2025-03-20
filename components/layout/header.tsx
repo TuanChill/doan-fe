@@ -74,7 +74,7 @@ export default function Header() {
                   icon: <Info className="h-4 w-4" />,
                 },
                 {
-                  href: "/gioi-thieu/thong-tin",
+                  href: "/gioi-thieu/thong-tin-tham-quan",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-4 w-4" />,
                 },
