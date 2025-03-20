@@ -14,14 +14,13 @@ import {
   Volume2,
   Download,
   Info,
-  ChevronRight,
-  ChevronLeft,
 } from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import { cn } from "@/lib/utils";
 import { getExhibit, getExhibitList } from "@/request/exhibit";
 import { get } from "lodash";
 import ImageCarousel from "@/components/artifacts/image-carousel";
+import TextToSpeechPlayer from "@/components/text-to-speech";
 
 export default function ArtifactDetailPage() {
   const params = useParams();
@@ -103,8 +102,61 @@ export default function ArtifactDetailPage() {
   }, [params.id]);
 
   // Handle back navigation
+  // const handleBack = () => {
+  //   router.back();
+  // };
+  const textToSpeechRef = useRef<{ stop: () => void } | null>(null);
+
   const handleBack = () => {
+    if (textToSpeechRef.current) {
+      textToSpeechRef.current.stop(); // Dừng phát nếu có phương thức stop
+    }
+    // Điều hướng về trang trước
     router.back();
+  };
+
+  // Prepare text-to-speech sections
+  const getTextToSpeechSections = () => {
+    if (!artifact) return [];
+
+    const sections = [
+      {
+        title: get(artifact, "name", "Hiện vật"),
+        content: get(artifact, "description", ""),
+      },
+    ];
+
+    // Add overview content if available
+    if (get(artifact, "overview_content", null)) {
+      sections.push({
+        title: "Tổng quan",
+        content: stripHtml(get(artifact, "overview_content", "")),
+      });
+    }
+
+    // Add history if available
+    if (get(artifact, "history", null)) {
+      sections.push({
+        title: "Lịch sử hiện vật",
+        content: stripHtml(get(artifact, "history", "")),
+      });
+    }
+
+    // Add significance if available
+    if (get(artifact, "historicalSignificance", null)) {
+      sections.push({
+        title: "Ý nghĩa lịch sử",
+        content: stripHtml(get(artifact, "historicalSignificance", "")),
+      });
+    }
+
+    return sections;
+  };
+
+  // Helper function to strip HTML tags for text-to-speech
+  const stripHtml = (html: string) => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
   };
 
   if (isLoading) {
@@ -495,7 +547,9 @@ export default function ArtifactDetailPage() {
                                       i + 1
                                     }`
                                   }
-                                  alt={`${name} - Hình ${i + 1}`}
+                                  alt={`${get(artifact, "name", "")} - Hình ${
+                                    i + 1
+                                  }`}
                                   className="w-full h-full object-cover"
                                 />
                               </div>
@@ -560,6 +614,9 @@ export default function ArtifactDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* Text-to-Speech Player - Always visible */}
+      <TextToSpeechPlayer sections={getTextToSpeechSections()} />
     </div>
   );
 }
