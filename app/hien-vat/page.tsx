@@ -64,7 +64,7 @@ export default function ArtifactsPage() {
 
   const handleGetFeaturedArtifact = async () => {
     try {
-      const response = await getFeaturedArtifact();
+      const response = await getFeaturedArtifact(1, 1);
       const artifactData = get(response, "data", []);
       setFeaturedArtifact(artifactData[0]);
     } catch (error) {

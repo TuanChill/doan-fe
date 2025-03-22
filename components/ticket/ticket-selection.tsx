@@ -56,8 +56,8 @@ export default function TicketSelection({
             <div>
               <p className="font-medium text-amber-800">Thông báo quan trọng</p>
               <p className="text-sm text-amber-800">
-                Từ ngày 1/11/2023, Bảo tàng mở cửa miễn phí tham quan tại địa
-                điểm mới. Giao diện mua vé này chỉ dành cho mục đích minh họa.
+                Bảo tàng Lịch sử Quân sự Việt Nam chính thức mở cửa đón, phục vụ
+                khách tham quan và miễn phí tham quan đến hết tháng 12/2024.
               </p>
             </div>
           </div>

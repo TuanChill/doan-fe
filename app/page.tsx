@@ -8,16 +8,30 @@ import {
   Map,
   MessageSquareText,
   Newspaper,
-  Image,
+  ImageIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import AnimatedSection from "@/components/ui/animated-section";
 import StaggeredChildren from "@/components/ui/staggered-children";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/const/route";
+import { getFeaturedArtifact } from "@/request/exhibit";
+import { useEffect, useState } from "react";
+import { get } from "lodash";
+import Image from "next/image";
 
 export default function Home() {
+  const [featuredArtifact, setFeaturedArtifact] = useState<any[]>([]);
+
   const router = useRouter();
+
+  const handleTinTuc = () => {
+    router.push(APP_ROUTES.TIN_TUC);
+  };
+
+  const handleHienVat = () => {
+    router.push(APP_ROUTES.HIEN_VAT);
+  };
 
   const handleMuaVe = () => {
     router.push(APP_ROUTES.MUA_VE);
@@ -31,6 +45,18 @@ export default function Home() {
     router.push(APP_ROUTES.AI_AGENT);
   };
 
+  const handleGetFeaturedArtifact = async () => {
+    try {
+      const response = await getFeaturedArtifact();
+      setFeaturedArtifact(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetFeaturedArtifact();
+  }, []);
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Hero Section with Animation */}
@@ -55,7 +81,7 @@ export default function Home() {
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-3xl text-white">
             <AnimatedSection animation="fadeUp" delay={0.3} duration={0.8}>
-              <h1 className="text-5xl md:text-6xl font-bold mb-4">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">
                 Bảo tàng Lịch sử Quân sự Việt Nam
               </h1>
             </AnimatedSection>
@@ -157,7 +183,7 @@ export default function Home() {
             </AnimatedSection>
             <AnimatedSection
               animation="fadeRight"
-              className="md:w-1/2 relative"
+              className="lg:w-1/2 relative hidden lg:block"
             >
               <div className="aspect-video rounded-lg overflow-hidden border-4 border-amber-600 shadow-xl">
                 <div
@@ -233,6 +259,7 @@ export default function Home() {
               <div className="h-48 bg-olive-800 relative">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
+                  onClick={handleTinTuc}
                   style={{
                     backgroundImage:
                       "url('https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/468914568_122117903312604010_6064694651255731049_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YKvgtqDAiH4Q7kNvgFgXBYu&_nc_oc=AdjkSzAmhbIsjoKdaYqp7NYzMyWqmqTSn47vce6aeSl1Qks48lWBeMzBbgKCoI1V83w&_nc_zt=23&_nc_ht=scontent.fhan17-1.fna&_nc_gid=jmTGQXSTK7huc5gjlwT3SA&oh=00_AYETOW3SE0TH6azL9pZcJtv4iHDEr53o42d-5W2CIRYpFQ&oe=67DE12D2')",
@@ -269,6 +296,7 @@ export default function Home() {
               <div className="h-48 bg-olive-800 relative">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
+                  onClick={handleThamQuanVR360}
                   style={{
                     backgroundImage:
                       "url('https://media.vietnamplus.vn/images/7255a701687d11cb8c6bbc58a6c80785e1b319bced8b2064350f15811336cc4af157f8ff81572e4e5dd2a44f7a6d0aea527e5a3af85f2df55b4bf78ab4a21a2015c84708a094c1f5316c563199de65fe/bao-tang-quan-su-viet-nam-7-4992.jpg.webp')",
@@ -305,6 +333,7 @@ export default function Home() {
               <div className="h-48 bg-olive-800 relative">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
+                  onClick={handleAIHoiDap}
                   style={{
                     backgroundImage:
                       "url('https://bizweb.dktcdn.net/100/380/059/files/prompt-hoi-dap.png?v=1701331008334')",
@@ -341,6 +370,7 @@ export default function Home() {
               <div className="h-48 bg-olive-800 relative">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
+                  onClick={handleHienVat}
                   style={{
                     backgroundImage:
                       "url('https://cdnphoto.dantri.com.vn/n9RVComUc3taeuKd2MWR-tdi2lE=/thumb_w/1920/2024/10/03/bao-tang-lich-su-quan-su-viet-nam39-1727960239206.jpg')",
@@ -350,7 +380,7 @@ export default function Home() {
                   className="absolute top-4 left-4 bg-green-700 text-white p-2 rounded-full"
                   whileHover={{ rotate: 15 }}
                 >
-                  <Image className="h-6 w-6" />
+                  <ImageIcon className="h-6 w-6" />
                 </motion.div>
               </div>
               <div className="p-6">
@@ -387,32 +417,39 @@ export default function Home() {
             animation="fadeUp"
             staggerDelay={0.2}
           >
-            {[1, 2, 3].map((item) => (
+            {featuredArtifact.map((item) => (
               <motion.div
-                key={item}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                key={item.id + get(item, "name")}
+                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow h-full flex flex-col"
                 whileHover={{ y: -10 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div
-                  className="h-64 bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url('/placeholder.svg?height=500&width=500')`,
-                  }}
-                ></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2">
-                    Hiện vật lịch sử {item}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Mô tả ngắn về hiện vật và ý nghĩa lịch sử của nó.
-                  </p>
+                <Image
+                  className="h-72 bg-cover bg-center"
+                  src={`${process.env.NEXT_PUBLIC_API_URL}${get(
+                    item,
+                    "image.url",
+                    ""
+                  )}`}
+                  alt={get(item, "name", "")}
+                  width={500}
+                  height={500}
+                />
+                <div className="p-6 flex flex-col justify-between h-full">
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">
+                      {get(item, "name")}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {get(item, "history", "")}
+                    </p>
+                  </div>
                   <motion.div
                     whileHover={{ x: 5 }}
                     transition={{ type: "spring" }}
                   >
                     <Link
-                      href={`/hien-vat/${item}`}
+                      href={`/hien-vat/${get(item, "documentId", "")}`}
                       className="text-olive-800 font-medium flex items-center"
                     >
                       Xem chi tiết <ChevronRight className="ml-1 h-4 w-4" />
@@ -561,10 +598,17 @@ export default function Home() {
               whileHover={{ y: -10 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
+              <motion.div
+                className="absolute top-0 right-0 bg-amber-600 text-white px-3 py-1 text-sm font-medium"
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+              >
+                Phổ biến nhất
+              </motion.div>
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Vé Thường</h3>
+                <h3 className="text-xl font-bold mb-2">Vé Người Lớn</h3>
                 <div className="text-3xl font-bold text-red-700 mb-4">
-                  30.000 VNĐ
+                  40.000 VNĐ
                 </div>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center">
@@ -635,91 +679,10 @@ export default function Home() {
               whileHover={{ y: -10 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <motion.div
-                className="absolute top-0 right-0 bg-amber-600 text-white px-3 py-1 text-sm font-medium"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-              >
-                Phổ biến nhất
-              </motion.div>
               <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Vé VIP</h3>
+                <h3 className="text-xl font-bold mb-2">Vé Trẻ Em</h3>
                 <div className="text-3xl font-bold text-amber-600 mb-4">
-                  50.000 VNĐ
-                </div>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-center">
-                    <svg
-                      className="h-5 w-5 text-green-500 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Tham quan toàn bộ bảo tàng
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="h-5 w-5 text-green-500 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Tài liệu hướng dẫn cao cấp
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="h-5 w-5 text-green-500 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Hướng dẫn viên riêng
-                  </li>
-                </ul>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    onClick={handleMuaVe}
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
-                  >
-                    Mua vé
-                  </Button>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow border-t-4 border-blue-600"
-              whileHover={{ y: -10 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Vé Đoàn</h3>
-                <div className="text-3xl font-bold text-blue-600 mb-4">
-                  25.000 VNĐ/người
+                  20.000 VNĐ
                 </div>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center">
@@ -768,7 +731,81 @@ export default function Home() {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    Hướng dẫn viên cho đoàn
+                    Phải có người lớn cùng
+                  </li>
+                </ul>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    onClick={handleMuaVe}
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white"
+                  >
+                    Mua vé
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow border-t-4 border-blue-600"
+              whileHover={{ y: -10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">Vé Đoàn</h3>
+                <div className="text-3xl font-bold text-blue-600 mb-4">
+                  40.000 VNĐ/người
+                </div>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-center">
+                    <svg
+                      className="h-5 w-5 text-green-500 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Tham quan toàn bộ bảo tàng
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      className="h-5 w-5 text-green-500 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Tài liệu hướng dẫn
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      className="h-5 w-5 text-green-500 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Đoàn từ 20 người trở lên
                   </li>
                 </ul>
                 <motion.div

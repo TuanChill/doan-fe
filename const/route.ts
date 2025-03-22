@@ -6,6 +6,8 @@ export const APP_ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
   PROFILE: "/profile",
+  TIN_TUC: "/tin-tuc",
+  HIEN_VAT: "/hien-vat",
 };
 
 export const PRIVATE_ROUTES = {

@@ -171,9 +171,9 @@ export default function VisitorInformationPage() {
                             <div>
                               <p className="font-medium">Miễn phí tham quan</p>
                               <p className="text-sm">
-                                Từ ngày 1/11/2023, Bảo tàng Lịch sử Quân sự Việt
-                                Nam tại địa điểm mới mở cửa đón khách tham quan
-                                miễn phí.
+                                Bảo tàng Lịch sử Quân sự Việt Nam chính thức mở
+                                cửa đón, phục vụ khách tham quan và miễn phí
+                                tham quan đến hết tháng 12/2024.
                               </p>
                             </div>
                           </div>
@@ -335,32 +335,6 @@ export default function VisitorInformationPage() {
                         <h2 className="text-2xl font-bold text-amber-900">
                           Địa Điểm & Hướng Dẫn Đi Lại
                         </h2>
-                      </div>
-                    </AnimatedSection>
-
-                    <AnimatedSection animation="fadeUp" delay={0.2}>
-                      <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
-                          Địa chỉ mới
-                        </h3>
-                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200 mb-4 shadow-sm">
-                          <p className="font-medium text-green-800">
-                            Từ ngày 1/11/2023, Bảo tàng Lịch sử Quân sự Việt Nam
-                            đã chuyển đến địa điểm mới:
-                          </p>
-                          <p className="mt-2 flex items-center text-green-800">
-                            <MapPin className="h-5 w-5 mr-2 text-green-700" />
-                            <strong>
-                              Số 2 Lê Đức Thọ, phường Mỹ Đình 2, quận Nam Từ
-                              Liêm, Hà Nội
-                            </strong>
-                          </p>
-                        </div>
-                        <p className="mb-4 text-amber-900">
-                          Địa điểm mới của Bảo tàng Lịch sử Quân sự Việt Nam nằm
-                          trong khu vực phát triển mới của Hà Nội, dễ dàng tiếp
-                          cận bằng nhiều phương tiện giao thông.
-                        </p>
                       </div>
                     </AnimatedSection>
 
@@ -661,7 +635,7 @@ export default function VisitorInformationPage() {
 
                         <FaqItem
                           question="Có cần đặt vé trước khi đến tham quan không?"
-                          answer="Từ ngày 1/11/2023, Bảo tàng Lịch sử Quân sự Việt Nam tại địa điểm mới mở cửa đón khách tham quan miễn phí. Bạn không cần đặt vé trước, tuy nhiên nếu đi theo đoàn đông (từ 20 người trở lên), bạn nên liên hệ trước với ban quản lý bảo tàng để được sắp xếp lịch tham quan phù hợp."
+                          answer="Từ ngày 1/11/2023, Bảo tàng Lịch sử Quân sự Việt Nam chính thức mở cửa đón, phục vụ khách tham quan và miễn phí tham quan đến hết tháng 12/2024."
                         />
 
                         <FaqItem
