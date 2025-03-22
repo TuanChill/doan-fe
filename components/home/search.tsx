@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
-import { SearchIcon, X, ArrowRight, Clock, Tag } from "lucide-react";
+import { SearchIcon, X, ArrowRight, Clock, Tag, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -14,21 +14,25 @@ import { getCountExhibit } from "@/request/exhibit";
 import { assign, flatMap, get, map } from "lodash";
 import { SearchType } from "@/types/search";
 import { Badge } from "@/components/ui/badge";
-
-// Recent searches - would be stored in localStorage in a real app
-const RECENT_SEARCHES = ["chiến tranh", "vũ khí", "triển lãm", "Xe tăng"];
+import {
+  createHistorySearch,
+  getHistorySearch,
+} from "@/request/history-search";
+import { useUserStore } from "@/stores/user-store";
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [recentSearches, setRecentSearches] =
-    useState<string[]>(RECENT_SEARCHES);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [countPost, setCountPost] = useState(0);
   const [countExhibit, setCountExhibit] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { user } = useUserStore();
 
   const handleGetCount = async () => {
     try {
@@ -41,11 +45,24 @@ export default function Search() {
     }
   };
 
+  const handleGetRecentSearches = async () => {
+    try {
+      if (user?.id) {
+        const res = await getHistorySearch(user?.id.toString(), 1, 4);
+        setRecentSearches(get(res, "data", []));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSearchOverall = useDebouncedCallback(async () => {
     if (searchQuery.trim() === "") {
       setSearchResults([]);
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const res = await overallSearch(1, 10, searchQuery.trim());
@@ -61,11 +78,28 @@ export default function Search() {
       setSearchResults(allHits);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+
+    try {
+      if (user?.id && searchQuery.trim().length > 0) {
+        await createHistorySearch(user.id.toString(), searchQuery.trim());
+      }
+    } catch (error) {
+      console.error("Error creating history search:", error);
+    }
+
+    try {
+      await handleGetRecentSearches();
+    } catch (error) {
+      console.log(error);
     }
   }, 500);
 
   useEffect(() => {
     handleGetCount();
+    handleGetRecentSearches();
   }, []);
 
   // Handle search
@@ -111,16 +145,11 @@ export default function Search() {
     };
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (searchQuery.trim() !== "") {
-      // Add to recent searches if not already there
-      if (!recentSearches.includes(searchQuery)) {
-        const newRecentSearches = [searchQuery, ...recentSearches.slice(0, 3)];
-        setRecentSearches(newRecentSearches);
-        // In a real app, save to localStorage here
-      }
+      await handleSearchOverall();
     }
   };
 
@@ -218,7 +247,7 @@ export default function Search() {
                       onClick={() => handleRecentSearchClick(search)}
                       className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-black"
                     >
-                      {search}
+                      {String(get(search, "search", ""))}
                     </button>
                   ))}
                 </div>
@@ -234,7 +263,15 @@ export default function Search() {
                     : `Không tìm thấy kết quả nào cho "${searchQuery}"`}
                 </h3>
 
-                {searchResults.length > 0 ? (
+                {isLoading && (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                      <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+                    </div>
+                  </div>
+                )}
+
+                {!isLoading && searchResults.length > 0 ? (
                   <div className="space-y-4">
                     {searchResults.map((result) => {
                       if (result.indexUid === SearchType.POST) {

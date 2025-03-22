@@ -29,6 +29,8 @@ import {
 import { get } from "lodash";
 import { searchExhibitions } from "@/lib/melisearch";
 import { useDebouncedCallback } from "use-debounce";
+import { createHistorySearch } from "@/request/history-search";
+import { useUserStore } from "@/stores/user-store";
 
 export default function ArtifactsPage() {
   // State cho dữ liệu từ API
@@ -46,6 +48,8 @@ export default function ArtifactsPage() {
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [yearRange, setYearRange] = useState([1000, 2000]);
+
+  const { user } = useUserStore();
 
   // Ref for scroll position
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -97,6 +101,14 @@ export default function ArtifactsPage() {
       console.error("Error fetching artifacts:", error);
     } finally {
       setIsLoading(false);
+    }
+
+    try {
+      if (user?.id && searchQuery.trim().length > 0) {
+        await createHistorySearch(user.id.toString(), searchQuery.trim());
+      }
+    } catch (error) {
+      console.error("Error creating history search:", error);
     }
   }, 500);
 

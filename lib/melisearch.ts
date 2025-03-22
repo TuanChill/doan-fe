@@ -7,13 +7,24 @@ const client = new MeiliSearch({
   apiKey: apiKey,
 })
 
+const setupFilterableAttributes = async () => {
+  try {
+    await client.index("exhibit").updateFilterableAttributes(["category_artifact", "year"]);
+    await client.index("post").updateFilterableAttributes(["category", "date"]);
+    console.log("FilterableAttributes setup completed");
+  } catch (error) {
+    console.error("Error setting up filterable attributes:", error);
+  }
+};
+
+setupFilterableAttributes();
+
 export const searchExhibitions = async (
   page: number,
   pageSize: number,
   query: string,
   category_artifact: string[], year: number[]
 ) => {
-  await client.index("exhibit").updateFilterableAttributes(["category_artifact", "year"]);
   const results = await client.index("exhibit").search(query, {
         limit: pageSize,
         page: page,
@@ -30,8 +41,6 @@ export const searchPost = async (
   category?: string[],
 ) => {
   const condition = category ? `category.id IN [${category.join(",")}]` : "";
-
-  await client.index("post").updateFilterableAttributes(["category", "date"]);
 
   const results = await client.index("post").search(query, {
     limit: pageSize,
@@ -62,5 +71,3 @@ export const overallSearch = async (page: number, pageSize: number, query: strin
 
   return results;
 };
-
-

@@ -48,6 +48,8 @@ import { useInterval } from "@/hooks/use-interval";
 import Autoplay from "embla-carousel-autoplay";
 import { useDebouncedCallback } from "use-debounce";
 import { searchPost } from "@/lib/melisearch";
+import { createHistorySearch } from "@/request/history-search";
+import { useUserStore } from "@/stores/user-store";
 
 export default function NewsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,6 +65,8 @@ export default function NewsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const [total, setTotal] = useState(0);
+
+  const { user } = useUserStore();
 
   const handleGetHighlightNews = useCallback(async () => {
     try {
@@ -116,6 +120,14 @@ export default function NewsPage() {
       }
     } catch (error) {
       console.log(error);
+    }
+
+    try {
+      if (user?.id && searchTerm.trim().length > 0) {
+        await createHistorySearch(user.id.toString(), searchTerm.trim());
+      }
+    } catch (error) {
+      console.error("Error creating history search:", error);
     }
   }, 500);
 
