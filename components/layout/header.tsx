@@ -23,15 +23,21 @@ import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
 import { APP_ROUTES } from "@/const/route";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const pathName = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathName]);
 
   const { isAuthenticated, clear } = useUserStore();
 
@@ -64,7 +70,6 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
-            <NavItem href="/" label="Trang chủ" />
             <NavDropdown
               label="Giới thiệu"
               items={[
@@ -175,7 +180,6 @@ export default function Header() {
             <Search />
           </div>
           <nav className="flex flex-col space-y-2">
-            <MobileNavItem href="/" label="Trang chủ" />
             <MobileNavItem href="/gioi-thieu" label="Giới thiệu" />
             <MobileNavItem
               href="/tin-tuc"

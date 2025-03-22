@@ -10,6 +10,8 @@ export const API_ROUTES = {
   USERS: `${API_BASE}/users`,
   EXHIBIT: `${API_BASE}/exhibits`,
   CATEGORY_ARTIFACT: `${API_BASE}/category-artifacts`,
+  CATEGORY: `${API_BASE}/categories`,
   POST: `${API_BASE}/posts`,
+  HISTORY_SEARCH: `${API_BASE}/history-searches`,
 };
 

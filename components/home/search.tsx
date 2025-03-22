@@ -3,106 +3,108 @@
 import type React from "react";
 
 import { useState, useEffect, useRef } from "react";
-import { SearchIcon, X, ArrowRight, Clock, Tag } from "lucide-react";
+import { SearchIcon, X, ArrowRight, Clock, Tag, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-
-// Sample search data - in a real app, this would come from a database or API
-const SEARCH_DATA = [
-  {
-    id: 1,
-    title: "Khu trưng bày chiến tranh chống Pháp",
-    description:
-      "Khám phá các hiện vật, hình ảnh và tài liệu về cuộc kháng chiến chống thực dân Pháp (1945-1954).",
-    category: "Khu vực",
-    url: "/vr360",
-  },
-  {
-    id: 2,
-    title: "Khu trưng bày chiến tranh chống Mỹ",
-    description:
-      "Tìm hiểu về cuộc kháng chiến chống Mỹ cứu nước (1954-1975) qua các hiện vật và tài liệu lịch sử.",
-    category: "Khu vực",
-    url: "/vr360",
-  },
-  {
-    id: 3,
-    title: "Xe tăng T-54 đầu tiên tiến vào Dinh Độc Lập",
-    description:
-      "Xe tăng T-54 số hiệu 843 đã húc đổ cổng Dinh Độc Lập vào trưa ngày 30/4/1975.",
-    category: "Hiện vật",
-    url: "/hien-vat/1",
-  },
-  {
-    id: 4,
-    title: "Máy bay MiG-21 của Anh hùng Phạm Tuân",
-    description:
-      "Máy bay MiG-21 do Anh hùng Phạm Tuân điều khiển bắn rơi máy bay B-52 của Mỹ.",
-    category: "Hiện vật",
-    url: "/hien-vat/2",
-  },
-  {
-    id: 5,
-    title: "Triển lãm 'Chiến thắng Điện Biên Phủ'",
-    description:
-      "Triển lãm kỷ niệm 70 năm Chiến thắng Điện Biên Phủ (7/5/1954 - 7/5/2024).",
-    category: "Sự kiện",
-    url: "/tin-tuc/1",
-  },
-  {
-    id: 6,
-    title: "Hướng dẫn tham quan VR360°",
-    description:
-      "Hướng dẫn chi tiết cách sử dụng tính năng tham quan VR360° của bảo tàng.",
-    category: "Hướng dẫn",
-    url: "/vr360",
-  },
-  {
-    id: 7,
-    title: "Giờ mở cửa và giá vé",
-    description: "Thông tin về giờ mở cửa và giá vé tham quan bảo tàng.",
-    category: "Thông tin",
-    url: "/mua-ve",
-  },
-  {
-    id: 8,
-    title: "Đại bác thần công thời Nguyễn",
-    description:
-      "Bộ sưu tập đại bác thần công được đúc dưới triều Nguyễn, thế kỷ 19.",
-    category: "Hiện vật",
-    url: "/hien-vat/3",
-  },
-];
-
-// Recent searches - would be stored in localStorage in a real app
-const RECENT_SEARCHES = ["chiến tranh", "vũ khí", "triển lãm", "vé tham quan"];
+import { useDebouncedCallback } from "use-debounce";
+import { overallSearch } from "@/lib/melisearch";
+import { getCountPost } from "@/request/post";
+import { getCountExhibit } from "@/request/exhibit";
+import { assign, flatMap, get, map } from "lodash";
+import { SearchType } from "@/types/search";
+import { Badge } from "@/components/ui/badge";
+import {
+  createHistorySearch,
+  getHistorySearch,
+} from "@/request/history-search";
+import { useUserStore } from "@/stores/user-store";
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<typeof SEARCH_DATA>([]);
-  const [recentSearches, setRecentSearches] =
-    useState<string[]>(RECENT_SEARCHES);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [countPost, setCountPost] = useState(0);
+  const [countExhibit, setCountExhibit] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Handle search
-  useEffect(() => {
+  const { user } = useUserStore();
+
+  const handleGetCount = async () => {
+    try {
+      const resPost = await getCountPost();
+      const resExhibit = await getCountExhibit();
+      setCountPost(get(resPost, "meta.pagination.total", 0));
+      setCountExhibit(get(resExhibit, "meta.pagination.total", 0));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetRecentSearches = async () => {
+    try {
+      if (user?.id) {
+        const res = await getHistorySearch(user?.id.toString(), 1, 4);
+        setRecentSearches(get(res, "data", []));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSearchOverall = useDebouncedCallback(async () => {
     if (searchQuery.trim() === "") {
       setSearchResults([]);
       return;
     }
 
-    const query = searchQuery.toLowerCase();
-    const results = SEARCH_DATA.filter(
-      (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query)
-    );
+    setIsLoading(true);
 
-    setSearchResults(results);
+    try {
+      const res = await overallSearch(1, 10, searchQuery.trim());
+
+      const results = get(res, "results", []);
+
+      const allHits = flatMap(results, (result) => {
+        return map(result.hits, (hit) => {
+          return assign({}, hit, { indexUid: result.indexUid });
+        });
+      });
+
+      setSearchResults(allHits);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+
+    try {
+      if (user?.id && searchQuery.trim().length > 0) {
+        await createHistorySearch(user.id.toString(), searchQuery.trim());
+      }
+    } catch (error) {
+      console.error("Error creating history search:", error);
+    }
+
+    try {
+      await handleGetRecentSearches();
+    } catch (error) {
+      console.log(error);
+    }
+  }, 500);
+
+  useEffect(() => {
+    handleGetCount();
+    handleGetRecentSearches();
+  }, []);
+
+  // Handle search
+  useEffect(() => {
+    handleSearchOverall();
   }, [searchQuery]);
 
   // Focus input when search opens
@@ -143,16 +145,11 @@ export default function Search() {
     };
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (searchQuery.trim() !== "") {
-      // Add to recent searches if not already there
-      if (!recentSearches.includes(searchQuery)) {
-        const newRecentSearches = [searchQuery, ...recentSearches.slice(0, 3)];
-        setRecentSearches(newRecentSearches);
-        // In a real app, save to localStorage here
-      }
+      await handleSearchOverall();
     }
   };
 
@@ -250,7 +247,7 @@ export default function Search() {
                       onClick={() => handleRecentSearchClick(search)}
                       className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-black"
                     >
-                      {search}
+                      {String(get(search, "search", ""))}
                     </button>
                   ))}
                 </div>
@@ -266,34 +263,87 @@ export default function Search() {
                     : `Không tìm thấy kết quả nào cho "${searchQuery}"`}
                 </h3>
 
-                {searchResults.length > 0 ? (
+                {isLoading && (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                      <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+                    </div>
+                  </div>
+                )}
+
+                {!isLoading && searchResults.length > 0 ? (
                   <div className="space-y-4">
-                    {searchResults.map((result) => (
-                      <Link
-                        href={result.url}
-                        key={result.id}
-                        onClick={() => setIsOpen(false)}
-                        className="block p-3 hover:bg-gray-50 rounded-lg transition-colors"
-                      >
-                        <div className="flex items-start">
-                          <div className="flex-1">
-                            <div className="flex items-center mb-1">
-                              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 flex items-center">
-                                <Tag className="h-3 w-3 mr-1" />{" "}
-                                {result.category}
-                              </span>
+                    {searchResults.map((result) => {
+                      if (result.indexUid === SearchType.POST) {
+                        return (
+                          <Link
+                            href={`/tin-tuc/${get(result, "documentId", "")}`}
+                            key={result.id}
+                            className="block p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                          >
+                            <div className="flex items-start">
+                              <div className="flex-1">
+                                <div className="flex gap-2 items-center mb-1">
+                                  <Badge variant="outline">
+                                    Tin tức & sự kiện
+                                  </Badge>
+                                  {get(result, "category.name", "") && (
+                                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 flex items-center">
+                                      <Tag className="h-3 w-3 mr-1" />
+                                      {get(result, "category.name", "")}
+                                    </span>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-olive-900">
+                                  {get(result, "title", "")}
+                                </h4>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  {get(result, "excerpt", "")}
+                                </p>
+                              </div>
+                              <ArrowRight className="h-5 w-5 text-gray-400 mt-1 ml-2" />
                             </div>
-                            <h4 className="font-medium text-olive-900">
-                              {result.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {result.description}
-                            </p>
-                          </div>
-                          <ArrowRight className="h-5 w-5 text-gray-400 mt-1 ml-2" />
-                        </div>
-                      </Link>
-                    ))}
+                          </Link>
+                        );
+                      } else {
+                        return (
+                          <Link
+                            href={`/hien-vat/${get(result, "documentId", "")}`}
+                            key={result.id}
+                            className="block p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                          >
+                            <div className="flex items-start">
+                              <div className="flex-1">
+                                <div className="flex gap-2 items-center mb-1">
+                                  <Badge variant="outline">Hiện vật</Badge>
+                                  {get(
+                                    result,
+                                    "category_artifact.name",
+                                    ""
+                                  ) && (
+                                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 flex items-center">
+                                      <Tag className="h-3 w-3 mr-1" />{" "}
+                                      {get(
+                                        result,
+                                        "category_artifact.name",
+                                        ""
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                                <h4 className="font-medium text-olive-900">
+                                  {get(result, "name", "")}
+                                </h4>
+                                <p className="text-sm text-gray-600 mt-1 line-clamp-3">
+                                  {get(result, "history", "")}
+                                </p>
+                              </div>
+                              <ArrowRight className="h-5 w-5 text-gray-400 mt-1 ml-2" />
+                            </div>
+                          </Link>
+                        );
+                      }
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-8">
@@ -318,33 +368,19 @@ export default function Search() {
                 <h3 className="text-sm font-medium text-gray-500 mb-3">
                   Danh mục
                 </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <CategoryCard
-                    title="Khu vực trưng bày"
-                    count={5}
-                    color="bg-olive-800"
-                    url="/vr360"
-                    onClick={() => setIsOpen(false)}
-                  />
+                <div className="grid grid-cols-2 gap-3">
                   <CategoryCard
                     title="Hiện vật"
-                    count={120}
+                    count={countExhibit}
                     color="bg-green-700"
                     url="/hien-vat"
                     onClick={() => setIsOpen(false)}
                   />
                   <CategoryCard
-                    title="Sự kiện"
-                    count={8}
+                    title="Tin tức & sự kiện"
+                    count={countPost}
                     color="bg-red-700"
                     url="/tin-tuc"
-                    onClick={() => setIsOpen(false)}
-                  />
-                  <CategoryCard
-                    title="Hướng dẫn"
-                    count={4}
-                    color="bg-amber-600"
-                    url="/gioi-thieu"
                     onClick={() => setIsOpen(false)}
                   />
                 </div>

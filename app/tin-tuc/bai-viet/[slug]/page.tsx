@@ -13,14 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { articles } from "@/lib/articles-data";
 import TextToSpeechPlayer from "@/components/text-to-speech";
 import { getPostDetail } from "@/request/post";
 import { get } from "lodash";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  FacebookMessengerShareButton,
+  FacebookMessengerIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+} from "next-share";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
   const [article, setArticle] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [shareUrl, setShareUrl] = useState("");
 
   const handleGetPost = async () => {
     try {
@@ -46,6 +60,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
   useEffect(() => {
     handleGetPost();
+    // Set the share URL when component mounts
+    if (typeof window !== "undefined") {
+      setShareUrl(window.location.href);
+    }
   }, [params.slug]);
 
   if (isLoading) {
@@ -79,8 +97,8 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
   // Prepare sections for text-to-speech
   const speechSections = [
-    { title: article.title, content: article.excerpt },
-    ...article.content.content.map((section: any) => ({
+    { title: get(article, "title", ""), content: get(article, "excerpt", "") },
+    ...get(article, "content.content", []).map((section: any) => ({
       title: section.heading || "Nội dung",
       content: section.text,
     })),
@@ -171,21 +189,72 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         <div className="flex justify-between items-center border-t border-b py-4 mb-8">
           <div>
             <span className="text-sm text-muted-foreground">Thẻ: </span>
-            {/* {article.tags.map((tag: string) => ( */}
             <Badge variant="outline" className="mr-2">
               {get(article, "tag.name", "--")}
             </Badge>
-            {/* ))} */}
           </div>
-          <Button variant="ghost" size="sm">
-            <Share2 className="mr-2 h-4 w-4" /> Chia sẻ
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <Share2 className="mr-2 h-4 w-4" /> Chia sẻ
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="p-2 flex flex-col gap-2"
+            >
+              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                <FacebookShareButton
+                  url={shareUrl}
+                  quote={article.title}
+                  className="w-full flex items-center p-2"
+                >
+                  <div className="flex items-center gap-1">
+                    <FacebookIcon size={24} round className="mr-2" />
+                    <span>Facebook</span>
+                  </div>
+                </FacebookShareButton>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                <FacebookMessengerShareButton
+                  url={shareUrl}
+                  appId=""
+                  className="w-full flex items-center p-2"
+                >
+                  <div className="flex items-center gap-1">
+                    <FacebookMessengerIcon size={24} round className="mr-2" />
+                    <span>Messenger</span>
+                  </div>
+                </FacebookMessengerShareButton>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                <LinkedinShareButton
+                  url={shareUrl}
+                  title={article.title}
+                  summary={article.excerpt}
+                  className="w-full flex items-center p-2"
+                >
+                  <div className="flex items-center gap-1">
+                    <LinkedinIcon size={24} round className="mr-2" />
+                    <span>LinkedIn</span>
+                  </div>
+                </LinkedinShareButton>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="bg-muted p-6 rounded-lg">
           <h3 className="text-lg font-bold mb-2">Về tác giả</h3>
           <p className="text-muted-foreground">
-            {article.authorBio || "Thông tin về tác giả chưa được cập nhật."}
+            {get(
+              article,
+              "authorBio",
+              "Thông tin về tác giả chưa được cập nhật."
+            ) || "Thông tin về tác giả chưa được cập nhật."}
           </p>
         </div>
       </article>
