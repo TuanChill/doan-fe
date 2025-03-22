@@ -39,7 +39,6 @@ export default function ArtifactsPage() {
 
   // State for search and filtering
   const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(true);
@@ -213,32 +212,6 @@ export default function ArtifactsPage() {
               {selectedCategories.length > 0 &&
                 `(${selectedCategories.length})`}
             </Button>
-
-            {/* View Mode Toggle */}
-            <div className="flex rounded-lg border border-gray-300 overflow-hidden">
-              <button
-                className={cn(
-                  "px-3 py-2 flex items-center",
-                  viewMode === "grid"
-                    ? "bg-olive-800 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                )}
-                onClick={() => setViewMode("grid")}
-              >
-                <Grid className="h-5 w-5" />
-              </button>
-              <button
-                className={cn(
-                  "px-3 py-2 flex items-center",
-                  viewMode === "list"
-                    ? "bg-olive-800 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                )}
-                onClick={() => setViewMode("list")}
-              >
-                <List className="h-5 w-5" />
-              </button>
-            </div>
           </div>
 
           {/* Filter Panel */}
@@ -387,13 +360,11 @@ export default function ArtifactsPage() {
           ) : (
             <>
               {/* Grid View */}
-              {viewMode === "grid" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
-                  {currentItems.map((artifact) => (
-                    <ArtifactCard key={artifact.id} artifact={artifact} />
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
+                {currentItems.map((artifact) => (
+                  <ArtifactCard key={artifact.id} artifact={artifact} />
+                ))}
+              </div>
 
               {/* Empty State */}
               {!isLoading && artifacts.length === 0 && (

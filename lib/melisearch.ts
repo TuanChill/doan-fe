@@ -22,3 +22,23 @@ export const searchExhibitions = async (
   );
   return results;
 };
+
+export const searchPost = async (
+  page: number,
+  pageSize: number,
+  query: string,
+  category?: string[],
+) => {
+  const condition = category ? `category.id IN [${category.join(",")}]` : "";
+
+  await client.index("post").updateFilterableAttributes(["category", "date"]);
+
+  const results = await client.index("post").search(query, {
+    limit: pageSize,
+    page: page,
+    filter: condition,
+    attributesToRetrieve: ["id", "title", "content", "category", "date", "image", "slug"],
+  });
+  return results;
+};
+
