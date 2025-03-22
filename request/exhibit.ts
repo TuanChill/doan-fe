@@ -40,3 +40,8 @@ export const getFeaturedArtifact = async (page: number = 1, limit: number = 3) =
     const response = await fdAxios.get(`${API_ROUTES.EXHIBIT}?populate=*&filters[isFeatured][$eq]=true&pagination[page]=${page}&pagination[pageSize]=${limit}`);
     return response.data;
 };
+
+export const getCountExhibit = async () => {
+    const response = await fdAxios.get(`${API_ROUTES.EXHIBIT}?pagination[withCount]=true&pagination[pageSize]=1`);
+    return response.data;
+};
