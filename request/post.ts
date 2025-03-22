@@ -66,3 +66,8 @@ export const getPostCategory = async () => {
     const response = await fdAxios.get(`${API_ROUTES.CATEGORY}`);
     return response.data;
 };
+
+export const getCountPost = async () => {
+    const response = await fdAxios.get(`${API_ROUTES.POST}?pagination[withCount]=true&pagination[pageSize]=1`);
+    return response.data;
+};

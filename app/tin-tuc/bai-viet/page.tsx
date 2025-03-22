@@ -104,11 +104,11 @@ export default function NewsPage() {
   const handleSearchPost = useDebouncedCallback(async () => {
     try {
       if (selectedCategory === "all") {
-        const res = await searchPost(page, pageSize, searchTerm);
+        const res = await searchPost(page, pageSize, searchTerm.trim());
         setPosts(get(res, "hits", []));
         setTotal(get(res, "total", 0));
       } else {
-        const res = await searchPost(page, pageSize, searchTerm, [
+        const res = await searchPost(page, pageSize, searchTerm.trim(), [
           selectedCategory,
         ]);
         setPosts(get(res, "hits", []));

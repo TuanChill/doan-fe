@@ -42,3 +42,25 @@ export const searchPost = async (
   return results;
 };
 
+export const overallSearch = async (page: number, pageSize: number, query: string) => {
+  const results = await client.multiSearch({
+    queries: [
+      {
+        indexUid: "post",
+        q: query,
+        limit: pageSize,  
+        offset: (page - 1) * pageSize,
+      },
+      {
+        indexUid: "exhibit",
+        q: query,
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      },
+    ]
+  });
+
+  return results;
+};
+
+

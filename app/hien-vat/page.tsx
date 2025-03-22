@@ -74,7 +74,7 @@ export default function ArtifactsPage() {
   const handleSearchExhibition = useDebouncedCallback(async () => {
     setIsLoading(true);
     try {
-      if (searchQuery.length === 0) {
+      if (searchQuery.trim().length === 0) {
         const response = await getExhibitList(
           currentPage,
           12,
@@ -83,11 +83,10 @@ export default function ArtifactsPage() {
         const artifactData = get(response, "data", []);
         setArtifacts(artifactData);
       } else {
-        console.log(yearRange);
         const response = await searchExhibitions(
           currentPage,
           12,
-          searchQuery,
+          searchQuery.trim(),
           selectedCategories,
           yearRange
         );
