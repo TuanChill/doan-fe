@@ -103,6 +103,9 @@ export default function Home() {
                   size="lg"
                   variant="outline"
                   className="bg-transparent border-white text-white hover:bg-white/10"
+                  onClick={() =>
+                    router.push(APP_ROUTES.GIOI_THIEU.THONG_TIN_THAM_QUAN)
+                  }
                 >
                   Tìm hiểu thêm <ChevronRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -478,7 +481,7 @@ export default function Home() {
       </section>
 
       {/* AI Agent Section with Animation */}
-      <section className="py-16 bg-blue-50">
+      <section className="py-16 bg-blue-50 overflow-x-hidden">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <AnimatedSection animation="fadeLeft" className="md:w-1/2">

@@ -23,6 +23,7 @@ import gallery13 from '../app/assets/images/gallery/gallery13.jpg';
 import vr360 from '../app/assets/images/360vr.jpg';
 import youtubeView from '../app/assets/images/youtube.jpg';
 import logo from '../app/assets/images/logo.png';
+import logoApp from '../app/assets/images/logo_app.png';
 
 
 const galleryImages = [
@@ -82,4 +83,4 @@ const galleryImages = [
 
 const heroImages = [hero, hero1, hero2, hero3, hero4];
 
-export { heroImages, historyImage, architectImage, news1, news2, galleryImages, vr360, youtubeView, logo };
+export { heroImages, historyImage, architectImage, news1, news2, galleryImages, vr360, youtubeView, logo, logoApp };
