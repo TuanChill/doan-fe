@@ -24,11 +24,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
 import { APP_ROUTES } from "@/const/route";
 import { usePathname } from "next/navigation";
+import { get } from "lodash";
+import { logoApp } from "@/components/image";
+import ImageNext from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathName = usePathname();
 
   useEffect(() => {
@@ -39,7 +47,7 @@ export default function Header() {
     setIsMenuOpen(false);
   }, [pathName]);
 
-  const { isAuthenticated, clear } = useUserStore();
+  const { isAuthenticated, clear, user } = useUserStore();
 
   if (!mounted) return null;
 
@@ -49,27 +57,18 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
+            {/* <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
               <span className="font-bold text-lg">VM</span>
-            </div>
+            </div> */}
+            <ImageNext src={logoApp} alt="logo" width={100} height={100} />
             <span className="font-bold text-xl hidden md:inline-block">
               Bảo tàng LSQS Việt Nam
             </span>
           </Link>
 
-          {/* <Link href="/" className="flex items-center space-x-2">
-            <img
-              src=""
-              alt="Logo Bảo tàng LSQS Việt Nam"
-              className="w-12 h-12 object-contain"
-            />
-            <span className="font-bold text-xl hidden md:inline-block">
-              Bảo tàng LSQS Việt Nam
-            </span>
-          </Link> */}
-
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
+            <NavItem href="/" label="Trang chủ" />
             <NavDropdown
               label="Giới thiệu"
               items={[
@@ -79,7 +78,7 @@ export default function Header() {
                   icon: <Info className="h-4 w-4" />,
                 },
                 {
-                  href: "/gioi-thieu/thong-tin-tham-quan",
+                  href: "/gioi-thieu/thong-tin",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-4 w-4" />,
                 },
@@ -106,46 +105,38 @@ export default function Header() {
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-4 w-4" />}
             />
-            <NavItem
-              href="/contact"
-              label="Liên hệ"
-              icon={<Mail className="h-4 w-4" />}
-            />
           </nav>
 
           {/* Right Side Actions */}
-          <div className="flex items-center gap-2">
-            <div className="hidden lg:block">
-              <Search />
-            </div>
+          <div className="hidden lg:flex items-center space-x-2">
+            <Search />
             {isAuthenticated() ? (
-              <div className="relative">
-                <Avatar onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 overflow-hidden">
-                    <Link
-                      href={APP_ROUTES.PROFILE}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Tài khoản
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
+                  <Avatar className="h-8 w-8 mr-3">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="hover:bg-gray-200">
+                    <Link href="/profile" className="w-full text-sm">
+                      Hồ sơ
                     </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="hover:bg-gray-200">
                     <button
-                      onClick={() => {
-                        clear();
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => clear()}
+                      className="w-full text-left text-sm"
                     >
                       Đăng xuất
                     </button>
-                  </div>
-                )}
-              </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <Link href={APP_ROUTES.LOGIN}>
-                <Button className="bg-red-700 hover:bg-red-800">
+              <Link href="/login">
+                <Button className="w-full bg-red-700 hover:bg-red-800">
                   Đăng nhập
                 </Button>
               </Link>
@@ -153,7 +144,8 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button and Search */}
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center space-x-2">
+            <Search />
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -176,11 +168,24 @@ export default function Header() {
         )}
       >
         <div className="container mx-auto px-4 py-4 space-y-4">
-          <div className="mb-4">
-            <Search />
-          </div>
           <nav className="flex flex-col space-y-2">
-            <MobileNavItem href="/gioi-thieu" label="Giới thiệu" />
+            <MobileNavItem href="/" label="Trang chủ" />
+            <MobileNavItem
+              href="/gioi-thieu"
+              label="Giới thiệu"
+              subItems={[
+                {
+                  href: "/gioi-thieu/lich-su",
+                  label: "Lịch sử bảo tàng",
+                  icon: <Info className="h-5 w-5" />,
+                },
+                {
+                  href: "/gioi-thieu/thong-tin",
+                  label: "Thông tin tham quan",
+                  icon: <Clock className="h-5 w-5" />,
+                },
+              ]}
+            />
             <MobileNavItem
               href="/tin-tuc"
               label="Tin tức & Sự kiện"
@@ -202,15 +207,41 @@ export default function Header() {
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-5 w-5" />}
             />
-            <MobileNavItem
-              href="/contact"
-              label="Liên hệ "
-              icon={<Mail className="h-5 w-5" />}
-            />
           </nav>
 
           <div className="pt-4 border-t border-olive-800">
-            <Button className="w-full bg-red-700 hover:bg-red-800">
+            {isAuthenticated() ? (
+              <div className="flex items-center px-4 py-3 text-base font-medium text-white">
+                <Avatar className="h-8 w-8 mr-3">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <span>{get(user, "fullName", "Tài khoản của bạn")}</span>
+                  <div className="flex mt-2 space-x-2">
+                    <Link
+                      href="/profile"
+                      className="text-sm text-amber-300 hover:text-amber-200"
+                    >
+                      Hồ sơ
+                    </Link>
+                    <button
+                      onClick={() => clear()}
+                      className="text-sm text-amber-300 hover:text-amber-200"
+                    >
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button className="w-full bg-red-700 hover:bg-red-800">
+                  Đăng nhập
+                </Button>
+              </Link>
+            )}
+            <Button className="w-full bg-amber-600 hover:bg-amber-700 mt-3">
               <Ticket className="h-5 w-5 mr-2" /> Mua vé tham quan
             </Button>
           </div>
@@ -315,30 +346,82 @@ function NavDropdown({
   );
 }
 
-// Mobile Navigation Item Component
+// Replace the existing MobileNavItem component with this updated version that supports submenus
 function MobileNavItem({
   href,
   label,
   icon,
   highlight = false,
+  subItems,
 }: {
   href: string;
   label: string;
   icon?: React.ReactNode;
   highlight?: boolean;
+  subItems?: { href: string; label: string; icon?: React.ReactNode }[];
 }) {
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+
+  // If there are no subitems, render a simple link
+  if (!subItems || subItems.length === 0) {
+    return (
+      <Link
+        href={href}
+        className={cn(
+          "px-4 py-3 rounded-md text-base font-medium flex items-center space-x-3 transition-colors",
+          highlight
+            ? "bg-amber-600 hover:bg-amber-700 text-white"
+            : "text-white hover:bg-white/10"
+        )}
+      >
+        {icon && <span>{icon}</span>}
+        <span>{label}</span>
+      </Link>
+    );
+  }
+
+  // If there are subitems, render a dropdown
   return (
-    <Link
-      href={href}
-      className={cn(
-        "px-4 py-3 rounded-md text-base font-medium flex items-center space-x-3 transition-colors",
-        highlight
-          ? "bg-amber-600 hover:bg-amber-700 text-white"
-          : "text-white hover:bg-white/10"
-      )}
-    >
-      {icon && <span>{icon}</span>}
-      <span>{label}</span>
-    </Link>
+    <div>
+      <button
+        onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
+        className={cn(
+          "w-full px-4 py-3 rounded-md text-base font-medium flex items-center justify-between transition-colors",
+          highlight
+            ? "bg-amber-600 hover:bg-amber-700 text-white"
+            : "text-white hover:bg-white/10"
+        )}
+      >
+        <div className="flex items-center space-x-3">
+          {icon && <span>{icon}</span>}
+          <span>{label}</span>
+        </div>
+        <ChevronDown
+          className={cn(
+            "h-5 w-5 transition-transform",
+            isSubMenuOpen && "transform rotate-180"
+          )}
+        />
+      </button>
+
+      {/* Submenu */}
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300 pl-4",
+          isSubMenuOpen ? "max-h-96" : "max-h-0"
+        )}
+      >
+        {subItems.map((item, index) => (
+          <Link
+            key={index}
+            href={item.href}
+            className="flex items-center px-4 py-3 text-base text-white/90 hover:text-white hover:bg-white/10 rounded-md mt-1"
+          >
+            {item.icon && <span className="mr-3">{item.icon}</span>}
+            {item.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

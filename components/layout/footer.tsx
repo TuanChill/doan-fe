@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { APP_ROUTES } from "@/const/route";
+import { logoApp } from "@/components/image";
+import ImageNext from "next/image";
+
 export default function Footer() {
   const router = useRouter();
 
@@ -25,7 +28,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
-                <span className="font-bold text-lg">VM</span>
+                <ImageNext src={logoApp} alt="logo" width={100} height={100} />
               </div>
               <span className="font-bold text-xl">Bảo tàng LSQS</span>
             </div>

@@ -169,25 +169,26 @@ export default function Search() {
       {/* Search Trigger Button */}
       <Button
         variant="ghost"
-        size="icon"
-        className="text-white hover:bg-white/10"
+        // size="icon"
+        className="text-white hover:bg-white/20 bg-white/10"
         onClick={() => setIsOpen(true)}
         aria-label="Tìm kiếm"
       >
+        <span className="text-xs text-white">Tìm kiếm</span>
         <SearchIcon className="h-5 w-5" />
       </Button>
 
       {/* Search Overlay */}
       <div
         className={cn(
-          "fixed inset-0 bg-black/50 z-50 transition-opacity duration-200",
+          "fixed inset-0 bg-black/50 z-50 transition-opacity duration-200 overflow-y-auto overflow-x-hidden",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
       >
         <div
           ref={searchRef}
           className={cn(
-            "bg-white w-full max-w-4xl mx-auto mt-20 rounded-lg shadow-xl transition-transform duration-200 overflow-hidden",
+            "bg-white w-[95%] max-w-4xl mx-auto mt-20 rounded-lg shadow-xl transition-transform duration-200 overflow-hidden",
             isOpen ? "translate-y-0" : "-translate-y-10"
           )}
         >
