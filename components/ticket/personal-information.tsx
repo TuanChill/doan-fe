@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TicketFormValues } from "@/components/validation/ticket";
-
+import { useUserStore } from "@/stores/user-store";
+import { get } from "lodash";
 interface PersonalInformationProps {
   form: UseFormReturn<TicketFormValues>;
   handleNextStep: () => void;
@@ -37,6 +38,8 @@ export default function PersonalInformation({
   watchSeniorTickets,
   watchGroupTickets,
 }: PersonalInformationProps) {
+  const { user } = useUserStore();
+
   return (
     <div className="p-8">
       <div className="flex items-center mb-6">
@@ -49,28 +52,16 @@ export default function PersonalInformation({
       <div className="mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
-            <Label htmlFor="firstName">Họ</Label>
+            <Label htmlFor="lastName">Họ tên</Label>
             <Input
-              id="firstName"
+              id="fullName"
               className="mt-1"
-              {...form.register("firstName")}
+              {...form.register("fullName")}
+              defaultValue={get(user, "fullName", "")}
             />
-            {form.formState.errors.firstName && (
+            {form.formState.errors.fullName && (
               <p className="text-sm text-red-500 mt-1">
-                {form.formState.errors.firstName.message}
-              </p>
-            )}
-          </div>
-          <div>
-            <Label htmlFor="lastName">Tên</Label>
-            <Input
-              id="lastName"
-              className="mt-1"
-              {...form.register("lastName")}
-            />
-            {form.formState.errors.lastName && (
-              <p className="text-sm text-red-500 mt-1">
-                {form.formState.errors.lastName.message}
+                {form.formState.errors.fullName.message}
               </p>
             )}
           </div>
@@ -84,6 +75,7 @@ export default function PersonalInformation({
               type="email"
               className="mt-1"
               {...form.register("email")}
+              defaultValue={get(user, "email", "")}
             />
             {form.formState.errors.email && (
               <p className="text-sm text-red-500 mt-1">
@@ -93,10 +85,15 @@ export default function PersonalInformation({
           </div>
           <div>
             <Label htmlFor="phone">Số điện thoại</Label>
-            <Input id="phone" className="mt-1" {...form.register("phone")} />
-            {form.formState.errors.phone && (
+            <Input
+              id="phone"
+              className="mt-1"
+              {...form.register("phoneNumber")}
+              defaultValue={get(user, "phoneNumber", "") || ""}
+            />
+            {form.formState.errors.phoneNumber && (
               <p className="text-sm text-red-500 mt-1">
-                {form.formState.errors.phone.message}
+                {form.formState.errors.phoneNumber.message}
               </p>
             )}
           </div>

@@ -74,16 +74,6 @@ export default function PaymentMethod({
               className="space-y-4"
             >
               <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
-                <RadioGroupItem value="card" id="card" />
-                <Label
-                  htmlFor="card"
-                  className="cursor-pointer flex items-center"
-                >
-                  <CreditCard className="h-5 w-5 mr-2 text-gray-700" />
-                  Thẻ tín dụng / ghi nợ
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
                 <RadioGroupItem value="qrcode" id="qrcode" />
                 <Label
                   htmlFor="qrcode"
@@ -91,16 +81,6 @@ export default function PaymentMethod({
                 >
                   <QrCode className="h-5 w-5 mr-2 text-gray-700" />
                   Quét mã QR (VNPay, ZaloPay)
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
-                <RadioGroupItem value="bank" id="bank" />
-                <Label
-                  htmlFor="bank"
-                  className="cursor-pointer flex items-center"
-                >
-                  <BankCheck className="h-5 w-5 mr-2 text-gray-700" />
-                  Chuyển khoản ngân hàng
                 </Label>
               </div>
               <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
@@ -114,128 +94,6 @@ export default function PaymentMethod({
                 </Label>
               </div>
             </RadioGroup>
-          </div>
-
-          {/* Payment method specific forms */}
-          <div className="mt-6">
-            {watchPaymentMethod === "card" && (
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="cardNumber">Số thẻ</Label>
-                  <Input
-                    id="cardNumber"
-                    className="mt-1"
-                    placeholder="1234 5678 9012 3456"
-                    {...form.register("cardNumber")}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="cardExpiry">Ngày hết hạn</Label>
-                    <Input
-                      id="cardExpiry"
-                      className="mt-1"
-                      placeholder="MM/YY"
-                      {...form.register("cardExpiry")}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="cardCvc">CVC/CVV</Label>
-                    <Input
-                      id="cardCvc"
-                      className="mt-1"
-                      placeholder="123"
-                      {...form.register("cardCvc")}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="cardName">Tên chủ thẻ</Label>
-                  <Input
-                    id="cardName"
-                    className="mt-1"
-                    placeholder="NGUYEN VAN A"
-                    {...form.register("cardName")}
-                  />
-                </div>
-              </div>
-            )}
-
-            {watchPaymentMethod === "qrcode" && (
-              <div className="p-6 border border-gray-200 rounded-lg bg-stone-50 text-center">
-                <div className="mb-4">
-                  <div className="bg-white p-4 rounded-lg inline-block">
-                    <div className="w-48 h-48 bg-stone-100 mx-auto flex items-center justify-center">
-                      <QrCode className="h-24 w-24 text-gray-400" />
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-700">
-                  Quét mã QR bằng ứng dụng VNPay hoặc ZaloPay để thanh toán
-                </p>
-                <p className="mt-2 text-sm text-gray-500">
-                  Mã QR có hiệu lực trong 15 phút
-                </p>
-              </div>
-            )}
-
-            {watchPaymentMethod === "bank" && (
-              <div className="p-6 border border-gray-200 rounded-lg bg-stone-50">
-                <h4 className="font-medium mb-2">Thông tin chuyển khoản</h4>
-                <div className="space-y-2 text-sm mb-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Ngân hàng:</span>
-                    <span className="font-medium">Vietcombank</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Số tài khoản:</span>
-                    <span className="font-medium">1234567890</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Chủ tài khoản:</span>
-                    <span className="font-medium">
-                      BẢO TÀNG LỊCH SỬ QUÂN SỰ VIỆT NAM
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Nội dung CK:</span>
-                    <span className="font-medium">
-                      MUSEUM {form.getValues("lastName")}{" "}
-                      {form.getValues("phone")}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600">
-                  Sau khi chuyển khoản, vui lòng nhấn nút &quot;Hoàn tất thanh
-                  toán&quot; để hoàn tất quá trình đặt vé.
-                </p>
-              </div>
-            )}
-
-            {watchPaymentMethod === "ewallet" && (
-              <div className="p-6 border border-gray-200 rounded-lg bg-stone-50">
-                <div className="mb-4">
-                  <h4 className="font-medium mb-3">Chọn ví điện tử</h4>
-                  <Select defaultValue="momo">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="momo">Ví MoMo</SelectItem>
-                      <SelectItem value="shopeepay">ShopeePay</SelectItem>
-                      <SelectItem value="zalopay">ZaloPay</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="text-center p-4 bg-white rounded-lg">
-                  <p className="mb-4 text-gray-700">
-                    Bạn sẽ được chuyển đến trang thanh toán của ví điện tử sau
-                    khi nhấn nút &quot;Hoàn tất thanh toán&quot;
-                  </p>
-                  <Wallet className="h-16 w-16 text-pink-500 mx-auto" />
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

@@ -27,6 +27,12 @@ import { usePathname } from "next/navigation";
 import { get } from "lodash";
 import { logoApp } from "@/components/image";
 import ImageNext from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -102,11 +108,39 @@ export default function Header() {
           </nav>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-2">
             <Search />
-            {/* <Button className="bg-red-700 hover:bg-red-800">
-              <Ticket className="h-4 w-4 mr-2" /> Mua vé
-            </Button> */}
+            {isAuthenticated() ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
+                  <Avatar className="h-8 w-8 mr-3">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="hover:bg-gray-200">
+                    <Link href="/profile" className="w-full text-sm">
+                      Hồ sơ
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="hover:bg-gray-200">
+                    <button
+                      onClick={() => clear()}
+                      className="w-full text-left text-sm"
+                    >
+                      Đăng xuất
+                    </button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login">
+                <Button className="w-full bg-red-700 hover:bg-red-800">
+                  Đăng nhập
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button and Search */}

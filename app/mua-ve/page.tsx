@@ -15,21 +15,22 @@ import PaymentMethod from "@/components/ticket/payment-method";
 import PaymentConfirmation from "@/components/ticket/payment-confirmation";
 import { ticketTypes } from "@/lib/ticket-data";
 import { formSchema, TicketFormValues } from "@/components/validation/ticket";
-
+import { useUserStore } from "@/stores/user-store";
 export default function TicketPurchasePage() {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isPaymentComplete, setIsPaymentComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
 
+  const { user } = useUserStore();
+
   // Initialize form
   const form = useForm<TicketFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
+      fullName: user?.fullName || "",
+      email: user?.email || "",
+      phoneNumber: user?.phoneNumber || "",
       adultTickets: 1,
       childTickets: 0,
       seniorTickets: 0,
@@ -103,9 +104,9 @@ export default function TicketPurchasePage() {
 
     // Validate form fields for current step
     if (step === 2) {
-      const { firstName, lastName, email, phone } = form.getValues();
-      if (!firstName || !lastName || !email || !phone) {
-        form.trigger(["firstName", "lastName", "email", "phone"]);
+      const { fullName, email, phoneNumber } = form.getValues();
+      if (!fullName || !email || !phoneNumber) {
+        form.trigger(["fullName", "email", "phoneNumber"]);
         return;
       }
     }
