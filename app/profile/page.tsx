@@ -99,14 +99,14 @@ export default function ProfilePage() {
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-olive-800">
                   <img
                     src={logo.src}
-                    alt={user?.name}
+                    alt={get(user, "fullName", "")}
                     className="w-full h-full object-cover"
                   />
                 </div>
               </div>
 
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl font-bold">{user?.name}</h2>
+                <h2 className="text-2xl font-bold">{get(user, "name", "")}</h2>
                 <p className="text-gray-600 mb-2">@{user?.username}</p>
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-3">
                   <div className="flex items-center text-gray-700">
