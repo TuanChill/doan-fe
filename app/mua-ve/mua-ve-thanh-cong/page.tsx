@@ -7,11 +7,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Home, AlertTriangle, Mail, Download, Share2 } from "lucide-react";
 import Link from "next/link";
 import AnimatedSection from "@/components/ui/animated-section";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import confettiAnimation from "@/public/confetti-animation.json";
 import successAnimation from "@/public/success-animation.json";
 import { getInvoiceByTransId } from "@/request/invoice";
 import { get } from "lodash";
+
+// Dynamic import của Lottie
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+  loading: () => <div className="w-24 h-24" />, // Loading placeholder
+});
 
 export default function PaymentSuccessPage() {
   const [isMounted, setIsMounted] = useState(false);
