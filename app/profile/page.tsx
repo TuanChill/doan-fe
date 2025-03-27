@@ -99,7 +99,7 @@ export default function ProfilePage() {
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-olive-800">
                   <img
                     src={logo.src}
-                    alt={get(user, "fullName", "--")}
+                    alt={get(user, "fullName", "")}
                     className="w-full h-full object-cover"
                   />
                 </div>
