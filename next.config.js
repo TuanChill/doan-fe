@@ -9,6 +9,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "api.luongtuan.xyz",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
     ],
   },
 };

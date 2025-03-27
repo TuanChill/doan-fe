@@ -16,13 +16,11 @@ import {
   Image,
   Info,
   Clock,
-  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
-import { APP_ROUTES } from "@/const/route";
 import { usePathname } from "next/navigation";
 import { get } from "lodash";
 import { logoApp } from "@/components/image";
@@ -78,7 +76,7 @@ export default function Header() {
                   icon: <Info className="h-4 w-4" />,
                 },
                 {
-                  href: "/gioi-thieu/thong-tin",
+                  href: "/gioi-thieu/thong-tin-tham-quan",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-4 w-4" />,
                 },
@@ -180,7 +178,7 @@ export default function Header() {
                   icon: <Info className="h-5 w-5" />,
                 },
                 {
-                  href: "/gioi-thieu/thong-tin",
+                  href: "/gioi-thieu/thong-tin-tham-quan",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-5 w-5" />,
                 },
