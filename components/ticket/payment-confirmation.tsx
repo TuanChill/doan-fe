@@ -91,21 +91,12 @@ export default function PaymentConfirmation({
                     </span>
                   </div>
                 )}
-                {seniorsCount > 0 && (
-                  <div className="flex justify-between">
-                    <span>Vé người cao tuổi:</span>
-                    <span>
-                      {seniorsCount} x{" "}
-                      {ticketTypes[2].price.toLocaleString("vi-VN")} VNĐ
-                    </span>
-                  </div>
-                )}
                 {groupsCount > 0 && (
                   <div className="flex justify-between">
                     <span>Vé đoàn:</span>
                     <span>
                       {groupsCount} x{" "}
-                      {ticketTypes[3].price.toLocaleString("vi-VN")} VNĐ
+                      {ticketTypes[2].price.toLocaleString("vi-VN")} VNĐ
                     </span>
                   </div>
                 )}

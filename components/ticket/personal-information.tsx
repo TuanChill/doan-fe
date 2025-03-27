@@ -132,21 +132,12 @@ export default function PersonalInformation({
                 </span>
               </div>
             )}
-            {watchSeniorTickets > 0 && (
-              <div className="flex justify-between">
-                <span>Vé người cao tuổi:</span>
-                <span>
-                  {watchSeniorTickets} x{" "}
-                  {ticketTypes[2].price.toLocaleString("vi-VN")} VNĐ
-                </span>
-              </div>
-            )}
             {watchGroupTickets > 0 && (
               <div className="flex justify-between">
                 <span>Vé đoàn:</span>
                 <span>
                   {watchGroupTickets} x{" "}
-                  {ticketTypes[3].price.toLocaleString("vi-VN")} VNĐ
+                  {ticketTypes[2].price.toLocaleString("vi-VN")} VNĐ
                 </span>
               </div>
             )}

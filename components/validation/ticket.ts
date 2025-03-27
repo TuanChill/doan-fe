@@ -10,11 +10,7 @@ export const formSchema = z.object({
     childTickets: z.coerce.number().min(0).default(0),
     seniorTickets: z.coerce.number().min(0).default(0),
     groupTickets: z.coerce.number().min(0).default(0),
-    paymentMethod: z.enum(["card", "qrcode", "bank", "ewallet"]),
-    cardNumber: z.string().optional(),
-    cardExpiry: z.string().optional(),
-    cardCvc: z.string().optional(),
-    cardName: z.string().optional(),
+    paymentMethod: z.enum(["vnpay", "momo"]),
     agree: z.boolean().refine((val) => val === true, {
       message: "Bạn phải đồng ý với điều khoản và điều kiện",
     }),

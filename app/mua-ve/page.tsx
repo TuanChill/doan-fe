@@ -16,11 +16,16 @@ import PaymentConfirmation from "@/components/ticket/payment-confirmation";
 import { ticketTypes } from "@/lib/ticket-data";
 import { formSchema, TicketFormValues } from "@/components/validation/ticket";
 import { useUserStore } from "@/stores/user-store";
+import { createVNPayURLPayment } from "@/request/payment";
+import { useRouter } from "next/navigation";
+import { get } from "lodash";
+
 export default function TicketPurchasePage() {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isPaymentComplete, setIsPaymentComplete] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const router = useRouter();
 
   const { user } = useUserStore();
 
@@ -35,7 +40,7 @@ export default function TicketPurchasePage() {
       childTickets: 0,
       seniorTickets: 0,
       groupTickets: 0,
-      paymentMethod: "card",
+      paymentMethod: "vnpay",
       agree: false,
     },
   });
@@ -67,8 +72,16 @@ export default function TicketPurchasePage() {
 
     setIsLoading(true);
 
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const res = await createVNPayURLPayment(form.getValues());
+      if (get(res, "order_url")) {
+        router.push(get(res, "order_url"));
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
 
     // Generate a random order number
     const randomOrderNumber = Math.floor(
@@ -77,7 +90,7 @@ export default function TicketPurchasePage() {
     setOrderNumber(randomOrderNumber);
 
     setIsLoading(false);
-    setIsPaymentComplete(true);
+    // setIsPaymentComplete(true);
   };
 
   // Next step handler
