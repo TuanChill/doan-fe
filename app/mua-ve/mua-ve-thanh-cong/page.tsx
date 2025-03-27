@@ -14,6 +14,7 @@ import { getInvoiceByTransId } from "@/request/invoice";
 import { get } from "lodash";
 
 export default function PaymentSuccessPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const searchParams = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState<
     "success" | "pending" | "failed"
@@ -21,6 +22,10 @@ export default function PaymentSuccessPage() {
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const lottieRef = useRef<any>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const verifyPayment = async () => {
@@ -61,6 +66,12 @@ export default function PaymentSuccessPage() {
       lottieRef.current.play();
     }
   }, [paymentStatus]);
+
+  useEffect(() => {
+    if (isMounted) {
+      lottieRef.current.play();
+    }
+  }, [isMounted]);
 
   if (isLoading) {
     return (
