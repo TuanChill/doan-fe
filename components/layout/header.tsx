@@ -60,7 +60,7 @@ export default function Header() {
             {/* <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
               <span className="font-bold text-lg">VM</span>
             </div> */}
-            <ImageNext src={logoApp} alt="logo" width={100} height={100} />
+            <ImageNext src={logoApp} alt="logo" width={50} height={60} />
             <span className="font-bold text-xl hidden md:inline-block">
               Bảo tàng LSQS Việt Nam
             </span>

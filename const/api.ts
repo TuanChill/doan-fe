@@ -13,5 +13,6 @@ export const API_ROUTES = {
   CATEGORY: `${API_BASE}/categories`,
   POST: `${API_BASE}/posts`,
   HISTORY_SEARCH: `${API_BASE}/history-searches`,
+  INVOICE: `${API_BASE}/invoices`,
 };
 

@@ -95,7 +95,7 @@ export default function Search() {
     } catch (error) {
       console.log(error);
     }
-  }, 500);
+  }, 1000);
 
   useEffect(() => {
     handleGetCount();
@@ -245,7 +245,11 @@ export default function Search() {
                   {recentSearches.map((search, index) => (
                     <button
                       key={index}
-                      onClick={() => handleRecentSearchClick(search)}
+                      onClick={() =>
+                        handleRecentSearchClick(
+                          String(get(search, "search", ""))
+                        )
+                      }
                       className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-black"
                     >
                       {String(get(search, "search", ""))}

@@ -2,26 +2,12 @@
 
 import type { UseFormReturn } from "react-hook-form";
 
-import {
-  CheckIcon as BankCheck,
-  ChevronRight,
-  CreditCard,
-  QrCode,
-  Wallet,
-} from "lucide-react";
+import { ChevronRight, CreditCard, QrCode, Wallet } from "lucide-react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { ticketTypes } from "@/lib/ticket-data";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TicketFormValues } from "@/components/validation/ticket";
@@ -74,26 +60,31 @@ export default function PaymentMethod({
               className="space-y-4"
             >
               <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
-                <RadioGroupItem value="qrcode" id="qrcode" />
+                <RadioGroupItem value="vnpay" id="vnpay" />
                 <Label
-                  htmlFor="qrcode"
+                  htmlFor="vnpay"
                   className="cursor-pointer flex items-center"
                 >
                   <QrCode className="h-5 w-5 mr-2 text-gray-700" />
-                  Quét mã QR (VNPay, ZaloPay)
+                  Thanh toán qua ZaloPay
                 </Label>
               </div>
-              <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
-                <RadioGroupItem value="ewallet" id="ewallet" />
+              {/* <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
+                <RadioGroupItem value="momo" id="momo" />
                 <Label
-                  htmlFor="ewallet"
+                  htmlFor="momo"
                   className="cursor-pointer flex items-center"
                 >
                   <Wallet className="h-5 w-5 mr-2 text-gray-700" />
-                  Ví điện tử (MoMo, ShopeePay)
+                  Ví điện tử MoMo
                 </Label>
-              </div>
+              </div> */}
             </RadioGroup>
+            <p className="text-sm text-red-500 mb-2">
+              {form.formState.errors.paymentMethod?.message
+                ? "Vui lòng chọn phương thức thanh toán"
+                : ""}
+            </p>
           </div>
         </div>
 
@@ -136,24 +127,12 @@ export default function PaymentMethod({
                   </div>
                 )}
 
-                {watchSeniorTickets > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span>Vé người cao tuổi x {watchSeniorTickets}</span>
-                    <span>
-                      {(
-                        watchSeniorTickets * ticketTypes[2].price
-                      ).toLocaleString("vi-VN")}{" "}
-                      VNĐ
-                    </span>
-                  </div>
-                )}
-
                 {watchGroupTickets > 0 && (
                   <div className="flex justify-between text-sm">
                     <span>Vé đoàn x {watchGroupTickets}</span>
                     <span>
                       {(
-                        watchGroupTickets * ticketTypes[3].price
+                        watchGroupTickets * ticketTypes[2].price
                       ).toLocaleString("vi-VN")}{" "}
                       VNĐ
                     </span>

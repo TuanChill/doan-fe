@@ -1,12 +1,10 @@
 export const usePayment = () => {
-  const handlePaymentWithVNPay = async (orderId: string) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/payment/vnpay`,
-      {
-        method: "POST",
-        body: JSON.stringify({ orderId }),
-      }
-    );
+  const createVNPayPayment = async (price: number, tickets: number) => {
+    const date = new Date();
+    const tmnCode = process.env.VNPAY_TMN_CODE;
+    const hashSecret = process.env.VNPAY_HASH_SECRET;
+    const orderInfo = `Thanh toán vé tham quan bảo tàng - ${tickets} vé`;
+    const amount = price;
   };
 
   return {};
