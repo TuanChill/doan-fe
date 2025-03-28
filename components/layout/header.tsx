@@ -16,13 +16,11 @@ import {
   Image,
   Info,
   Clock,
-  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
-import { APP_ROUTES } from "@/const/route";
 import { usePathname } from "next/navigation";
 import { get } from "lodash";
 import { logoApp } from "@/components/image";
@@ -33,6 +31,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import VoiceSearch from "../home/search-with-voice";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,7 +59,12 @@ export default function Header() {
             {/* <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
               <span className="font-bold text-lg">VM</span>
             </div> */}
-            <ImageNext src={logoApp} alt="logo" width={50} height={60} />
+            <ImageNext
+              src={logoApp || "/placeholder.svg"}
+              alt="logo"
+              width={50}
+              height={60}
+            />
             <span className="font-bold text-xl hidden md:inline-block">
               Bảo tàng LSQS Việt Nam
             </span>
@@ -109,7 +113,8 @@ export default function Header() {
 
           {/* Right Side Actions */}
           <div className="hidden lg:flex items-center space-x-2">
-            <Search />
+            <VoiceSearch />
+
             {isAuthenticated() ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
@@ -146,6 +151,7 @@ export default function Header() {
           {/* Mobile Menu Button and Search */}
           <div className="lg:hidden flex items-center space-x-2">
             <Search />
+            {}
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
