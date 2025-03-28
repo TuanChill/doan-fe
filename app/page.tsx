@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   ChevronRight,
-  Ticket,
   Map,
   MessageSquareText,
   Newspaper,
@@ -68,7 +67,7 @@ export default function Home() {
           transition={{ duration: 1 }}
         ></motion.div>
         <motion.div
-          className="absolute inset-0 bg-cover bg-center z-0 bg-[url('/placeholder.svg?height=1080&width=1920')]"
+          className="absolute inset-0 bg-cover bg-center z-0 bg-[url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/hv.jpg')]"
           initial={{ scale: 1.2 }}
           animate={{ scale: 1 }}
           transition={{
@@ -81,8 +80,8 @@ export default function Home() {
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-3xl text-white">
             <AnimatedSection animation="fadeUp" delay={0.3} duration={0.8}>
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                Bảo tàng Lịch sử Quân sự Việt Nam
+              <h1 className="text-4xl md:text-4xl font-bold mb-4">
+                Khám phá Bảo tàng Lịch sử Quân sự Việt Nam
               </h1>
             </AnimatedSection>
             <AnimatedSection animation="fadeUp" delay={0.5} duration={0.8}>
@@ -95,14 +94,6 @@ export default function Home() {
                 <Button
                   size="lg"
                   className="bg-red-700 hover:bg-red-800 text-white"
-                  onClick={handleMuaVe}
-                >
-                  Mua vé tham quan <Ticket className="ml-2 h-5 w-5" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-transparent border-white text-white hover:bg-white/10"
                   onClick={() =>
                     router.push(APP_ROUTES.GIOI_THIEU.THONG_TIN_THAM_QUAN)
                   }
@@ -265,7 +256,7 @@ export default function Home() {
                   onClick={handleTinTuc}
                   style={{
                     backgroundImage:
-                      "url('https://scontent.fhan17-1.fna.fbcdn.net/v/t39.30808-6/468914568_122117903312604010_6064694651255731049_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=YKvgtqDAiH4Q7kNvgFgXBYu&_nc_oc=AdjkSzAmhbIsjoKdaYqp7NYzMyWqmqTSn47vce6aeSl1Qks48lWBeMzBbgKCoI1V83w&_nc_zt=23&_nc_ht=scontent.fhan17-1.fna&_nc_gid=jmTGQXSTK7huc5gjlwT3SA&oh=00_AYETOW3SE0TH6azL9pZcJtv4iHDEr53o42d-5W2CIRYpFQ&oe=67DE12D2')",
+                      "url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/anh-boi-toi.jpg')",
                   }}
                 ></div>
                 <motion.div
@@ -376,7 +367,7 @@ export default function Home() {
                   onClick={handleHienVat}
                   style={{
                     backgroundImage:
-                      "url('https://cdnphoto.dantri.com.vn/n9RVComUc3taeuKd2MWR-tdi2lE=/thumb_w/1920/2024/10/03/bao-tang-lich-su-quan-su-viet-nam39-1727960239206.jpg')",
+                      "url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/bao-tang-lich-su-quan-su-viet-nam39.webp')",
                   }}
                 ></div>
                 <motion.div

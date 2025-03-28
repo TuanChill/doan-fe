@@ -12,6 +12,8 @@ import confettiAnimation from "@/public/confetti-animation.json";
 import successAnimation from "@/public/success-animation.json";
 import { getInvoiceByTransId } from "@/request/invoice";
 import { get } from "lodash";
+import { getTicket } from "@/request/ticket";
+import Image from "next/image";
 
 // Dynamic import của Lottie
 const Lottie = dynamic(() => import("lottie-react"), {
@@ -28,6 +30,22 @@ export default function PaymentSuccessPage() {
   const [orderDetails, setOrderDetails] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const lottieRef = useRef<any>(null);
+
+  const handleDownloadTicket = async () => {
+    try {
+      const ticketUrl = get(orderDetails, "ticketUrl", "");
+      // download file from url
+      const response = await fetch(ticketUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${get(orderDetails, "documentId", "")}.png`;
+      a.click();
+    } catch (error) {
+      console.error("Payment verification error:", error);
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -75,7 +93,7 @@ export default function PaymentSuccessPage() {
 
   useEffect(() => {
     if (isMounted) {
-      lottieRef.current.play();
+      lottieRef.current?.play();
     }
   }, [isMounted]);
 
@@ -99,33 +117,49 @@ export default function PaymentSuccessPage() {
               <CardContent className="p-8">
                 {paymentStatus === "success" ? (
                   <div className="text-center">
-                    <div className="relative">
-                      <div className="absolute top-0 left-0 right-0 z-10">
-                        <Lottie
-                          animationData={confettiAnimation}
-                          loop={false}
-                          autoplay={true}
-                          style={{ height: 300 }}
-                        />
+                    {new Date(
+                      get(orderDetails, "invoice_details[0].validDate", "")
+                    ) > new Date() && (
+                      <div className="relative">
+                        <div className="absolute top-0 left-0 right-0 z-10">
+                          <Lottie
+                            animationData={confettiAnimation}
+                            loop={false}
+                            autoplay={true}
+                            style={{ height: 300 }}
+                          />
+                        </div>
+                        <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 relative z-20">
+                          <Lottie
+                            animationData={successAnimation}
+                            loop={false}
+                            autoplay={true}
+                            style={{ height: 80 }}
+                            lottieRef={lottieRef}
+                          />
+                        </div>
                       </div>
-                      <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 relative z-20">
-                        <Lottie
-                          animationData={successAnimation}
-                          loop={false}
-                          autoplay={true}
-                          style={{ height: 80 }}
-                          lottieRef={lottieRef}
-                        />
-                      </div>
-                    </div>
+                    )}
 
-                    <h1 className="text-2xl font-bold mb-2">
-                      Chúc mừng! Thanh toán thành công!
-                    </h1>
-                    <p className="text-gray-600 mb-8">
-                      Cảm ơn {orderDetails.fullName || "quý khách"} đã đặt vé
-                      tham quan Bảo tàng Lịch sử Quân sự Việt Nam.
-                    </p>
+                    {new Date(
+                      get(orderDetails, "invoice_details[0].validDate", "")
+                    ) < new Date() ? (
+                      <div className="text-center">
+                        <p className="text-red-600 mb-8 text-2xl font-bold">
+                          Vé tham quan đã hết hạn sử dụng.
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <h1 className="text-2xl font-bold mb-2">
+                          Chúc mừng! Thanh toán thành công!
+                        </h1>
+                        <p className="text-gray-600 mb-8">
+                          Cảm ơn {orderDetails.fullName || "quý khách"} đã đặt
+                          vé tham quan Bảo tàng Lịch sử Quân sự Việt Nam.
+                        </p>
+                      </>
+                    )}
 
                     {orderDetails && (
                       <div className="bg-gray-50 rounded-lg p-6 text-left mb-8">
@@ -237,31 +271,49 @@ export default function PaymentSuccessPage() {
                       </div>
                     )}
 
-                    <div className="bg-green-50 p-6 rounded-lg border border-green-200 text-green-800 mb-8">
-                      <div className="flex items-start">
-                        <Mail className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="font-bold mb-2">
-                            Vui lòng kiểm tra email của bạn
-                          </p>
-                          <p className="text-sm">
-                            Vé tham quan đã được gửi vào email{" "}
-                            {orderDetails.email || "của bạn"}. Vui lòng kiểm tra
-                            hộp thư, bao gồm cả thư mục spam.
-                          </p>
-                          <p className="text-sm mt-2">
-                            Bạn cần xuất trình vé (in hoặc trên điện thoại) khi
-                            đến tham quan bảo tàng.
-                          </p>
+                    {get(orderDetails, "ticketUrl", "") && (
+                      <div className="flex justify-center">
+                        <Image
+                          src={get(orderDetails, "ticketUrl", "")}
+                          alt="QR Code"
+                          width={200}
+                          height={200}
+                        />
+                      </div>
+                    )}
+
+                    {new Date(
+                      get(orderDetails, "invoice_details[0].validDate", "")
+                    ) > new Date() && (
+                      <div className="bg-green-50 p-6 rounded-lg border border-green-200 text-green-800 mb-8">
+                        <div className="flex items-start">
+                          {/* <Mail className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" /> */}
+                          <div>
+                            <p className="font-bold mb-2">
+                              Vui lòng kiểm tra email của bạn
+                            </p>
+                            <p className="text-sm">
+                              Vé tham quan đã được gửi vào email{" "}
+                              {orderDetails.email || "của bạn"}. Vui lòng kiểm
+                              tra hộp thư, bao gồm cả thư mục spam.
+                            </p>
+                            <p className="text-sm mt-2">
+                              Bạn cần xuất trình vé (in hoặc trên điện thoại)
+                              khi đến tham quan bảo tàng.
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      {/* <Button className="bg-red-700 hover:bg-red-800">
+                      <Button
+                        className="bg-red-700 hover:bg-red-800"
+                        onClick={handleDownloadTicket}
+                      >
                         <Download className="h-4 w-4 mr-2" /> Tải vé
                       </Button>
-                      <Button
+                      {/* <Button
                         variant="outline"
                         className="border-olive-800 text-olive-800 hover:bg-olive-800 hover:text-white"
                       >
