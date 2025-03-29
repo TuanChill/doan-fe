@@ -16,6 +16,7 @@ import {
   Image,
   Info,
   Clock,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Search from "@/components/home/search";
@@ -72,9 +73,10 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-1">
-            <NavItem href="/" label="Trang chủ" />
+            <NavItem href="/" label="Trang chủ" isActive={pathName === "/"} />
             <NavDropdown
               label="Giới thiệu"
+              isActive={pathName.includes("/gioi-thieu")}
               items={[
                 {
                   href: "/gioi-thieu/lich-su",
@@ -86,28 +88,37 @@ export default function Header() {
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-4 w-4" />,
                 },
+                {
+                  href: "/contact",
+                  label: "Liên hệ",
+                  icon: <Mail className="h-4 w-4" />,
+                },
               ]}
             />
             <NavItem
               href="/tin-tuc"
               label="Tin tức & Sự kiện"
               icon={<Newspaper className="h-4 w-4" />}
+              isActive={pathName.includes("/tin-tuc")}
             />
             <NavItem
               href="/vr360"
               label="Tham quan VR360°"
               icon={<Map className="h-4 w-4" />}
               highlight
+              isActive={pathName.includes("/vr360")}
             />
             <NavItem
               href="/hien-vat"
               label="Hiện vật"
               icon={<Image className="h-4 w-4" />}
+              isActive={pathName.includes("/hien-vat")}
             />
             <NavItem
               href="/ai-agent"
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-4 w-4" />}
+              isActive={pathName.includes("/ai-agent")}
             />
           </nav>
 
@@ -151,7 +162,6 @@ export default function Header() {
           {/* Mobile Menu Button and Search */}
           <div className="lg:hidden flex items-center space-x-2">
             <Search />
-            {}
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -189,6 +199,11 @@ export default function Header() {
                   href: "/gioi-thieu/thong-tin-tham-quan",
                   label: "Thông tin tham quan",
                   icon: <Clock className="h-5 w-5" />,
+                },
+                {
+                  href: "/contact",
+                  label: "Liên hệ",
+                  icon: <Mail className="h-5 w-5" />,
                 },
               ]}
             />
@@ -263,20 +278,23 @@ function NavItem({
   label,
   icon,
   highlight = false,
+  isActive = false,
 }: {
   href: string;
   label: string;
   icon?: React.ReactNode;
   highlight?: boolean;
+  isActive?: boolean;
 }) {
   return (
     <Link
       href={href}
       className={cn(
-        "px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1 transition-colors",
+        "px-3 py-2 rounded-md text-base font-medium flex items-center space-x-1 transition-colors",
         highlight
           ? "bg-amber-600 hover:bg-amber-700 text-white"
-          : "text-white hover:bg-white/10"
+          : "text-white hover:bg-white/10",
+        isActive && "bg-gray-700 hover:bg-gray-800 text-white"
       )}
     >
       {icon && icon}
@@ -289,9 +307,11 @@ function NavItem({
 function NavDropdown({
   label,
   items,
+  isActive = false,
 }: {
   label: string;
   items: { href: string; label: string; icon?: React.ReactNode }[];
+  isActive?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -319,7 +339,10 @@ function NavDropdown({
       onMouseLeave={handleMouseLeave}
     >
       <button
-        className="px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1 text-white hover:bg-white/10 transition-colors"
+        className={cn(
+          "px-3 py-2 rounded-md text-base flex items-center space-x-1 text-white hover:bg-white/10 transition-colors",
+          isActive && "bg-gray-700 hover:bg-gray-800 text-white"
+        )}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{label}</span>
@@ -337,7 +360,7 @@ function NavDropdown({
               <Link
                 key={index}
                 href={item.href}
-                className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100"
+                className="flex items-center px-4 py-3 text-base text-gray-700 hover:bg-gray-100"
               >
                 {item.icon && (
                   <span className="mr-2 text-gray-500">{item.icon}</span>

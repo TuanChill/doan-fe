@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import TextToSpeechPlayer from "@/components/text-to-speech";
-import { getPostDetail } from "@/request/post";
+import { getPostDetail, IncrementViewPost } from "@/request/post";
 import { get } from "lodash";
 import {
   FacebookShareButton,
@@ -40,10 +40,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     try {
       setIsLoading(true);
       const res = await getPostDetail(params.slug);
-
       const post = get(res, "data", null);
-
       setArticle(post);
+      await IncrementViewPost(
+        get(post, "documentId", ""),
+        get(post, "view", 0) + 1
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -162,7 +164,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
           <Separator className="my-8" />
 
-          {article.content.content.map((section: any, index: number) => (
+          {article.content?.content.map((section: any, index: number) => (
             <div key={index} className="mb-8">
               {section.heading && (
                 <h2 className="text-2xl font-bold mb-4">{section.heading}</h2>
@@ -193,58 +195,62 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               {get(article, "tag.name", "--")}
             </Badge>
           </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {get(article, "view", 0)} lượt xem
+            </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Share2 className="mr-2 h-4 w-4" /> Chia sẻ
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="p-2 flex flex-col gap-2"
+              >
+                <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                  <FacebookShareButton
+                    url={shareUrl}
+                    quote={article.title}
+                    className="w-full flex items-center p-2"
+                  >
+                    <div className="flex items-center gap-1">
+                      <FacebookIcon size={24} round className="mr-2" />
+                      <span>Facebook</span>
+                    </div>
+                  </FacebookShareButton>
+                </DropdownMenuItem>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <Share2 className="mr-2 h-4 w-4" /> Chia sẻ
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="p-2 flex flex-col gap-2"
-            >
-              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
-                <FacebookShareButton
-                  url={shareUrl}
-                  quote={article.title}
-                  className="w-full flex items-center p-2"
-                >
-                  <div className="flex items-center gap-1">
-                    <FacebookIcon size={24} round className="mr-2" />
-                    <span>Facebook</span>
-                  </div>
-                </FacebookShareButton>
-              </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                  <FacebookMessengerShareButton
+                    url={shareUrl}
+                    appId=""
+                    className="w-full flex items-center p-2"
+                  >
+                    <div className="flex items-center gap-1">
+                      <FacebookMessengerIcon size={24} round className="mr-2" />
+                      <span>Messenger</span>
+                    </div>
+                  </FacebookMessengerShareButton>
+                </DropdownMenuItem>
 
-              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
-                <FacebookMessengerShareButton
-                  url={shareUrl}
-                  appId=""
-                  className="w-full flex items-center p-2"
-                >
-                  <div className="flex items-center gap-1">
-                    <FacebookMessengerIcon size={24} round className="mr-2" />
-                    <span>Messenger</span>
-                  </div>
-                </FacebookMessengerShareButton>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
-                <LinkedinShareButton
-                  url={shareUrl}
-                  title={article.title}
-                  summary={article.excerpt}
-                  className="w-full flex items-center p-2"
-                >
-                  <div className="flex items-center gap-1">
-                    <LinkedinIcon size={24} round className="mr-2" />
-                    <span>LinkedIn</span>
-                  </div>
-                </LinkedinShareButton>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                  <LinkedinShareButton
+                    url={shareUrl}
+                    title={article.title}
+                    summary={article.excerpt}
+                    className="w-full flex items-center p-2"
+                  >
+                    <div className="flex items-center gap-1">
+                      <LinkedinIcon size={24} round className="mr-2" />
+                      <span>LinkedIn</span>
+                    </div>
+                  </LinkedinShareButton>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         <div className="bg-muted p-6 rounded-lg">

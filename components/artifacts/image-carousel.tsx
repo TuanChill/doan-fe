@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface ImageCarouselProps {
   mainImage: string;
@@ -71,11 +72,13 @@ export default function ImageCarousel({
   // If there's only one image, just show it without carousel controls
   if (allImages.length <= 1) {
     return (
-      <div className="relative aspect-square">
-        <img
-          src={mainImage || "/placeholder.svg?height=800&width=800"}
+      <div className="relative aspect-auto">
+        <Image
+          src={mainImage}
           alt={altText}
-          className="w-full h-full object-contain"
+          className="object-contain"
+          width={800}
+          height={800}
         />
       </div>
     );
@@ -97,10 +100,12 @@ export default function ImageCarousel({
               index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
             )}
           >
-            <img
-              src={image || "/placeholder.svg?height=800&width=800"}
+            <Image
+              src={image}
               alt={`${altText} - Hình ${index + 1}`}
-              className="w-full h-full object-contain"
+              className="object-contain"
+              width={800}
+              height={800}
             />
           </div>
         ))}
