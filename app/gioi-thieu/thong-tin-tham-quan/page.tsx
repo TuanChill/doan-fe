@@ -24,6 +24,12 @@ import {
 import AnimatedSection from "@/components/ui/animated-section";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function VisitorInformationPage() {
   return (
@@ -58,8 +64,8 @@ export default function VisitorInformationPage() {
                   Thông tin tham quan
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
-                Thông Tin Tham Quan
+              <h1 className="text-4xl md:text-4xl font-bold mb-4 drop-shadow-md">
+                Hướng dẫn tham quan Bảo tàng Lịch sử Quân sự Việt Nam
               </h1>
             </AnimatedSection>
             <AnimatedSection animation="fadeUp" delay={0.5}>
@@ -94,8 +100,12 @@ export default function VisitorInformationPage() {
                     className="text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
                   >
                     <MapPin className="h-4 w-4 mr-2 md:mr-2" />
-                    <span className="hidden md:inline">Địa điểm</span>
-                    <span className="inline md:hidden">Địa điểm</span>
+                    <span className="hidden md:inline">
+                      Địa Điểm & Hướng dẫn đi lại
+                    </span>
+                    <span className="inline md:hidden">
+                      Địa Điểm & Hướng dẫn đi lại
+                    </span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="rules"
@@ -733,16 +743,11 @@ export default function VisitorInformationPage() {
 // FAQ Item Component
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   return (
-    <div className="border border-amber-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
-      <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-4">
-        <h3 className="font-medium flex items-center text-amber-800">
-          <HelpCircle className="h-5 w-5 mr-2 text-amber-600" />
-          {question}
-        </h3>
-      </div>
-      <div className="p-4 bg-white">
-        <p className="text-amber-900">{answer}</p>
-      </div>
-    </div>
+    <Accordion type="single" collapsible>
+      <AccordionItem value={question}>
+        <AccordionTrigger>{question}</AccordionTrigger>
+        <AccordionContent>{answer}</AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

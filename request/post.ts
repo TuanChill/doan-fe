@@ -21,6 +21,15 @@ export const getPostDetail = async (id: string) => {
     return response.data;
 };
 
+export const IncrementViewPost = async (id: string, view: number) => {
+    const response = await fdAxios.put(`${API_ROUTES.POST}/${id}`, {
+        data: {
+            view: view
+        }
+    });
+    return response.data;
+};
+
 export const getPostByCategory = async (page: number, limit: number, category?: string) => {
     let params = qs.stringify({
         populate: '*',

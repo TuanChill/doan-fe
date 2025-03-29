@@ -27,7 +27,7 @@ export default function Footer() {
           {/* Column 1 - About */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center">
                 <ImageNext src={logoApp} alt="logo" width={100} height={100} />
               </div>
               <span className="font-bold text-xl">Bảo tàng LSQS</span>
@@ -136,7 +136,7 @@ export default function Footer() {
               © {new Date().getFullYear()} Bảo tàng Lịch sử Quân sự Việt Nam.
               Tất cả các quyền được bảo lưu.
             </p>
-            <div className="flex space-x-4 mt-2 md:mt-0">
+            {/* <div className="flex space-x-4 mt-2 md:mt-0">
               <Link
                 href="/chinh-sach-bao-mat"
                 className="text-gray-400 text-sm hover:text-white"
@@ -150,7 +150,7 @@ export default function Footer() {
               >
                 Điều khoản sử dụng
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

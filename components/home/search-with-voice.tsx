@@ -27,6 +27,7 @@ import {
   getHistorySearch,
 } from "@/request/history-search";
 import { useUserStore } from "@/stores/user-store";
+import { usePathname } from "next/navigation";
 
 export default function Search() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +44,7 @@ export default function Search() {
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const pathName = usePathname();
   const { user } = useUserStore();
 
   const handleGetCount = async () => {
@@ -252,6 +254,10 @@ export default function Search() {
     };
   }, [isListening]);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathName]);
+
   const startListening = () => {
     if (!recognition) return;
 
@@ -442,7 +448,11 @@ export default function Search() {
                       if (result.indexUid === SearchType.POST) {
                         return (
                           <Link
-                            href={`/tin-tuc/${get(result, "documentId", "")}`}
+                            href={`/tin-tuc/bai-viet/${get(
+                              result,
+                              "documentId",
+                              ""
+                            )}`}
                             key={result.id}
                             className="block p-3 hover:bg-gray-50 rounded-lg transition-colors"
                           >

@@ -250,10 +250,12 @@ export default function Home() {
           >
             {/* Feature 1 */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-olive-800 relative">
+              <div
+                onClick={handleTinTuc}
+                className="h-48 bg-olive-800 relative cursor-pointer"
+              >
                 <div
                   className="absolute inset-0 bg-cover bg-center"
-                  onClick={handleTinTuc}
                   style={{
                     backgroundImage:
                       "url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/anh-boi-toi.jpg')",
@@ -287,10 +289,12 @@ export default function Home() {
 
             {/* Feature 2 */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-olive-800 relative">
+              <div
+                onClick={handleThamQuanVR360}
+                className="h-48 bg-olive-800 relative cursor-pointer"
+              >
                 <div
                   className="absolute inset-0 bg-cover bg-center"
-                  onClick={handleThamQuanVR360}
                   style={{
                     backgroundImage:
                       "url('https://media.vietnamplus.vn/images/7255a701687d11cb8c6bbc58a6c80785e1b319bced8b2064350f15811336cc4af157f8ff81572e4e5dd2a44f7a6d0aea527e5a3af85f2df55b4bf78ab4a21a2015c84708a094c1f5316c563199de65fe/bao-tang-quan-su-viet-nam-7-4992.jpg.webp')",
@@ -324,10 +328,12 @@ export default function Home() {
 
             {/* Feature 3 */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-olive-800 relative">
+              <div
+                onClick={handleAIHoiDap}
+                className="h-48 bg-olive-800 relative cursor-pointer"
+              >
                 <div
                   className="absolute inset-0 bg-cover bg-center"
-                  onClick={handleAIHoiDap}
                   style={{
                     backgroundImage:
                       "url('https://bizweb.dktcdn.net/100/380/059/files/prompt-hoi-dap.png?v=1701331008334')",
@@ -361,10 +367,12 @@ export default function Home() {
 
             {/* Feature 4 */}
             <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-olive-800 relative">
+              <div
+                onClick={handleHienVat}
+                className="h-48 bg-olive-800 relative cursor-pointer"
+              >
                 <div
                   className="absolute inset-0 bg-cover bg-center"
-                  onClick={handleHienVat}
                   style={{
                     backgroundImage:
                       "url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/bao-tang-lich-su-quan-su-viet-nam39.webp')",

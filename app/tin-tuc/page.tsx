@@ -221,7 +221,7 @@ export default function HomePage() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Tin tức mới nhất</h2>
-          <Link href="/tin-tuc">
+          <Link href="/tin-tuc/bai-viet">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button variant="outline">Xem tất cả</Button>
             </motion.div>
@@ -316,7 +316,7 @@ export default function HomePage() {
         >
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Sự kiện sắp diễn ra</h2>
-            <Link href="/su-kien">
+            <Link href="/tin-tuc/bai-viet">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -385,7 +385,9 @@ export default function HomePage() {
                     </p>
                   </CardContent>
                   <CardFooter className="p-4 pt-0">
-                    <Link href={`/su-kien/${get(event, "documentId", "")}`}>
+                    <Link
+                      href={`/tin-tuc/bai-viet/${get(event, "documentId", "")}`}
+                    >
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

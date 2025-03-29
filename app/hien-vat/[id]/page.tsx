@@ -5,22 +5,27 @@ import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowLeft,
-  Calendar,
-  MapPin,
-  Share2,
-  CuboidIcon as Cube,
-  Volume2,
-  Download,
-  Info,
-} from "lucide-react";
+import { ArrowLeft, Share2, Volume2, Download, Info } from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import { cn } from "@/lib/utils";
 import { getExhibit, getExhibitList } from "@/request/exhibit";
 import { get } from "lodash";
 import ImageCarousel from "@/components/artifacts/image-carousel";
 import TextToSpeechPlayer from "@/components/text-to-speech";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  FacebookMessengerShareButton,
+  FacebookMessengerIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+} from "next-share";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ArtifactDetailPage() {
   const params = useParams();
@@ -31,6 +36,7 @@ export default function ArtifactDetailPage() {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [relatedArtifacts, setRelatedArtifacts] = useState<any[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [shareUrl, setShareUrl] = useState("");
 
   // Fetch artifact data
   const fetchArtifactData = async (id: string) => {
@@ -59,6 +65,11 @@ export default function ArtifactDetailPage() {
   useEffect(() => {
     if (params.id) {
       fetchArtifactData(params.id as string);
+    }
+
+    // Set the share URL when component mounts
+    if (typeof window !== "undefined") {
+      setShareUrl(window.location.href);
     }
   }, [params.id]);
 
@@ -296,9 +307,69 @@ export default function ArtifactDetailPage() {
                     </div>
 
                     <div className="p-4 pt-0 flex flex-wrap gap-2">
-                      <Button variant="outline" className="flex-1">
-                        <Share2 className="h-4 w-4 mr-2" /> Chia sẻ
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="flex-1">
+                            <Share2 className="h-4 w-4 mr-2" /> Chia sẻ
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="p-2 flex flex-col gap-2"
+                        >
+                          <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                            <FacebookShareButton
+                              url={shareUrl}
+                              quote={get(artifact, "name", "")}
+                              className="w-full flex items-center p-2"
+                            >
+                              <div className="flex items-center gap-1">
+                                <FacebookIcon
+                                  size={24}
+                                  round
+                                  className="mr-2"
+                                />
+                                <span>Facebook</span>
+                              </div>
+                            </FacebookShareButton>
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                            <FacebookMessengerShareButton
+                              url={shareUrl}
+                              appId=""
+                              className="w-full flex items-center p-2"
+                            >
+                              <div className="flex items-center gap-1">
+                                <FacebookMessengerIcon
+                                  size={24}
+                                  round
+                                  className="mr-2"
+                                />
+                                <span>Messenger</span>
+                              </div>
+                            </FacebookMessengerShareButton>
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem className="cursor-pointer p-0 flex items-center">
+                            <LinkedinShareButton
+                              url={shareUrl}
+                              title={get(artifact, "name", "")}
+                              summary={get(artifact, "description", "")}
+                              className="w-full flex items-center p-2"
+                            >
+                              <div className="flex items-center gap-1">
+                                <LinkedinIcon
+                                  size={24}
+                                  round
+                                  className="mr-2"
+                                />
+                                <span>LinkedIn</span>
+                              </div>
+                            </LinkedinShareButton>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                       <Button
                         variant="outline"
                         className="flex-1"
