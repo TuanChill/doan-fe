@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { get, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
@@ -46,11 +46,13 @@ export default function ProfileEditForm({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      ...user,
-      dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
-      gender: user.gender as "male" | "female" | "other",
-      address: user.address || undefined,
-      phoneNumber: user.phoneNumber || undefined,
+      username: get(user, "username", ""),
+      fullName: get(user, "fullName", ""),
+      email: get(user, "email", ""),
+      dateOfBirth: get(user, "dateOfBirth", undefined),
+      gender: get(user, "gender", "male"),
+      address: get(user, "address", ""),
+      phoneNumber: get(user, "phoneNumber", ""),
     },
   });
 
@@ -74,7 +76,7 @@ export default function ProfileEditForm({
           />
           {form.formState.errors.username && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.username.message}
+              {form.formState.errors.username?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -88,7 +90,7 @@ export default function ProfileEditForm({
           />
           {form.formState.errors.fullName && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.fullName.message}
+              {form.formState.errors.fullName?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -103,7 +105,7 @@ export default function ProfileEditForm({
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.email.message}
+              {form.formState.errors.email?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -117,7 +119,7 @@ export default function ProfileEditForm({
           />
           {form.formState.errors.phoneNumber && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.phoneNumber.message}
+              {form.formState.errors.phoneNumber?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -158,7 +160,7 @@ export default function ProfileEditForm({
           </div>
           {form.formState.errors.dateOfBirth && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.dateOfBirth.message}
+              {form.formState.errors.dateOfBirth?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -193,7 +195,7 @@ export default function ProfileEditForm({
           </RadioGroup>
           {form.formState.errors.gender && (
             <p className="text-sm text-red-500 mt-1">
-              {form.formState.errors.gender.message}
+              {form.formState.errors.gender?.message?.toString() || ""}
             </p>
           )}
         </div>
@@ -209,7 +211,7 @@ export default function ProfileEditForm({
         ></textarea>
         {form.formState.errors.address && (
           <p className="text-sm text-red-500 mt-1">
-            {form.formState.errors.address.message}
+            {form.formState.errors.address?.message?.toString() || ""}
           </p>
         )}
       </div>

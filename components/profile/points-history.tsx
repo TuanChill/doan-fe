@@ -1,6 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Award, ChevronUp, ChevronDown, Calendar, Clock } from "lucide-react";
 import { get } from "lodash";
+import { useEffect, useState } from "react";
+import { getUserPointsHistory } from "@/request/action";
+import { useUserStore } from "@/stores/user-store";
 // Mock points history data
 const POINTS_HISTORY = [
   {
@@ -77,6 +80,23 @@ interface PointsHistoryProps {
 }
 
 export default function PointsHistory({ userData }: PointsHistoryProps) {
+  const [pointsHistory, setPointsHistory] = useState([]);
+  const { user } = useUserStore();
+
+  const handleGetPointsHistory = async () => {
+    try {
+      if (!user?.id) return;
+      const res = await getUserPointsHistory(user?.id);
+      setPointsHistory(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetPointsHistory();
+  }, []);
+
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -135,17 +155,17 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
           <h3 className="text-xl font-bold mb-6">Lịch sử điểm</h3>
 
           <div className="space-y-4">
-            {POINTS_HISTORY.map((item) => (
+            {pointsHistory?.map((item) => (
               <div
-                key={item.id}
+                key={get(item, "id", 0)}
                 className="flex items-start p-4 bg-gray-50 rounded-lg"
               >
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
-                    item.type === "earn" ? "bg-green-100" : "bg-red-100"
+                    get(item, "point", 0) > 0 ? "bg-green-100" : "bg-red-100"
                   }`}
                 >
-                  {item.type === "earn" ? (
+                  {get(item, "point", 0) > 0 ? (
                     <ChevronUp className="h-5 w-5 text-green-600" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-red-600" />
@@ -154,21 +174,27 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
 
                 <div className="flex-1">
                   <div className="flex justify-between">
-                    <h4 className="font-medium">{item.description}</h4>
+                    <h4 className="font-medium">{get(item, "name", "")}</h4>
                     <span
                       className={`font-bold ${
-                        item.type === "earn" ? "text-green-600" : "text-red-600"
+                        get(item, "point", 0) > 0
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
-                      {item.type === "earn" ? "+" : "-"}
-                      {item.amount} điểm
+                      {get(item, "point", 0) > 0 ? "+" : "-"}
+                      {get(item, "point", 0)} điểm
                     </span>
                   </div>
                   <div className="flex items-center text-sm text-gray-500 mt-1">
                     <Calendar className="h-3 w-3 mr-1" />
-                    <span>{formatDate(item.date)}</span>
+                    <span>{formatDate(get(item, "createdAt", ""))}</span>
                     <Clock className="h-3 w-3 ml-3 mr-1" />
-                    <span>{item.time}</span>
+                    <span>
+                      {new Date(
+                        get(item, "createdAt", "")
+                      ).toLocaleTimeString()}
+                    </span>
                   </div>
                 </div>
               </div>

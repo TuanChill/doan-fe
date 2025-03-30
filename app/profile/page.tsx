@@ -34,6 +34,7 @@ export default function ProfilePage() {
   const { success, error } = useSnackBarStore();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [tab, setTab] = useState("profile");
 
   const handleSaveProfile = async (updatedData: typeof user) => {
     if (updatedData && user?.id) {
@@ -146,6 +147,9 @@ export default function ProfilePage() {
                   variant="outline"
                   size="sm"
                   className="mt-2 border-olive-800 text-olive-800 hover:bg-olive-800 hover:text-white"
+                  onClick={() => {
+                    setTab("points");
+                  }}
                 >
                   <Gift className="h-4 w-4 mr-1" /> Đổi quà
                 </Button>
@@ -159,7 +163,11 @@ export default function ProfilePage() {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
-            <Tabs defaultValue="profile" className="w-full">
+            <Tabs
+              value={tab}
+              className="w-full"
+              onValueChange={(value) => setTab(value)}
+            >
               <TabsList className="mb-8">
                 <TabsTrigger value="profile" className="text-sm">
                   <User className="h-4 w-4 mr-2" />
