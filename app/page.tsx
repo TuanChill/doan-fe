@@ -106,7 +106,7 @@ export default function Home() {
         </div>
 
         {/* Animated Decorative Elements */}
-        <div className="absolute bottom-0 left-0 w-full h-20 z-20">
+        <div className="absolute bottom-0 left-0 w-full h-20 z-20 lg:block hidden">
           <svg
             viewBox="0 0 1440 120"
             fill="none"

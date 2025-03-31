@@ -158,7 +158,7 @@ export default function NewsPage() {
         <div className="flex items-center">
           <Link href="/">
             <Button variant="ghost" className="p-0 mr-4">
-              <ArrowLeft className="h-4 w-4 mr-2" /> Trang chủ
+              <ArrowLeft className="h-4 w-4 mr-0 lg:mr-2" /> Trang chủ
             </Button>
           </Link>
           <h1 className="text-3xl font-bold">Tin tức & Sự kiện</h1>

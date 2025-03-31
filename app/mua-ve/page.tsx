@@ -122,6 +122,14 @@ export default function TicketPurchasePage() {
         form.trigger(["fullName", "email", "phoneNumber"]);
         return;
       }
+
+      if (!form.getValues("agree")) {
+        form.setError("agree", {
+          type: "manual",
+          message: "Vui lòng đồng ý với điều khoản và chính sách bảo mật",
+        });
+        return;
+      }
     }
 
     setStep((prev) => prev + 1);

@@ -19,10 +19,9 @@ import {
   Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Search from "@/components/home/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { get } from "lodash";
 import { logoApp } from "@/components/image";
 import ImageNext from "next/image";
@@ -33,11 +32,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import VoiceSearch from "../home/search-with-voice";
+import { APP_ROUTES } from "@/const/route";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathName = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -66,13 +67,11 @@ export default function Header() {
               width={50}
               height={60}
             />
-            <span className="font-bold text-xl hidden md:inline-block">
-              Bảo tàng LSQS Việt Nam
-            </span>
+            <span className="font-bold text-xl">Bảo tàng LSQS Việt Nam</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          <nav className="hidden xl:flex items-center space-x-1">
             <NavItem href="/" label="Trang chủ" isActive={pathName === "/"} />
             <NavDropdown
               label="Giới thiệu"
@@ -123,9 +122,8 @@ export default function Header() {
           </nav>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="hidden xl:flex items-center space-x-2">
             <VoiceSearch />
-
             {isAuthenticated() ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
@@ -160,8 +158,8 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button and Search */}
-          <div className="lg:hidden flex items-center space-x-2">
-            <Search />
+          <div className="xl:hidden flex items-center space-x-2">
+            <VoiceSearch />
             <button
               className="text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -179,7 +177,7 @@ export default function Header() {
       {/* Mobile Navigation */}
       <div
         className={cn(
-          "lg:hidden bg-olive-900 overflow-hidden transition-all duration-300",
+          "xl:hidden bg-olive-900 overflow-hidden transition-all duration-300",
           isMenuOpen ? "max-h-screen" : "max-h-0"
         )}
       >
@@ -233,7 +231,10 @@ export default function Header() {
           <div className="pt-4 border-t border-olive-800">
             {isAuthenticated() ? (
               <div className="flex items-center px-4 py-3 text-base font-medium text-white">
-                <Avatar className="h-8 w-8 mr-3">
+                <Avatar
+                  className="h-8 w-8 mr-3"
+                  onClick={() => router.push(APP_ROUTES.PROFILE)}
+                >
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
@@ -241,7 +242,7 @@ export default function Header() {
                   <span>{get(user, "fullName", "Tài khoản của bạn")}</span>
                   <div className="flex mt-2 space-x-2">
                     <Link
-                      href="/profile"
+                      href={APP_ROUTES.PROFILE}
                       className="text-sm text-amber-300 hover:text-amber-200"
                     >
                       Hồ sơ
@@ -262,7 +263,10 @@ export default function Header() {
                 </Button>
               </Link>
             )}
-            <Button className="w-full bg-amber-600 hover:bg-amber-700 mt-3">
+            <Button
+              onClick={() => router.push(APP_ROUTES.MUA_VE)}
+              className="w-full bg-amber-600 hover:bg-amber-700 mt-3"
+            >
               <Ticket className="h-5 w-5 mr-2" /> Mua vé tham quan
             </Button>
           </div>

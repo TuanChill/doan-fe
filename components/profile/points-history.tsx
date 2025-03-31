@@ -52,25 +52,26 @@ const POINTS_HISTORY = [
 const REWARDS = [
   {
     id: 1,
-    name: "Vé tham quan VIP",
-    points: 200,
-    description: "Vé tham quan VIP có hướng dẫn viên riêng",
-    image: "/placeholder.svg?height=100&width=100",
+    name: "Vé tham quan",
+    points: 2000,
+    description: "Vé tham quan bảo tàng",
+    image:
+      "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/11/hien-vat-tai-bao-tang-lich-su-quan-su-viet-nam.jpg",
   },
-  {
-    id: 2,
-    name: "Sách lịch sử quân sự",
-    points: 150,
-    description: "Sách về lịch sử quân sự Việt Nam",
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Mô hình xe tăng",
-    points: 300,
-    description: "Mô hình xe tăng T-54 tỉ lệ 1:35",
-    image: "/placeholder.svg?height=100&width=100",
-  },
+  // {
+  //   id: 2,
+  //   name: "Sách lịch sử quân sự",
+  //   points: 150,
+  //   description: "Sách về lịch sử quân sự Việt Nam",
+  //   image: "/placeholder.svg?height=100&width=100",
+  // },
+  // {
+  //   id: 3,
+  //   name: "Mô hình xe tăng",
+  //   points: 300,
+  //   description: "Mô hình xe tăng T-54 tỉ lệ 1:35",
+  //   image: "/placeholder.svg?height=100&width=100",
+  // },
 ];
 
 interface PointsHistoryProps {
@@ -213,18 +214,18 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
                 key={reward.id}
                 className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col"
               >
-                <div className="h-32 bg-gray-100 flex items-center justify-center">
+                <div className="bg-gray-100 flex items-center justify-center">
                   <img
-                    src={reward.image || "/placeholder.svg"}
+                    src={reward.image}
                     alt={reward.name}
-                    className="h-24 w-24 object-contain"
+                    className="object-contain"
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <h4 className="font-medium">{reward.name}</h4>
-                  <p className="text-sm text-gray-600 mb-2">
+                  {/* <p className="text-sm text-gray-600 mb-2">
                     {reward.description}
-                  </p>
+                  </p> */}
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-amber-600">
                       {reward.points} điểm

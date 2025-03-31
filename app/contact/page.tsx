@@ -140,7 +140,7 @@ export default function ContactPage() {
             </h3>
           </div>
           {/* Hộp chứa các nút */}
-          <div className="absolute bottom-20 w-full flex justify-center gap-x-16">
+          <div className="absolute bottom-20 w-full justify-center gap-x-16 hidden lg:flex">
             {/* Nút bên trái */}
             <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl shadow-lg">
               📞 <span>(024) 3733 4464</span>

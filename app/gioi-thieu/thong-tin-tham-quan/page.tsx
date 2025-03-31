@@ -86,42 +86,40 @@ export default function VisitorInformationPage() {
           <div className="max-w-4xl mx-auto">
             <Tabs defaultValue="general" className="w-full">
               <AnimatedSection animation="fadeUp">
-                <TabsList className="grid grid-cols-4 mb-8 bg-amber-100/80 p-1 rounded-xl border border-amber-200">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 md:gap-1 mb-8 bg-amber-100/80 p-1 rounded-xl border border-amber-200 h-fit">
                   <TabsTrigger
                     value="general"
-                    className="text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
+                    className="text-xs sm:text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
                   >
-                    <Info className="h-4 w-4 mr-2 md:mr-2" />
-                    <span className="hidden md:inline">Thông tin chung</span>
-                    <span className="inline md:hidden">Chung</span>
+                    <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Thông tin chung</span>
+                    <span className="inline sm:hidden">Chung</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="location"
-                    className="text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
+                    className="text-xs sm:text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
                   >
-                    <MapPin className="h-4 w-4 mr-2 md:mr-2" />
-                    <span className="hidden md:inline">
-                      Địa Điểm & Hướng dẫn đi lại
+                    <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">
+                      Địa Điểm & Hướng dẫn
                     </span>
-                    <span className="inline md:hidden">
-                      Địa Điểm & Hướng dẫn đi lại
-                    </span>
+                    <span className="inline sm:hidden">Địa điểm</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="rules"
-                    className="text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
+                    className="text-xs sm:text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
                   >
-                    <AlertTriangle className="h-4 w-4 mr-2 md:mr-2" />
-                    <span className="hidden md:inline">Quy định</span>
-                    <span className="inline md:hidden">Quy định</span>
+                    <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Quy định</span>
+                    <span className="inline sm:hidden">Quy định</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="faq"
-                    className="text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
+                    className="text-xs sm:text-sm data-[state=active]:bg-amber-600 data-[state=active]:text-white"
                   >
-                    <HelpCircle className="h-4 w-4 mr-2 md:mr-2" />
-                    <span className="hidden md:inline">Câu hỏi thường gặp</span>
-                    <span className="inline md:hidden">FAQ</span>
+                    <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Câu hỏi thường gặp</span>
+                    <span className="inline sm:hidden">FAQ</span>
                   </TabsTrigger>
                 </TabsList>
               </AnimatedSection>
