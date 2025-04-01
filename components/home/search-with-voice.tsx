@@ -343,7 +343,7 @@ export default function Search() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Tìm kiếm trong bảo tàng..."
-                className="flex-1 outline-none text text-black"
+                className="outline-none text text-black flex-1 min-w-[100px] max-w-full md:w-full text-xs md:text-base"
                 autoComplete="off"
               />
               {searchQuery && (

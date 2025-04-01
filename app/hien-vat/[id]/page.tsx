@@ -630,10 +630,10 @@ export default function ArtifactDetailPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {relatedArtifacts.map((relatedArtifact) => (
                       <div
-                        key={relatedArtifact.id}
+                        key={relatedArtifact.documentId}
                         className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
                         onClick={() =>
-                          router.push(`/hien-vat/${relatedArtifact.id}`)
+                          router.push(`/hien-vat/${relatedArtifact.documentId}`)
                         }
                       >
                         <div className="aspect-square bg-gray-100">

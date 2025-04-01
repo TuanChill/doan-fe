@@ -1,6 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Award, ChevronUp, ChevronDown, Calendar, Clock } from "lucide-react";
 import { get } from "lodash";
+import { useEffect, useState } from "react";
+import { getUserPointsHistory } from "@/request/action";
+import { useUserStore } from "@/stores/user-store";
 // Mock points history data
 const POINTS_HISTORY = [
   {
@@ -49,25 +52,26 @@ const POINTS_HISTORY = [
 const REWARDS = [
   {
     id: 1,
-    name: "Vé tham quan VIP",
-    points: 200,
-    description: "Vé tham quan VIP có hướng dẫn viên riêng",
-    image: "/placeholder.svg?height=100&width=100",
+    name: "Vé tham quan",
+    points: 2000,
+    description: "Vé tham quan bảo tàng",
+    image:
+      "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/11/hien-vat-tai-bao-tang-lich-su-quan-su-viet-nam.jpg",
   },
-  {
-    id: 2,
-    name: "Sách lịch sử quân sự",
-    points: 150,
-    description: "Sách về lịch sử quân sự Việt Nam",
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Mô hình xe tăng",
-    points: 300,
-    description: "Mô hình xe tăng T-54 tỉ lệ 1:35",
-    image: "/placeholder.svg?height=100&width=100",
-  },
+  // {
+  //   id: 2,
+  //   name: "Sách lịch sử quân sự",
+  //   points: 150,
+  //   description: "Sách về lịch sử quân sự Việt Nam",
+  //   image: "/placeholder.svg?height=100&width=100",
+  // },
+  // {
+  //   id: 3,
+  //   name: "Mô hình xe tăng",
+  //   points: 300,
+  //   description: "Mô hình xe tăng T-54 tỉ lệ 1:35",
+  //   image: "/placeholder.svg?height=100&width=100",
+  // },
 ];
 
 interface PointsHistoryProps {
@@ -77,6 +81,23 @@ interface PointsHistoryProps {
 }
 
 export default function PointsHistory({ userData }: PointsHistoryProps) {
+  const [pointsHistory, setPointsHistory] = useState([]);
+  const { user } = useUserStore();
+
+  const handleGetPointsHistory = async () => {
+    try {
+      if (!user?.id) return;
+      const res = await getUserPointsHistory(user?.id);
+      setPointsHistory(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetPointsHistory();
+  }, []);
+
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -135,17 +156,17 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
           <h3 className="text-xl font-bold mb-6">Lịch sử điểm</h3>
 
           <div className="space-y-4">
-            {POINTS_HISTORY.map((item) => (
+            {pointsHistory?.map((item) => (
               <div
-                key={item.id}
+                key={get(item, "id", 0)}
                 className="flex items-start p-4 bg-gray-50 rounded-lg"
               >
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
-                    item.type === "earn" ? "bg-green-100" : "bg-red-100"
+                    get(item, "point", 0) > 0 ? "bg-green-100" : "bg-red-100"
                   }`}
                 >
-                  {item.type === "earn" ? (
+                  {get(item, "point", 0) > 0 ? (
                     <ChevronUp className="h-5 w-5 text-green-600" />
                   ) : (
                     <ChevronDown className="h-5 w-5 text-red-600" />
@@ -154,21 +175,27 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
 
                 <div className="flex-1">
                   <div className="flex justify-between">
-                    <h4 className="font-medium">{item.description}</h4>
+                    <h4 className="font-medium">{get(item, "name", "")}</h4>
                     <span
                       className={`font-bold ${
-                        item.type === "earn" ? "text-green-600" : "text-red-600"
+                        get(item, "point", 0) > 0
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
-                      {item.type === "earn" ? "+" : "-"}
-                      {item.amount} điểm
+                      {get(item, "point", 0) > 0 ? "+" : "-"}
+                      {get(item, "point", 0)} điểm
                     </span>
                   </div>
                   <div className="flex items-center text-sm text-gray-500 mt-1">
                     <Calendar className="h-3 w-3 mr-1" />
-                    <span>{formatDate(item.date)}</span>
+                    <span>{formatDate(get(item, "createdAt", ""))}</span>
                     <Clock className="h-3 w-3 ml-3 mr-1" />
-                    <span>{item.time}</span>
+                    <span>
+                      {new Date(
+                        get(item, "createdAt", "")
+                      ).toLocaleTimeString()}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -187,18 +214,18 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
                 key={reward.id}
                 className="bg-white border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col"
               >
-                <div className="h-32 bg-gray-100 flex items-center justify-center">
+                <div className="bg-gray-100 flex items-center justify-center">
                   <img
-                    src={reward.image || "/placeholder.svg"}
+                    src={reward.image}
                     alt={reward.name}
-                    className="h-24 w-24 object-contain"
+                    className="object-contain"
                   />
                 </div>
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <h4 className="font-medium">{reward.name}</h4>
-                  <p className="text-sm text-gray-600 mb-2">
+                  {/* <p className="text-sm text-gray-600 mb-2">
                     {reward.description}
-                  </p>
+                  </p> */}
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-amber-600">
                       {reward.points} điểm

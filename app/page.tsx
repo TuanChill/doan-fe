@@ -106,7 +106,7 @@ export default function Home() {
         </div>
 
         {/* Animated Decorative Elements */}
-        <div className="absolute bottom-0 left-0 w-full h-20 z-20">
+        <div className="absolute bottom-0 left-0 w-full h-20 z-20 lg:block hidden">
           <svg
             viewBox="0 0 1440 120"
             fill="none"
@@ -179,12 +179,15 @@ export default function Home() {
               animation="fadeRight"
               className="lg:w-1/2 relative hidden lg:block"
             >
-              <div className="aspect-video rounded-lg overflow-hidden border-4 border-amber-600 shadow-xl">
+              <div
+                onClick={handleThamQuanVR360}
+                className="aspect-video rounded-lg overflow-hidden border-4 border-amber-600 shadow-xl cursor-pointer"
+              >
                 <div
-                  className="absolute inset-0 bg-cover bg-center"
+                  className="absolute inset-0 bg-cover bg-center rounded-md brightness-75"
                   style={{
                     backgroundImage:
-                      "url('/placeholder.svg?height=720&width=1280')",
+                      "url('https://doan-hvnh.s3.ap-southeast-1.amazonaws.com/vr+cover.webp')",
                   }}
                 ></div>
                 <div className="absolute inset-0 flex items-center justify-center">

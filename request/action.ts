@@ -1,0 +1,16 @@
+import { fdAxios } from "@/components/config/axios.config"
+import { API_ROUTES } from "@/const/api";
+
+export const getUserPointsHistory = async (userId: number) => {
+    const params = {
+        user: userId,
+        pagination: {
+            page: 1,
+            pageSize: 10,
+        },
+        sort: "createdAt:desc",
+    }
+
+    const res = await fdAxios.get(API_ROUTES.ACTIVITY_POINTS, { params });
+    return res.data;
+}

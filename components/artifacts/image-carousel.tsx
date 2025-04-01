@@ -86,7 +86,7 @@ export default function ImageCarousel({
 
   return (
     <div
-      className="relative aspect-square overflow-hidden"
+      className="relative min-h-[400px] overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -96,7 +96,7 @@ export default function ImageCarousel({
           <div
             key={index}
             className={cn(
-              "absolute inset-0 transition-opacity duration-500",
+              "absolute inset-0 transition-opacity duration-500 max-w-[500px] max-h-[400px]",
               index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
             )}
           >
@@ -104,8 +104,9 @@ export default function ImageCarousel({
               src={image}
               alt={`${altText} - Hình ${index + 1}`}
               className="object-contain"
-              width={800}
-              height={800}
+              width={500}
+              height={400}
+              layout="fixed"
             />
           </div>
         ))}
