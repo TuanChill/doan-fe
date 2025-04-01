@@ -58,7 +58,7 @@ export default function VR360Page() {
               <h2 className="text-2xl font-bold">Khám phá các khu vực</h2>
               <div className="w-full h-[800px] rounded-lg overflow-hidden mt-3">
                 <iframe
-                  src="https://vr-tour-doan.vercel.app/"
+                  src={process.env.NEXT_PUBLIC_IFRAME_VR_TOUR}
                   className="w-full h-full"
                 />
               </div>
