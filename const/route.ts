@@ -18,5 +18,6 @@ export const PRIVATE_ROUTES = {
   PROFILE: "/profile",
   MUA_VE: "/mua-ve",
   // AI_AGENT: "/ai-agent",
+  DOI_VE: "/doi-diem/ve",
 };
 

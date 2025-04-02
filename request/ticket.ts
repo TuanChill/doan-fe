@@ -7,3 +7,9 @@ export const getTicket = async (invoiceDetailId: string) => {
   return res.data;
 };
 
+export const pointToTicket = async (data: any) => {
+  const res = await fdAxios.post(`/buy-ticket/point-to-ticket`, {
+    ...data,
+  });
+  return res.data;
+}

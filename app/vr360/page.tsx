@@ -78,11 +78,9 @@ export default function VR360Page() {
                         <div
                           className="aspect-video bg-cover bg-center"
                           style={{
-                            backgroundImage: `url(${get(
-                              item,
-                              "image.url",
-                              ""
-                            )})`,
+                            backgroundImage: `url(${
+                              process.env.NEXT_PUBLIC_BASE_URL
+                            }${get(item, "image.url", "")})`,
                           }}
                         ></div>
                         <CardContent className="p-4">

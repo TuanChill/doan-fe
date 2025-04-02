@@ -39,6 +39,9 @@ import AnimatedSection from "@/components/ui/animated-section";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useUserStore } from "@/stores/user-store";
+import { useLoadingStore } from "@/stores/loading-store";
+import { pointToTicket } from "@/request/ticket";
+import { SnackbarTypes, useSnackBarStore } from "@/stores/snackbar-store";
 
 // Định nghĩa schema cho form
 const formSchema = z.object({
@@ -61,7 +64,12 @@ export default function RedeemPointsPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { user } = useUserStore();
+  const { user, reload } = useUserStore();
+  const [showLoading, hideLoading] = useLoadingStore((state) => [
+    state.show,
+    state.hide,
+  ]);
+  const { show } = useSnackBarStore();
 
   // Thông tin vé và điểm
   const ticketInfo = {
@@ -102,23 +110,36 @@ export default function RedeemPointsPage() {
     setError(null);
 
     try {
-      // Giả lập gọi API để đổi điểm
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Form data submitted:", data);
+      showLoading();
+      const res = await pointToTicket({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phone,
+        visitDate: data.visitDate,
+      });
 
       // Giả định thành công
       setIsSuccess(true);
+      show(
+        SnackbarTypes.success,
+        "Đổi điểm thành công! Vé sẽ được gửi đến email của bạn."
+      );
 
+      reload();
       // Chuyển hướng sau 3 giây
       setTimeout(() => {
-        router.push("/doi-diem/thanh-cong");
+        router.push(`/mua-ve/mua-ve-thanh-cong?apptransid=${res?.transId}`);
       }, 3000);
     } catch (err) {
       console.error("Error redeeming points:", err);
       setError("Đã xảy ra lỗi khi đổi điểm. Vui lòng thử lại sau.");
+      show(
+        SnackbarTypes.error,
+        "Đã xảy ra lỗi khi đổi điểm. Vui lòng thử lại sau."
+      );
     } finally {
       setIsSubmitting(false);
+      hideLoading();
     }
   };
 

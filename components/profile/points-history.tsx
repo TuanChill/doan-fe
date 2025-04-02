@@ -4,6 +4,7 @@ import { get } from "lodash";
 import { useEffect, useState } from "react";
 import { getUserPointsHistory } from "@/request/action";
 import { useUserStore } from "@/stores/user-store";
+import { useRouter } from "next/navigation";
 // Mock points history data
 const POINTS_HISTORY = [
   {
@@ -55,6 +56,7 @@ const REWARDS = [
     name: "Vé tham quan",
     points: 2000,
     description: "Vé tham quan bảo tàng",
+    link: "/doi-diem/ve",
     image:
       "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/11/hien-vat-tai-bao-tang-lich-su-quan-su-viet-nam.jpg",
   },
@@ -83,6 +85,7 @@ interface PointsHistoryProps {
 export default function PointsHistory({ userData }: PointsHistoryProps) {
   const [pointsHistory, setPointsHistory] = useState([]);
   const { user } = useUserStore();
+  const router = useRouter();
 
   const handleGetPointsHistory = async () => {
     try {
@@ -237,6 +240,9 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
                           : "bg-gray-200 text-gray-500 cursor-not-allowed"
                       }`}
                       disabled={get(userData, "point", 0) < reward.points}
+                      onClick={() => {
+                        router.push(reward.link);
+                      }}
                     >
                       Đổi quà
                     </button>
