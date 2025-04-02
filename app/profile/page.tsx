@@ -28,6 +28,7 @@ import { useUserStore } from "@/stores/user-store";
 import { User as UserType } from "@/types/user";
 import { updateUser } from "@/request/auth";
 import { useSnackBarStore } from "@/stores/snackbar-store";
+import TicketsHistory from "@/components/profile/tickets-history";
 
 export default function ProfilePage() {
   const { user, setUserInfo } = useUserStore();
@@ -168,7 +169,7 @@ export default function ProfilePage() {
               className="w-full"
               onValueChange={(value) => setTab(value)}
             >
-              <TabsList className="mb-8 grid grid-cols-2 gap-2 md:gap-1 h-fit">
+              <TabsList className="mb-8 grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-1 h-fit">
                 <TabsTrigger value="profile" className="text-sm">
                   <User className="h-4 w-4 mr-2" />
                   Thông tin cá nhân
@@ -176,6 +177,10 @@ export default function ProfilePage() {
                 <TabsTrigger value="points" className="text-sm">
                   <Award className="h-4 w-4 mr-2" />
                   Điểm tích lũy
+                </TabsTrigger>
+                <TabsTrigger value="tickets" className="text-sm">
+                  <Ticket className="h-4 w-4 mr-2" />
+                  Vé của tôi
                 </TabsTrigger>
                 {/* <TabsTrigger value="visits" className="text-sm">
                   <Ticket className="h-4 w-4 mr-2" />
@@ -234,6 +239,10 @@ export default function ProfilePage() {
 
               <TabsContent value="visits">
                 <VisitHistory userData={user as UserType} />
+              </TabsContent>
+
+              <TabsContent value="tickets">
+                <TicketsHistory />
               </TabsContent>
             </Tabs>
           </div>

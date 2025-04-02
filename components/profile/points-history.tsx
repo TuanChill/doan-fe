@@ -2,52 +2,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Award, ChevronUp, ChevronDown, Calendar, Clock } from "lucide-react";
 import { get } from "lodash";
 import { useEffect, useState } from "react";
-import { getUserPointsHistory } from "@/request/action";
+import {
+  getUserPointsHistory,
+  getUserPointsHistoryUsed,
+} from "@/request/action";
 import { useUserStore } from "@/stores/user-store";
 import { useRouter } from "next/navigation";
-// Mock points history data
-const POINTS_HISTORY = [
-  {
-    id: 1,
-    date: "2023-12-15",
-    type: "earn",
-    amount: 50,
-    description: "Tham quan bảo tàng",
-    time: "10:30",
-  },
-  {
-    id: 2,
-    date: "2023-11-20",
-    type: "earn",
-    amount: 100,
-    description: "Tham gia sự kiện kỷ niệm 70 năm chiến thắng Điện Biên Phủ",
-    time: "14:15",
-  },
-  {
-    id: 3,
-    date: "2023-10-05",
-    type: "spend",
-    amount: 150,
-    description: "Đổi quà lưu niệm",
-    time: "16:45",
-  },
-  {
-    id: 4,
-    date: "2023-09-18",
-    type: "earn",
-    amount: 75,
-    description: "Tham quan bảo tàng",
-    time: "09:20",
-  },
-  {
-    id: 5,
-    date: "2023-08-30",
-    type: "earn",
-    amount: 175,
-    description: "Tham gia tour hướng dẫn đặc biệt",
-    time: "13:00",
-  },
-];
+import AnimatedSection from "@/components/ui/animated-section";
 
 // Mock rewards data
 const REWARDS = [
@@ -84,6 +45,7 @@ interface PointsHistoryProps {
 
 export default function PointsHistory({ userData }: PointsHistoryProps) {
   const [pointsHistory, setPointsHistory] = useState([]);
+  const [totalPointUsed, setTotalPointUsed] = useState(0);
   const { user } = useUserStore();
   const router = useRouter();
 
@@ -97,8 +59,23 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
     }
   };
 
+  const handleGetPointsHistoryUsed = async () => {
+    try {
+      if (!user?.id) return;
+      const res = await getUserPointsHistoryUsed(user?.id);
+      const totalUsed = res.data.reduce(
+        (acc: number, item: any) => acc + Math.abs(item.point),
+        0
+      );
+      setTotalPointUsed(totalUsed);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleGetPointsHistory();
+    handleGetPointsHistoryUsed();
   }, []);
 
   // Format date
@@ -139,14 +116,14 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
                 Điểm đã tích lũy
               </div>
               <div className="text-3xl font-bold text-green-800">
-                {get(userData, "point", 0)}
+                {totalPointUsed + Number(get(userData, "point", 0))}
               </div>
             </div>
 
             <div className="bg-red-50 p-4 rounded-lg border border-red-200">
               <div className="text-sm text-red-700 mb-1">Điểm đã sử dụng</div>
               <div className="text-3xl font-bold text-red-800">
-                {get(userData, "point", 0)}
+                {totalPointUsed}
               </div>
             </div>
           </div>
@@ -160,48 +137,47 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
 
           <div className="space-y-4">
             {pointsHistory?.map((item) => (
-              <div
-                key={get(item, "id", 0)}
-                className="flex items-start p-4 bg-gray-50 rounded-lg"
-              >
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
-                    get(item, "point", 0) > 0 ? "bg-green-100" : "bg-red-100"
-                  }`}
-                >
-                  {get(item, "point", 0) > 0 ? (
-                    <ChevronUp className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <ChevronDown className="h-5 w-5 text-red-600" />
-                  )}
-                </div>
+              <AnimatedSection key={get(item, "id", 0)} animation="fadeUp">
+                <div className="flex items-start p-4 bg-gray-50 rounded-lg">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
+                      get(item, "point", 0) > 0 ? "bg-green-100" : "bg-red-100"
+                    }`}
+                  >
+                    {get(item, "point", 0) > 0 ? (
+                      <ChevronUp className="h-5 w-5 text-green-600" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5 text-red-600" />
+                    )}
+                  </div>
 
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h4 className="font-medium">{get(item, "name", "")}</h4>
-                    <span
-                      className={`font-bold ${
-                        get(item, "point", 0) > 0
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {get(item, "point", 0) > 0 ? "+" : "-"}
-                      {get(item, "point", 0)} điểm
-                    </span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-500 mt-1">
-                    <Calendar className="h-3 w-3 mr-1" />
-                    <span>{formatDate(get(item, "createdAt", ""))}</span>
-                    <Clock className="h-3 w-3 ml-3 mr-1" />
-                    <span>
-                      {new Date(
-                        get(item, "createdAt", "")
-                      ).toLocaleTimeString()}
-                    </span>
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <h4 className="font-medium">{get(item, "name", "")}</h4>
+                      <span
+                        className={`font-bold ${
+                          get(item, "point", 0) > 0
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {get(item, "point", 0) > 0 ? "+" : "-"}
+                        {get(item, "point", 0)} điểm
+                      </span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <span>{formatDate(get(item, "createdAt", ""))}</span>
+                      <Clock className="h-3 w-3 ml-3 mr-1" />
+                      <span>
+                        {new Date(
+                          get(item, "createdAt", "")
+                        ).toLocaleTimeString()}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </CardContent>

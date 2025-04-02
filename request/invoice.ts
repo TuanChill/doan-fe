@@ -1,5 +1,6 @@
 import { fdAxios } from "@/components/config/axios.config";
 import { API_ROUTES } from "@/const/api";
+import qs from "qs";
 
 export const getInvoiceByTransId = async (transId: string) => {
   const res = await fdAxios.get(
@@ -7,3 +8,28 @@ export const getInvoiceByTransId = async (transId: string) => {
   );
   return res.data;
 };
+
+enum InvoiceStatus {
+  EXPIRED = "EXPIRED",
+  UNEXPIRED = "UNEXPIRED",
+}
+
+export const getAllInvoice = async (page: number, pageSize: number, status?: InvoiceStatus) => {
+  let params = qs.stringify({
+    pagination: {
+      page,
+      pageSize,
+    },
+    populate: '*',
+    sort: ['createdAt:desc']
+  });
+
+  if(status === InvoiceStatus.EXPIRED) {
+    params += '&filters[invoice_detail][validDate][$eq]=EXPIRED';
+  } else if(status === InvoiceStatus.UNEXPIRED) {
+    params += '&filters[status][$eq]=UNEXPIRED';
+  }
+
+  const res = await fdAxios.get(`${API_ROUTES.INVOICE}?${params}`);
+  return res.data;
+}

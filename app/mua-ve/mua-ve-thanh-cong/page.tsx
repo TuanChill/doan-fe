@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Home, AlertTriangle, Mail, Download, Share2 } from "lucide-react";
+import { Home, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
 import AnimatedSection from "@/components/ui/animated-section";
 import dynamic from "next/dynamic";
@@ -12,7 +12,6 @@ import confettiAnimation from "@/public/confetti-animation.json";
 import successAnimation from "@/public/success-animation.json";
 import { getInvoiceByTransId } from "@/request/invoice";
 import { get } from "lodash";
-import { getTicket } from "@/request/ticket";
 import Image from "next/image";
 
 // Dynamic import của Lottie
