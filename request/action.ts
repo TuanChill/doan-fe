@@ -8,7 +8,26 @@ export const getUserPointsHistory = async (userId: number) => {
             page: 1,
             pageSize: 10,
         },
-        sort: "createdAt:desc",
+        sort:["createdAt:desc"],
+    }
+
+    const res = await fdAxios.get(API_ROUTES.ACTIVITY_POINTS, { params });
+    return res.data;
+}
+
+export const getUserPointsHistoryUsed = async (userId: number) => {
+    const params = {
+        user: userId,
+        pagination: {
+            page: 1,
+            pageSize: 10,
+        },
+        filters: {
+            point: {
+                $lt: 0,
+            },
+        },
+        sort:["createdAt:desc"],
     }
 
     const res = await fdAxios.get(API_ROUTES.ACTIVITY_POINTS, { params });

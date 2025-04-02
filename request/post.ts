@@ -8,7 +8,7 @@ export const getPostList = async ({ page = 1, limit = 10 }: { page?: number, lim
             page,
             pageSize: limit
         },
-        order: ['createdAt:desc']
+        sort: ['createdAt:desc']
     });
 
     const response = await fdAxios.get(`${API_ROUTES.POST}?${params}`);
@@ -37,7 +37,7 @@ export const getPostByCategory = async (page: number, limit: number, category?: 
             page,
             pageSize: limit
         },
-        order: ['createdAt:desc', 'view:desc']
+        sort: ['createdAt:desc', 'view:desc']
     });
 
     if (category) {
