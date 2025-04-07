@@ -22,10 +22,14 @@ import { User } from "@/types/user";
 const formSchema = z.object({
   username: z
     .string()
-    .min(3, { message: "Tên đăng nhập phải có ít nhất 3 ký tự" }),
+    .min(6, { message: "Tên đăng nhập phải có ít nhất 6 ký tự" }),
   email: z.string().email({ message: "Email không hợp lệ" }),
   fullName: z.string().min(2, { message: "Họ tên phải có ít nhất 2 ký tự" }),
-  phoneNumber: z.string().min(10, { message: "Số điện thoại không hợp lệ" }),
+  phoneNumber: z
+    .string()
+    .refine((val) => /(84|0[3|5|7|8|9])+([0-9]{8})\b/g.test(val), {
+      message: "Số điện thoại không hợp lệ",
+    }),
   address: z.string().min(5, { message: "Địa chỉ phải có ít nhất 5 ký tự" }),
   dateOfBirth: z.date().optional(),
   gender: z.enum(["male", "female", "other"], {
@@ -74,6 +78,10 @@ export default function ProfileEditForm({
           <Input
             id="username"
             {...form.register("username")}
+            onChange={(e) => {
+              const value = e.target.value;
+              form.setValue("username", value.trim());
+            }}
             className="mt-1"
           />
           {form.formState.errors.username && (
@@ -89,6 +97,10 @@ export default function ProfileEditForm({
             id="full_name"
             {...form.register("fullName")}
             className="mt-1"
+            onChange={(e) => {
+              const value = e.target.value;
+              form.setValue("fullName", value.trim());
+            }}
           />
           {form.formState.errors.fullName && (
             <p className="text-sm text-red-500 mt-1">
@@ -104,6 +116,10 @@ export default function ProfileEditForm({
             type="email"
             {...form.register("email")}
             className="mt-1"
+            onChange={(e) => {
+              const value = e.target.value;
+              form.setValue("email", value.trim());
+            }}
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-500 mt-1">
@@ -118,6 +134,10 @@ export default function ProfileEditForm({
             id="phone"
             {...form.register("phoneNumber")}
             className="mt-1"
+            onChange={(e) => {
+              const value = e.target.value;
+              form.setValue("phoneNumber", value.trim());
+            }}
           />
           {form.formState.errors.phoneNumber && (
             <p className="text-sm text-red-500 mt-1">
