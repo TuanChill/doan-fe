@@ -4,7 +4,14 @@ import type React from "react";
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Clock, Calendar, Award, BookOpen, History } from "lucide-react";
+import {
+  Clock,
+  Calendar,
+  Award,
+  BookOpen,
+  History,
+  ArrowUp,
+} from "lucide-react";
 import AnimatedSection from "@/components/ui/animated-section";
 import Link from "next/link";
 import TextToSpeechPlayer from "@/components/text-to-speech";
@@ -336,6 +343,16 @@ export default function Page() {
 
       {/* Text-to-Speech Player */}
       <TextToSpeechPlayer sections={contentSections} />
+      <Button
+        variant="outline"
+        size="icon"
+        className="fixed bottom-24 right-4 bg-white hover:bg-gray-100"
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      >
+        <ArrowUp className="h-4 w-4" />
+      </Button>
     </div>
   );
 }

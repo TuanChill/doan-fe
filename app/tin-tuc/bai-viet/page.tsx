@@ -50,6 +50,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { searchPost } from "@/lib/melisearch";
 import { createHistorySearch } from "@/request/history-search";
 import { useUserStore } from "@/stores/user-store";
+import { useRouter } from "next/navigation";
 
 export default function NewsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,6 +68,7 @@ export default function NewsPage() {
   const [total, setTotal] = useState(0);
 
   const { user } = useUserStore();
+  const router = useRouter();
 
   const handleGetHighlightNews = useCallback(async () => {
     try {
@@ -335,7 +337,12 @@ export default function NewsPage() {
                       alt={get(news, "title", "")}
                       width={300}
                       height={200}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      onClick={() => {
+                        router.push(
+                          `/tin-tuc/bai-viet/${get(news, "documentId", "")}`
+                        );
+                      }}
+                      className="w-full h-full cursor-pointer object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute top-2 right-2">
                       {get(news, "category.name", "") && (

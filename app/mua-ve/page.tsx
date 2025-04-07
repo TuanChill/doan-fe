@@ -94,7 +94,7 @@ export default function TicketPurchasePage() {
   };
 
   // Next step handler
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === 1) {
       // Check if at least one ticket is selected
       if (totalTickets === 0) {
@@ -117,17 +117,16 @@ export default function TicketPurchasePage() {
 
     // Validate form fields for current step
     if (step === 2) {
-      const { fullName, email, phoneNumber } = form.getValues();
-      if (!fullName || !email || !phoneNumber) {
-        form.trigger(["fullName", "email", "phoneNumber"]);
-        return;
-      }
+      // Trigger validation for all step 2 fields
+      const step2Fields: (keyof TicketFormValues)[] = [
+        "fullName",
+        "email",
+        "phoneNumber",
+        "agree",
+      ];
+      const isValid = await form.trigger(step2Fields);
 
-      if (!form.getValues("agree")) {
-        form.setError("agree", {
-          type: "manual",
-          message: "Vui lòng đồng ý với điều khoản và chính sách bảo mật",
-        });
+      if (!isValid) {
         return;
       }
     }

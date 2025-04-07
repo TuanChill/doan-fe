@@ -61,7 +61,7 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-4">Liên kết nhanh</h3>
             <ul className="space-y-2">
-              <FooterLink href="/gioi-thieu" label="Giới thiệu" />
+              <FooterLink href="/gioi-thieu/lich-su" label="Giới thiệu" />
               <FooterLink href="/tin-tuc" label="Tin tức & Sự kiện" />
               <FooterLink href="/vr360" label="Tham quan VR360°" />
               <FooterLink href="/hien-vat" label="Hiện vật trưng bày" />

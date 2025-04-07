@@ -56,7 +56,10 @@ export default function PersonalInformation({
             <Input
               id="fullName"
               className="mt-1"
-              {...form.register("fullName")}
+              placeholder="Nhập họ và tên của bạn"
+              {...form.register("fullName", {
+                setValueAs: (value) => value?.trim(),
+              })}
               defaultValue={get(user, "fullName", "")}
             />
             {form.formState.errors.fullName && (
@@ -74,7 +77,10 @@ export default function PersonalInformation({
               id="email"
               type="email"
               className="mt-1"
-              {...form.register("email")}
+              placeholder="Nhập địa chỉ email của bạn"
+              {...form.register("email", {
+                setValueAs: (value) => value?.trim(),
+              })}
               defaultValue={get(user, "email", "")}
             />
             {form.formState.errors.email && (
@@ -88,7 +94,10 @@ export default function PersonalInformation({
             <Input
               id="phone"
               className="mt-1"
-              {...form.register("phoneNumber")}
+              placeholder="Nhập số điện thoại của bạn"
+              {...form.register("phoneNumber", {
+                setValueAs: (value) => value?.trim(),
+              })}
               defaultValue={get(user, "phoneNumber", "") || ""}
             />
             {form.formState.errors.phoneNumber && (

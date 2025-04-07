@@ -9,6 +9,7 @@ import { useSnackBarStore } from "@/stores/snackbar-store";
 import { APP_ROUTES } from "@/const/route";
 import { useUserStore } from "@/stores/user-store";
 import Link from "next/link";
+import { get } from "lodash";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -150,24 +151,27 @@ export default function RegisterForm() {
 
     try {
       showLoading();
-      const response = await register(
-        formData.username,
-        formData.email,
-        formData.password
-      );
+      await register(formData.username, formData.email, formData.password);
 
       success("Đăng ký thành công!");
 
-      setAuth(response.user, response.jwt);
-      if (redirectTo) {
-        setRedirectTo(null);
-        router.push(redirectTo);
-      } else {
-        router.push(APP_ROUTES.HOME);
-      }
+      // setAuth(response.user, response.jwt);
+      // if (redirectTo) {
+      // setRedirectTo(null);
+      // router.push(redirectTo);
+      // } else {
+      router.push(APP_ROUTES.LOGIN);
+      // }
     } catch (err) {
       console.error(err);
-      error("Đăng ký không thành công");
+      if (
+        get(err, "response.data.error.message") ===
+        "Email or Username are already taken"
+      ) {
+        error("Email hoặc tên người dùng đã tồn tại");
+      } else {
+        error("Đăng ký không thành công");
+      }
     } finally {
       hideLoading();
     }

@@ -88,7 +88,7 @@ export default function Header() {
                   icon: <Clock className="h-4 w-4" />,
                 },
                 {
-                  href: "/contact",
+                  href: "/lien-he",
                   label: "Liên hệ",
                   icon: <Mail className="h-4 w-4" />,
                 },
@@ -104,7 +104,6 @@ export default function Header() {
               href="/vr360"
               label="Tham quan VR360°"
               icon={<Map className="h-4 w-4" />}
-              highlight
               isActive={pathName.includes("/vr360")}
             />
             <NavItem
@@ -199,7 +198,7 @@ export default function Header() {
                   icon: <Clock className="h-5 w-5" />,
                 },
                 {
-                  href: "/contact",
+                  href: "/lien-he",
                   label: "Liên hệ",
                   icon: <Mail className="h-5 w-5" />,
                 },
@@ -209,22 +208,25 @@ export default function Header() {
               href="/tin-tuc"
               label="Tin tức & Sự kiện"
               icon={<Newspaper className="h-5 w-5" />}
+              isActive={pathName.includes("/tin-tuc")}
             />
             <MobileNavItem
               href="/vr360"
               label="Tham quan VR360°"
               icon={<Map className="h-5 w-5" />}
-              highlight
+              isActive={pathName.includes("/vr360")}
             />
             <MobileNavItem
               href="/hien-vat"
               label="Hiện vật"
               icon={<Image className="h-5 w-5" />}
+              isActive={pathName.includes("/hien-vat")}
             />
             <MobileNavItem
               href="/ai-agent"
               label="AI Hỏi đáp"
               icon={<MessageSquareText className="h-5 w-5" />}
+              isActive={pathName.includes("/ai-agent")}
             />
           </nav>
 
@@ -281,13 +283,11 @@ function NavItem({
   href,
   label,
   icon,
-  highlight = false,
   isActive = false,
 }: {
   href: string;
   label: string;
   icon?: React.ReactNode;
-  highlight?: boolean;
   isActive?: boolean;
 }) {
   return (
@@ -295,10 +295,9 @@ function NavItem({
       href={href}
       className={cn(
         "px-3 py-2 rounded-md text-base font-medium flex items-center space-x-1 transition-colors",
-        highlight
+        isActive
           ? "bg-amber-600 hover:bg-amber-700 text-white"
-          : "text-white hover:bg-white/10",
-        isActive && "bg-gray-700 hover:bg-gray-800 text-white"
+          : "text-white hover:bg-white/10"
       )}
     >
       {icon && icon}
@@ -384,14 +383,14 @@ function MobileNavItem({
   href,
   label,
   icon,
-  highlight = false,
   subItems,
+  isActive = false,
 }: {
   href: string;
   label: string;
   icon?: React.ReactNode;
-  highlight?: boolean;
   subItems?: { href: string; label: string; icon?: React.ReactNode }[];
+  isActive?: boolean;
 }) {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
@@ -402,7 +401,7 @@ function MobileNavItem({
         href={href}
         className={cn(
           "px-4 py-3 rounded-md text-base font-medium flex items-center space-x-3 transition-colors",
-          highlight
+          isActive
             ? "bg-amber-600 hover:bg-amber-700 text-white"
             : "text-white hover:bg-white/10"
         )}
@@ -420,7 +419,7 @@ function MobileNavItem({
         onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
         className={cn(
           "w-full px-4 py-3 rounded-md text-base font-medium flex items-center justify-between transition-colors",
-          highlight
+          isActive
             ? "bg-amber-600 hover:bg-amber-700 text-white"
             : "text-white hover:bg-white/10"
         )}

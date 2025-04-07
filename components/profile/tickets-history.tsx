@@ -304,7 +304,7 @@ function TicketItem({
     >
       <div className="flex-1">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
-          <h4 className="font-medium">Vé tham quam</h4>
+          <h4 className="font-medium">Vé tham quan</h4>
           <div className="flex items-center mt-1 md:mt-0">
             {new Date(get(ticket, "invoice_details[0].validDate", "N/A")) >
             new Date() ? (

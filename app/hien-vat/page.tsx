@@ -139,7 +139,7 @@ export default function ArtifactsPage() {
 
   // Reset filters
   const resetFilters = () => {
-    setSearchQuery("");
+    // setSearchQuery("");
     setSelectedCategories([]);
     setYearRange([1000, 2000]);
   };
@@ -196,7 +196,7 @@ export default function ArtifactsPage() {
               />
               {searchQuery && (
                 <button
-                  className="absolute right-3 top-2.5  h-5 w-5 text-gray-400"
+                  className="absolute right-3 top-2  h-5 w-5 text-gray-400"
                   onClick={() => setSearchQuery("")}
                 >
                   <X className="h-5 w-5" />

@@ -46,7 +46,7 @@ export const searchPost = async (
     limit: pageSize,
     page: page,
     filter: condition,
-    attributesToRetrieve: ["id", "title", "content", "category", "date", "image", "slug"],
+    attributesToRetrieve: ["id", "title", "content", "category", "date", "image", "slug", "documentId"],
   });
   return results;
 };

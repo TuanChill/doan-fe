@@ -180,6 +180,7 @@ export default function ContactPage() {
                     <textarea
                       className="w-full h-16 border rounded-lg p-2"
                       value={value}
+                      placeholder="Nhập nội dung tin nhắn của bạn..."
                       onChange={(e) =>
                         setForm({ ...form, [key]: e.target.value })
                       }
@@ -195,6 +196,15 @@ export default function ContactPage() {
                       }
                       className="w-full h-10 border rounded-lg p-2"
                       value={value}
+                      placeholder={
+                        key === "name"
+                          ? "Nhập họ và tên của bạn..."
+                          : key === "email"
+                          ? "Nhập email của bạn..."
+                          : key === "phone"
+                          ? "Nhập số điện thoại của bạn..."
+                          : "Nhập tiêu đề tin nhắn..."
+                      }
                       onChange={(e) =>
                         setForm({ ...form, [key]: e.target.value })
                       }
