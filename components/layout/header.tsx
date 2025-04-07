@@ -39,16 +39,20 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const pathName = usePathname();
   const router = useRouter();
+  const { isAuthenticated, clear, user } = useUserStore();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleLogout = () => {
+    clear();
+    router.push(APP_ROUTES.HOME);
+  };
+
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathName]);
-
-  const { isAuthenticated, clear, user } = useUserStore();
 
   if (!mounted) return null;
 
@@ -139,7 +143,7 @@ export default function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuItem className="hover:bg-gray-200">
                     <button
-                      onClick={() => clear()}
+                      onClick={handleLogout}
                       className="w-full text-left text-sm"
                     >
                       Đăng xuất
@@ -250,7 +254,7 @@ export default function Header() {
                       Hồ sơ
                     </Link>
                     <button
-                      onClick={() => clear()}
+                      onClick={handleLogout}
                       className="text-sm text-amber-300 hover:text-amber-200"
                     >
                       Đăng xuất
@@ -344,7 +348,7 @@ function NavDropdown({
       <button
         className={cn(
           "px-3 py-2 rounded-md text-base flex items-center space-x-1 text-white hover:bg-white/10 transition-colors",
-          isActive && "bg-gray-700 hover:bg-gray-800 text-white"
+          isActive && "bg-amber-600 hover:bg-amber-700 text-white"
         )}
         onClick={() => setIsOpen(!isOpen)}
       >

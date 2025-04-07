@@ -14,13 +14,20 @@ enum InvoiceStatus {
   UNEXPIRED = "UNEXPIRED",
 }
 
-export const getAllInvoice = async (page: number, pageSize: number, status?: InvoiceStatus) => {
+export const getAllInvoice = async (userId: string, page: number, pageSize: number, status?: InvoiceStatus) => {
   let params = qs.stringify({
     pagination: {
       page,
       pageSize,
     },
     populate: '*',
+    filters: {
+      users_permissions_user: {
+        id: {
+          $eq: userId,
+        },
+      },
+    },
     sort: ['createdAt:desc']
   });
 

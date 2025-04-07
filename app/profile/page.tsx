@@ -31,7 +31,7 @@ import { useSnackBarStore } from "@/stores/snackbar-store";
 import TicketsHistory from "@/components/profile/tickets-history";
 
 export default function ProfilePage() {
-  const { user, setUserInfo } = useUserStore();
+  const { user, reload } = useUserStore();
   const { success, error } = useSnackBarStore();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -40,9 +40,8 @@ export default function ProfilePage() {
   const handleSaveProfile = async (updatedData: typeof user) => {
     if (updatedData && user?.id) {
       try {
-        console.log(updatedData);
         await updateUser(user?.id, updatedData);
-        setUserInfo(updatedData);
+        reload();
         setIsEditing(false);
         success("Cập nhật thông tin thành công");
       } catch (err) {

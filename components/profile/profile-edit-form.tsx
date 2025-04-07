@@ -27,7 +27,7 @@ const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ tên phải có ít nhất 2 ký tự" }),
   phoneNumber: z.string().min(10, { message: "Số điện thoại không hợp lệ" }),
   address: z.string().min(5, { message: "Địa chỉ phải có ít nhất 5 ký tự" }),
-  dateOfBirth: z.date({ required_error: "Vui lòng chọn ngày sinh" }),
+  dateOfBirth: z.date().optional(),
   gender: z.enum(["male", "female", "other"], {
     required_error: "Vui lòng chọn giới tính",
   }),
@@ -49,7 +49,9 @@ export default function ProfileEditForm({
       username: get(user, "username", ""),
       fullName: get(user, "fullName", ""),
       email: get(user, "email", ""),
-      dateOfBirth: get(user, "dateOfBirth", undefined),
+      dateOfBirth: get(user, "dateOfBirth")
+        ? new Date(get(user, "dateOfBirth"))
+        : undefined,
       gender: get(user, "gender", "male"),
       address: get(user, "address", ""),
       phoneNumber: get(user, "phoneNumber", ""),
@@ -138,7 +140,9 @@ export default function ProfileEditForm({
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {form.watch("dateOfBirth") ? (
-                    format(form.watch("dateOfBirth"), "PPP", { locale: vi })
+                    format(form.watch("dateOfBirth") as Date, "PPP", {
+                      locale: vi,
+                    })
                   ) : (
                     <span>Chọn ngày</span>
                   )}

@@ -23,20 +23,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { cn, formatCurrency } from "@/lib/utils";
 import { getAllInvoice } from "@/request/invoice";
 import { get } from "lodash";
 import AnimatedSection from "@/components/ui/animated-section";
 
+import { useUserStore } from "@/stores/user-store";
 export default function TicketsHistory() {
   const [filter, setFilter] = useState<string>("all");
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
   const [invoices, setInvoices] = useState<any[]>([]);
 
+  const { user } = useUserStore();
+
   const handleGetInvoice = async () => {
     try {
-      const res = await getAllInvoice(1, 10);
+      if (!user?.id) return;
+      const res = await getAllInvoice(user?.id.toString(), 1, 10);
       setInvoices(res.data);
     } catch (error) {
       console.log(error);

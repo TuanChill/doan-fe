@@ -1,30 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { APP_ROUTES } from "@/const/route";
 import { useRouter } from "next/navigation";
-import { Info, Eye } from "lucide-react";
-import { useEffect, useState } from "react";
-import { getFeaturedArtifact } from "@/request/exhibit";
-import { get } from "lodash";
+import { Info } from "lucide-react";
 
 export default function VR360Page() {
   const router = useRouter();
-  const [exhibitionItems, setExhibitionItems] = useState<any[]>([]);
-
-  const handleGetExhibitionItems = async () => {
-    try {
-      const res = await getFeaturedArtifact(1, 3);
-      setExhibitionItems(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    handleGetExhibitionItems();
-  }, []);
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -52,9 +34,8 @@ export default function VR360Page() {
       {/* Main Content */}
       <section className="py-12">
         <div className="mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left Column - VR Tour */}
-            <div className="lg:w-3/4">
+          <div className="flex flex-col gap-8">
+            <div className="w-full">
               <h2 className="text-2xl font-bold">Khám phá các khu vực</h2>
               <div className="w-full h-[800px] rounded-lg overflow-hidden mt-3">
                 <iframe
@@ -62,61 +43,10 @@ export default function VR360Page() {
                   className="w-full h-full"
                 />
               </div>
-
-              {/* Exhibition Items */}
-              {exhibitionItems.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="text-2xl font-bold mb-6">
-                    Hiện vật nổi bật trong khu vực
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {exhibitionItems.map((item) => (
-                      <Card
-                        key={get(item, "documentId", "")}
-                        className="overflow-hidden hover:shadow-lg transition-shadow"
-                      >
-                        <div
-                          className="aspect-video bg-cover bg-center"
-                          style={{
-                            backgroundImage: `url(${
-                              process.env.NEXT_PUBLIC_BASE_URL
-                            }${get(item, "image.url", "")})`,
-                          }}
-                        ></div>
-                        <CardContent className="p-4">
-                          <h3 className="font-bold text-lg mb-2">
-                            {get(item, "name", "")}
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-3">
-                            {get(item, "history", "")}
-                          </p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full"
-                            onClick={() =>
-                              router.push(
-                                `${APP_ROUTES.HIEN_VAT}/${get(
-                                  item,
-                                  "documentId",
-                                  ""
-                                )}`
-                              )
-                            }
-                          >
-                            <Eye className="h-4 w-4 mr-2" /> Xem chi tiết
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-
             {/* Right Column - Info */}
-            <div className="lg:w-1/4">
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div className="w-full flex gap-4 justify-center">
+              <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-bold mb-4 flex items-center">
                   <Info className="h-5 w-5 mr-2 text-amber-600" />
                   Hướng dẫn sử dụng
