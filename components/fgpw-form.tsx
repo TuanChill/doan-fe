@@ -37,8 +37,7 @@ export default function ForgotPasswordForm() {
       await forgotPassword(data.email);
       success("Email đặt lại mật khẩu đã được gửi đến email của bạn.");
     } catch (err: any) {
-      console.log(err);
-      error(err.response.data.message);
+      error(err.response.data.error.message);
     } finally {
       hideLoading();
     }
