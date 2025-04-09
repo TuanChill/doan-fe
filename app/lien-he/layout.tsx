@@ -1,5 +1,7 @@
-export const metadata = {
-  title: "Liên hệ - Di tích lịch sử",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Liên hệ | Bảo tàng LSQS Việt Nam",
   description:
     "Liên hệ với chúng tôi để biết thêm thông tin về di tích lịch sử",
 };
