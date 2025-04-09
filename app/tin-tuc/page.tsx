@@ -148,7 +148,14 @@ export default function HomePage() {
               className="h-full"
             >
               <Card className="overflow-hidden h-full flex flex-col">
-                <div className="relative h-48 overflow-hidden">
+                <div
+                  onClick={() =>
+                    router.push(
+                      `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
+                    )
+                  }
+                  className="relative h-48 overflow-hidden cursor-pointer"
+                >
                   <motion.img
                     src={`${process.env.NEXT_PUBLIC_API_URL}${get(
                       article,
@@ -243,7 +250,14 @@ export default function HomePage() {
               className="h-full"
             >
               <Card className="overflow-hidden h-full flex flex-col">
-                <div className="relative h-40 overflow-hidden">
+                <div
+                  onClick={() =>
+                    router.push(
+                      `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
+                    )
+                  }
+                  className="relative h-40 overflow-hidden cursor-pointer"
+                >
                   <motion.img
                     src={`${process.env.NEXT_PUBLIC_API_URL}${get(
                       article,
@@ -256,11 +270,6 @@ export default function HomePage() {
                       filter: "brightness(1.1) contrast(1.1)",
                       transition: { duration: 0.3 },
                     }}
-                    onClick={() =>
-                      router.push(
-                        `/tin-tuc/bai-viet/${get(article, "documentId", "")}`
-                      )
-                    }
                   />
                   <motion.div
                     className="absolute inset-0 bg-primary/0"

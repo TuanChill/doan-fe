@@ -62,15 +62,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            {/* <div className="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center">
-              <span className="font-bold text-lg">VM</span>
-            </div> */}
-            <ImageNext
-              src={logoApp || "/placeholder.svg"}
-              alt="logo"
-              width={50}
-              height={60}
-            />
+            <ImageNext src={logoApp} alt="logo" width={50} height={60} />
             <span className="font-bold text-xl">Bảo tàng LSQS Việt Nam</span>
           </Link>
 
@@ -130,10 +122,13 @@ export default function Header() {
             {isAuthenticated() ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
-                  <Avatar className="h-8 w-8 mr-3">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://github.com/shadcn.png" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    {/* <span>{get(user, "fullName", "")}</span> */}
+                  </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem className="hover:bg-gray-200">
