@@ -33,7 +33,7 @@ import {
 
 export default function VisitorInformationPage() {
   return (
-    <div className="min-h-screen bg-amber-50/80">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center">
         <motion.div
@@ -125,14 +125,14 @@ export default function VisitorInformationPage() {
               </AnimatedSection>
 
               <TabsContent value="general">
-                <div className="bg-gradient-to-b from-white to-amber-50 rounded-lg shadow-lg overflow-hidden border border-amber-100">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
                   <div className="p-8">
                     <AnimatedSection animation="fadeUp">
                       <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-red-700 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mr-4 shadow-md">
                           <Info className="h-6 w-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-amber-900">
+                        <h2 className="text-2xl font-bold text-gray-900">
                           Thông Tin Chung
                         </h2>
                       </div>
@@ -140,10 +140,10 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.2}>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
-                          <h3 className="text-lg font-semibold mb-4 flex items-center text-amber-800">
-                            <Clock className="h-5 w-5 mr-2 text-amber-600" />{" "}
-                            Giờ mở cửa
+                        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                            <Clock className="h-5 w-5 mr-2 text-gray-600" /> Giờ
+                            mở cửa
                           </h3>
                           <ul className="space-y-3">
                             <li className="flex justify-between">
@@ -159,7 +159,7 @@ export default function VisitorInformationPage() {
                               <span className="font-medium">9:00 - 16:00</span>
                             </li>
                           </ul>
-                          <div className="mt-4 text-sm text-amber-700">
+                          <div className="mt-4 text-sm text-gray-600">
                             <p>
                               * Bảo tàng đóng cửa vào một số ngày lễ đặc biệt.
                               Vui lòng kiểm tra trước khi đến.
@@ -167,9 +167,9 @@ export default function VisitorInformationPage() {
                           </div>
                         </div>
 
-                        <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
-                          <h3 className="text-lg font-semibold mb-4 flex items-center text-amber-800">
-                            <Ticket className="h-5 w-5 mr-2 text-amber-600" />{" "}
+                        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                            <Ticket className="h-5 w-5 mr-2 text-gray-600" />{" "}
                             Giá vé
                           </h3>
                           <div className="mb-4 p-3 bg-green-50 text-green-800 rounded-lg border border-green-200 flex items-start">
@@ -185,7 +185,7 @@ export default function VisitorInformationPage() {
                               </p>
                             </div>
                           </div>
-                          <p className="text-sm text-amber-700">
+                          <p className="text-sm text-gray-600">
                             Các dịch vụ bổ sung như hướng dẫn viên riêng, tham
                             quan chuyên đề có thể có mức phí riêng. Vui lòng
                             liên hệ trước để biết thêm chi tiết.
@@ -196,20 +196,20 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.3}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center text-amber-800">
-                          <Phone className="h-5 w-5 mr-2 text-amber-600" />{" "}
-                          Thông tin liên hệ
+                        <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                          <Phone className="h-5 w-5 mr-2 text-gray-600" /> Thông
+                          tin liên hệ
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="flex items-start bg-amber-50 p-4 rounded-lg border border-amber-200 hover:bg-amber-100 transition-colors duration-300">
-                            <Phone className="h-5 w-5 mr-3 text-amber-600 mt-0.5" />
+                          <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-300">
+                            <Phone className="h-5 w-5 mr-3 text-gray-600 mt-0.5" />
                             <div>
                               <p className="font-medium">Điện thoại</p>
                               <p>(024) 3733 4464</p>
                             </div>
                           </div>
-                          <div className="flex items-start bg-amber-50 p-4 rounded-lg border border-amber-200 hover:bg-amber-100 transition-colors duration-300">
-                            <Mail className="h-5 w-5 mr-3 text-amber-600 mt-0.5" />
+                          <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-300">
+                            <Mail className="h-5 w-5 mr-3 text-gray-600 mt-0.5" />
                             <div>
                               <p className="font-medium">Email</p>
                               <p>info@btlsqsvn.vn</p>
@@ -221,18 +221,18 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.4}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center text-amber-800">
-                          <Calendar className="h-5 w-5 mr-2 text-amber-600" />{" "}
+                        <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                          <Calendar className="h-5 w-5 mr-2 text-gray-600" />{" "}
                           Các khu vực trưng bày
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm">
-                            <h4 className="font-medium mb-2 text-amber-800">
+                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                            <h4 className="font-medium mb-2 text-gray-800">
                               Khu trưng bày trong nhà
                             </h4>
-                            <ul className="space-y-2 text-amber-900">
+                            <ul className="space-y-2 text-gray-700">
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   1
                                 </span>
                                 <span>
@@ -241,7 +241,7 @@ export default function VisitorInformationPage() {
                                 </span>
                               </li>
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   2
                                 </span>
                                 <span>
@@ -250,26 +250,26 @@ export default function VisitorInformationPage() {
                                 </span>
                               </li>
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   3
                                 </span>
                                 <span>Khu trưng bày vũ khí các thời kỳ</span>
                               </li>
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   4
                                 </span>
                                 <span>Khu trưng bày hiện vật lịch sử</span>
                               </li>
                             </ul>
                           </div>
-                          <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm">
-                            <h4 className="font-medium mb-2 text-amber-800">
+                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                            <h4 className="font-medium mb-2 text-gray-800">
                               Khu trưng bày ngoài trời
                             </h4>
-                            <ul className="space-y-2 text-amber-900">
+                            <ul className="space-y-2 text-gray-700">
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   1
                                 </span>
                                 <span>
@@ -277,13 +277,13 @@ export default function VisitorInformationPage() {
                                 </span>
                               </li>
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   2
                                 </span>
                                 <span>Khu trưng bày xe tăng, pháo binh</span>
                               </li>
                               <li className="flex items-start">
-                                <span className="bg-gradient-to-r from-red-600 to-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                                <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                   3
                                 </span>
                                 <span>Khu trưng bày vũ khí hạng nặng</span>
@@ -296,32 +296,30 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.5}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center text-amber-800">
-                          <Accessibility className="h-5 w-5 mr-2 text-amber-600" />{" "}
+                        <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                          <Accessibility className="h-5 w-5 mr-2 text-gray-600" />{" "}
                           Tiện ích
                         </h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg text-center border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
-                            <Coffee className="h-6 w-6 mx-auto mb-2 text-amber-600" />
-                            <p className="text-sm text-amber-800">
-                              Quán cà phê
-                            </p>
+                          <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                            <Coffee className="h-6 w-6 mx-auto mb-2 text-gray-600" />
+                            <p className="text-sm text-gray-800">Quán cà phê</p>
                           </div>
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg text-center border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
-                            <Camera className="h-6 w-6 mx-auto mb-2 text-amber-600" />
-                            <p className="text-sm text-amber-800">
+                          <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                            <Camera className="h-6 w-6 mx-auto mb-2 text-gray-600" />
+                            <p className="text-sm text-gray-800">
                               Chụp ảnh lưu niệm
                             </p>
                           </div>
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg text-center border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
-                            <Accessibility className="h-6 w-6 mx-auto mb-2 text-amber-600" />
-                            <p className="text-sm text-amber-800">
+                          <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                            <Accessibility className="h-6 w-6 mx-auto mb-2 text-gray-600" />
+                            <p className="text-sm text-gray-800">
                               Lối đi cho người khuyết tật
                             </p>
                           </div>
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg text-center border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
-                            <Info className="h-6 w-6 mx-auto mb-2 text-amber-600" />
-                            <p className="text-sm text-amber-800">
+                          <div className="bg-gray-50 p-4 rounded-lg text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px]">
+                            <Info className="h-6 w-6 mx-auto mb-2 text-gray-600" />
+                            <p className="text-sm text-gray-800">
                               Quầy thông tin
                             </p>
                           </div>
@@ -333,14 +331,14 @@ export default function VisitorInformationPage() {
               </TabsContent>
 
               <TabsContent value="location">
-                <div className="bg-gradient-to-b from-white to-amber-50 rounded-lg shadow-lg overflow-hidden border border-amber-100">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
                   <div className="p-8">
                     <AnimatedSection animation="fadeUp">
                       <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-red-700 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mr-4 shadow-md">
                           <MapPin className="h-6 w-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-amber-900">
+                        <h2 className="text-2xl font-bold text-gray-900">
                           Địa Điểm & Hướng Dẫn Đi Lại
                         </h2>
                       </div>
@@ -348,10 +346,10 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.3}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Bản đồ
                         </h3>
-                        <div className="rounded-lg overflow-hidden border-2 border-amber-200 shadow-md">
+                        <div className="rounded-lg overflow-hidden border-2 border-gray-200 shadow-md">
                           <iframe
                             className="w-full h-[250px]"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.5596609032596!2d105.75152857601942!3d21.01028118841144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135aba2b73d5d13%3A0xa6a0ef366328a0b1!2zQuG6o28gdMOgbmcgTOG7i2NoIHPhu60gUXXDom4gc-G7sSBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1741533624214!5m2!1svi!2s"
@@ -371,21 +369,21 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.4}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Hướng dẫn đi lại
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <div className="flex items-center mb-3">
-                              <Bus className="h-5 w-5 mr-2 text-amber-600" />
-                              <h4 className="font-medium text-amber-800">
+                              <Bus className="h-5 w-5 mr-2 text-gray-600" />
+                              <h4 className="font-medium text-gray-800">
                                 Bằng xe buýt
                               </h4>
                             </div>
-                            <p className="text-sm text-amber-800 mb-2">
+                            <p className="text-sm text-gray-700 mb-2">
                               Các tuyến xe buýt đi qua khu vực:
                             </p>
-                            <ul className="text-sm space-y-1 text-amber-800">
+                            <ul className="text-sm space-y-1 text-gray-700">
                               <li>Tuyến 32: Bến xe Mỹ Đình - Nhổn</li>
                               <li>
                                 Tuyến 60: Bến xe Mỹ Đình - Đại học Quốc gia
@@ -394,28 +392,28 @@ export default function VisitorInformationPage() {
                             </ul>
                           </div>
 
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <div className="flex items-center mb-3">
-                              <Car className="h-5 w-5 mr-2 text-amber-600" />
-                              <h4 className="font-medium text-amber-800">
+                              <Car className="h-5 w-5 mr-2 text-gray-600" />
+                              <h4 className="font-medium text-gray-800">
                                 Bằng ô tô/ taxi
                               </h4>
                             </div>
-                            <p className="text-sm text-amber-800">
+                            <p className="text-sm text-gray-700">
                               Từ trung tâm Hà Nội, bạn có thể đi theo đường Phạm
                               Hùng hoặc đường Lê Đức Thọ để đến bảo tàng. Có bãi
                               đỗ xe rộng rãi tại bảo tàng.
                             </p>
                           </div>
 
-                          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <div className="flex items-center mb-3">
-                              <Train className="h-5 w-5 mr-2 text-amber-600" />
-                              <h4 className="font-medium text-amber-800">
+                              <Train className="h-5 w-5 mr-2 text-gray-600" />
+                              <h4 className="font-medium text-gray-800">
                                 Bằng tàu điện
                               </h4>
                             </div>
-                            <p className="text-sm text-amber-800">
+                            <p className="text-sm text-gray-700">
                               Khi tuyến Metro số 1 hoàn thành, bạn có thể đi đến
                               ga Mỹ Đình và đi bộ hoặc bắt xe buýt đến bảo tàng.
                             </p>
@@ -426,34 +424,34 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.5}>
                       <div className="mb-4">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Khu vực lân cận
                         </h3>
-                        <p className="mb-4 text-amber-900">
+                        <p className="mb-4 text-gray-700">
                           Bảo tàng nằm gần các địa điểm nổi tiếng khác như:
                         </p>
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                          <li className="flex items-center bg-gradient-to-r from-amber-50 to-amber-100 p-3 rounded-lg border border-amber-200 shadow-sm hover:bg-amber-100 transition-colors duration-300">
-                            <MapPin className="h-4 w-4 mr-2 text-amber-600" />
-                            <span className="text-amber-900">
+                          <li className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-100 transition-colors duration-300">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-600" />
+                            <span className="text-gray-700">
                               Sân vận động Quốc gia Mỹ Đình
                             </span>
                           </li>
-                          <li className="flex items-center bg-gradient-to-r from-amber-50 to-amber-100 p-3 rounded-lg border border-amber-200 shadow-sm hover:bg-amber-100 transition-colors duration-300">
-                            <MapPin className="h-4 w-4 mr-2 text-amber-600" />
-                            <span className="text-amber-900">
+                          <li className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-100 transition-colors duration-300">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-600" />
+                            <span className="text-gray-700">
                               Trung tâm Hội nghị Quốc gia
                             </span>
                           </li>
-                          <li className="flex items-center bg-gradient-to-r from-amber-50 to-amber-100 p-3 rounded-lg border border-amber-200 shadow-sm hover:bg-amber-100 transition-colors duration-300">
-                            <MapPin className="h-4 w-4 mr-2 text-amber-600" />
-                            <span className="text-amber-900">
+                          <li className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-100 transition-colors duration-300">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-600" />
+                            <span className="text-gray-700">
                               Khu đô thị Mỹ Đình
                             </span>
                           </li>
-                          <li className="flex items-center bg-gradient-to-r from-amber-50 to-amber-100 p-3 rounded-lg border border-amber-200 shadow-sm hover:bg-amber-100 transition-colors duration-300">
-                            <MapPin className="h-4 w-4 mr-2 text-amber-600" />
-                            <span className="text-amber-900">
+                          <li className="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200 shadow-sm hover:bg-gray-100 transition-colors duration-300">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-600" />
+                            <span className="text-gray-700">
                               Bến xe Mỹ Đình
                             </span>
                           </li>
@@ -465,14 +463,14 @@ export default function VisitorInformationPage() {
               </TabsContent>
 
               <TabsContent value="rules">
-                <div className="bg-gradient-to-b from-white to-amber-50 rounded-lg shadow-lg overflow-hidden border border-amber-100">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
                   <div className="p-8">
                     <AnimatedSection animation="fadeUp">
                       <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-red-700 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mr-4 shadow-md">
                           <AlertTriangle className="h-6 w-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-amber-900">
+                        <h2 className="text-2xl font-bold text-gray-900">
                           Quy Định Tham Quan
                         </h2>
                       </div>
@@ -480,19 +478,19 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.2}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Quy định chung
                         </h3>
                         <div className="space-y-4">
-                          <div className="flex items-start bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="mr-3 mt-1 text-amber-600">
+                          <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div className="mr-3 mt-1 text-gray-600">
                               <Camera className="h-5 w-5" />
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1 text-amber-800">
+                              <h4 className="font-medium mb-1 text-gray-800">
                                 Chụp ảnh và quay phim
                               </h4>
-                              <p className="text-sm text-amber-800">
+                              <p className="text-sm text-gray-700">
                                 Được phép chụp ảnh và quay phim cho mục đích cá
                                 nhân. Không sử dụng đèn flash trong các khu vực
                                 trưng bày hiện vật nhạy cảm với ánh sáng. Việc
@@ -503,7 +501,7 @@ export default function VisitorInformationPage() {
                             </div>
                           </div>
 
-                          <div className="flex items-start bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg border border-red-200 shadow-sm hover:shadow-md transition-all duration-300">
+                          <div className="flex items-start bg-red-50 p-4 rounded-lg border border-red-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <div className="mr-3 mt-1 text-red-600">
                               <Ban className="h-5 w-5" />
                             </div>
@@ -511,7 +509,7 @@ export default function VisitorInformationPage() {
                               <h4 className="font-medium mb-1 text-red-800">
                                 Các hành vi không được phép
                               </h4>
-                              <ul className="text-sm text-red-800 space-y-1">
+                              <ul className="text-sm text-red-700 space-y-1">
                                 <li>
                                   Mang vũ khí, chất cháy nổ, chất độc hại vào
                                   bảo tàng
@@ -531,15 +529,15 @@ export default function VisitorInformationPage() {
                             </div>
                           </div>
 
-                          <div className="flex items-start bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="mr-3 mt-1 text-amber-600">
+                          <div className="flex items-start bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div className="mr-3 mt-1 text-gray-600">
                               <Info className="h-5 w-5" />
                             </div>
                             <div>
-                              <h4 className="font-medium mb-1 text-amber-800">
+                              <h4 className="font-medium mb-1 text-gray-800">
                                 Trang phục
                               </h4>
-                              <p className="text-sm text-amber-800">
+                              <p className="text-sm text-gray-700">
                                 Khách tham quan nên mặc trang phục lịch sự, phù
                                 hợp khi đến bảo tàng. Không mặc quần áo quá hở
                                 hang hoặc có hình ảnh, chữ viết không phù hợp.
@@ -552,13 +550,13 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.3}>
                       <div className="mb-8">
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Quy định đối với đoàn tham quan
                         </h3>
-                        <div className="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg border border-amber-200 shadow-sm">
-                          <ul className="space-y-3 text-amber-800">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                          <ul className="space-y-3 text-gray-700">
                             <li className="flex items-start">
-                              <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                              <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                 1
                               </span>
                               <span>
@@ -568,7 +566,7 @@ export default function VisitorInformationPage() {
                               </span>
                             </li>
                             <li className="flex items-start">
-                              <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                              <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                 2
                               </span>
                               <span>
@@ -578,7 +576,7 @@ export default function VisitorInformationPage() {
                               </span>
                             </li>
                             <li className="flex items-start">
-                              <span className="bg-gradient-to-r from-amber-600 to-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
+                              <span className="bg-gray-800 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                                 3
                               </span>
                               <span>
@@ -594,17 +592,17 @@ export default function VisitorInformationPage() {
 
                     <AnimatedSection animation="fadeUp" delay={0.4}>
                       <div>
-                        <h3 className="text-lg font-semibold mb-4 text-amber-800">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
                           Lưu ý đặc biệt
                         </h3>
-                        <div className="bg-gradient-to-r from-amber-50 to-amber-200 p-4 rounded-lg border border-amber-300 shadow-md">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-300 shadow-md">
                           <div className="flex items-start">
-                            <AlertTriangle className="h-5 w-5 mr-3 text-amber-600 mt-0.5" />
+                            <AlertTriangle className="h-5 w-5 mr-3 text-gray-600 mt-0.5" />
                             <div>
-                              <p className="font-medium text-amber-800 mb-2">
+                              <p className="font-medium text-gray-800 mb-2">
                                 Bảo vệ hiện vật
                               </p>
-                              <p className="text-sm text-amber-800">
+                              <p className="text-sm text-gray-700">
                                 Nhiều hiện vật trong bảo tàng có giá trị lịch sử
                                 và văn hóa cao. Vui lòng không chạm vào hiện
                                 vật, không tựa vào tủ kính, và tuân thủ các biển
@@ -621,14 +619,14 @@ export default function VisitorInformationPage() {
               </TabsContent>
 
               <TabsContent value="faq">
-                <div className="bg-gradient-to-b from-white to-amber-50 rounded-lg shadow-lg overflow-hidden border border-amber-100">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
                   <div className="p-8">
                     <AnimatedSection animation="fadeUp">
                       <div className="flex items-center mb-6">
-                        <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-red-700 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center mr-4 shadow-md">
                           <HelpCircle className="h-6 w-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-amber-900">
+                        <h2 className="text-2xl font-bold text-gray-900">
                           Câu Hỏi Thường Gặp
                         </h2>
                       </div>
@@ -680,14 +678,14 @@ export default function VisitorInformationPage() {
             <AnimatedSection animation="fadeUp" delay={0.6} className="mt-8">
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/gioi-thieu/lich-su">
-                  <Button className="bg-gradient-to-r from-amber-600 to-red-700 hover:from-amber-700 hover:to-red-800 shadow-md">
+                  <Button className="bg-gray-800 hover:bg-gray-900 shadow-md">
                     <History className="mr-2 h-4 w-4" /> Lịch sử bảo tàng
                   </Button>
                 </Link>
                 <Link href="/vr360">
                   <Button
                     variant="outline"
-                    className="border-amber-600 text-amber-700 hover:bg-amber-600 hover:text-white shadow-md"
+                    className="border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white shadow-md"
                   >
                     <Camera className="mr-2 h-4 w-4" /> Tham quan VR360°
                   </Button>
@@ -699,15 +697,14 @@ export default function VisitorInformationPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 bg-gradient-to-r from-amber-800 to-red-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=100&width=100')] opacity-10 bg-repeat"></div>
+      <section className="py-12 bg-gray-800 text-white relative overflow-hidden">
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
             <AnimatedSection animation="fadeUp">
               <h2 className="text-3xl font-bold mb-4 drop-shadow-md">
                 Khám Phá Bảo Tàng Ngay Hôm Nay
               </h2>
-              <p className="text-lg mb-8 text-amber-100">
+              <p className="text-lg mb-8 text-gray-200">
                 Hãy đến và trải nghiệm không gian trưng bày hiện đại với hàng
                 nghìn hiện vật quý giá về lịch sử quân sự Việt Nam.
               </p>
@@ -715,7 +712,7 @@ export default function VisitorInformationPage() {
                 <Link href="/vr360">
                   <Button
                     size="lg"
-                    className="bg-amber-500 hover:bg-amber-600 text-amber-950 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-white hover:bg-gray-100 text-gray-800 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Tham quan VR360°
                   </Button>
@@ -724,7 +721,7 @@ export default function VisitorInformationPage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="bg-transparent border-amber-300 text-amber-100 hover:bg-white/10 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-transparent border-white text-white hover:bg-white/10 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Hỏi đáp với AI
                   </Button>
