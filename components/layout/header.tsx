@@ -235,10 +235,10 @@ export default function Header() {
             {isAuthenticated() ? (
               <div className="flex items-center px-4 py-3 text-base font-medium text-white">
                 <Avatar
-                  className="h-8 w-8 mr-3"
                   onClick={() => router.push(APP_ROUTES.PROFILE)}
+                  className="h-8 w-8 mr-3 bg-white border-2 border-orange-500"
                 >
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={logo.src} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
