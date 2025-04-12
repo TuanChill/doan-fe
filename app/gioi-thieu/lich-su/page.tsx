@@ -346,12 +346,12 @@ export default function Page() {
       <Button
         variant="outline"
         size="icon"
-        className="fixed bottom-24 right-4 bg-white hover:bg-gray-100"
+        className="fixed bottom-20 right-4 bg-white hover:bg-gray-100 h-12 w-12 shadow-lg"
         onClick={() => {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
-        <ArrowUp className="h-4 w-4" />
+        <ArrowUp className="h-12 w-12" />
       </Button>
     </div>
   );
