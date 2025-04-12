@@ -22,7 +22,6 @@ interface PersonalInformationProps {
   totalPrice: number;
   watchAdultTickets: number;
   watchChildTickets: number;
-  watchSeniorTickets: number;
   watchGroupTickets: number;
 }
 
@@ -35,7 +34,6 @@ export default function PersonalInformation({
   totalPrice,
   watchAdultTickets,
   watchChildTickets,
-  watchSeniorTickets,
   watchGroupTickets,
 }: PersonalInformationProps) {
   const { user } = useUserStore();
@@ -158,30 +156,6 @@ export default function PersonalInformation({
             </div>
           </div>
         </div>
-
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="agree"
-            className="h-4 w-4 text-red-700 border-gray-300 rounded focus:ring-red-700"
-            {...form.register("agree")}
-          />
-          <label htmlFor="agree" className="ml-2 block text-sm text-gray-700">
-            Tôi đồng ý với{" "}
-            <Link href="#" className="text-red-700 hover:underline">
-              điều khoản
-            </Link>{" "}
-            và{" "}
-            <Link href="#" className="text-red-700 hover:underline">
-              chính sách bảo mật
-            </Link>
-          </label>
-        </div>
-        {form.formState.errors.agree && (
-          <p className="text-sm text-red-500 mt-1">
-            {form.formState.errors.agree.message}
-          </p>
-        )}
       </div>
 
       <div className="flex justify-between">

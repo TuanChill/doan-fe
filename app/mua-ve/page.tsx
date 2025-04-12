@@ -38,10 +38,8 @@ export default function TicketPurchasePage() {
       phoneNumber: user?.phoneNumber || "",
       adultTickets: 1,
       childTickets: 0,
-      seniorTickets: 0,
       groupTickets: 0,
       paymentMethod: "vnpay",
-      agree: false,
     },
   });
 
@@ -122,7 +120,6 @@ export default function TicketPurchasePage() {
         "fullName",
         "email",
         "phoneNumber",
-        "agree",
       ];
       const isValid = await form.trigger(step2Fields);
 
@@ -244,7 +241,6 @@ export default function TicketPurchasePage() {
                       totalPrice={totalPrice}
                       watchAdultTickets={watchAdultTickets}
                       watchChildTickets={watchChildTickets}
-                      watchSeniorTickets={watchSeniorTickets}
                       watchGroupTickets={watchGroupTickets}
                     />
                   )}
