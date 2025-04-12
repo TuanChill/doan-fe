@@ -473,6 +473,7 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant="outline"
+                onClick={handleHienVat}
                 className="border-olive-800 text-olive-800 hover:bg-olive-800 hover:text-white"
               >
                 Xem tất cả hiện vật

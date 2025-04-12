@@ -1,6 +1,7 @@
 import { fdAxios } from "@/components/config/axios.config";
 import { API_ROUTES } from "@/const/api";
 import qs from "qs";
+
 export const getPostList = async ({ page = 1, limit = 10 }: { page?: number, limit?: number }) => {
     const params = qs.stringify({
         populate: '*',

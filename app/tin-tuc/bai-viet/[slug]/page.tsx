@@ -118,7 +118,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       </div>
 
       <article className="max-w-4xl mx-auto">
-        <Badge className="mb-4">{article.category}</Badge>
+        <Badge className="mb-4">{get(article, "category.name", "--")}</Badge>
         <h1 className="text-3xl md:text-4xl font-bold mb-4">{article.title}</h1>
 
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
