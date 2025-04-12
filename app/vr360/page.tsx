@@ -44,8 +44,7 @@ export default function VR360Page() {
                 />
               </div>
             </div>
-            {/* Right Column - Info */}
-            <div className="w-full flex gap-4 justify-center">
+            <div className="w-full flex flex-col lg:flex-row gap-4 justify-center">
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h3 className="text-lg font-bold mb-4 flex items-center">
                   <Info className="h-5 w-5 mr-2 text-amber-600" />
