@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, Filter, Calendar } from "lucide-react";
+import { ArrowLeft, Search, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -287,7 +287,7 @@ export default function NewsPage() {
                   <div>
                     {get(news, "category", "") && (
                       <Badge variant="outline" className="mb-1">
-                        {get(news, "category", "")}
+                        {get(news, "category.name", "")}
                       </Badge>
                     )}
                     <h3 className="font-medium group-hover:text-primary transition-colors">

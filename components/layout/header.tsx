@@ -23,7 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user-store";
 import { usePathname, useRouter } from "next/navigation";
 import { get } from "lodash";
-import { logoApp } from "@/components/image";
+import { logo, logoApp } from "@/components/image";
 import ImageNext from "next/image";
 import {
   DropdownMenu,
@@ -63,7 +63,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <ImageNext src={logoApp} alt="logo" width={50} height={60} />
-            <span className="font-bold text-xl">Bảo tàng LSQS Việt Nam</span>
+            <span className="font-bold line-clamp-2 w-32">
+              Bảo tàng LSQS Việt Nam
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -123,8 +125,8 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center px-4 py-3 text-base font-medium text-white">
                   <div className="flex items-center space-x-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://github.com/shadcn.png" />
+                    <Avatar className="h-8 w-8 bg-white border-2 border-orange-500">
+                      <AvatarImage src={logo.src} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     {/* <span>{get(user, "fullName", "")}</span> */}
