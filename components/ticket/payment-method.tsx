@@ -24,6 +24,7 @@ interface PaymentMethodProps {
   watchChildTickets: number;
   watchSeniorTickets: number;
   watchGroupTickets: number;
+  onSubmit: (data: TicketFormValues) => Promise<void>;
 }
 
 export default function PaymentMethod({
@@ -38,6 +39,7 @@ export default function PaymentMethod({
   watchChildTickets,
   watchSeniorTickets,
   watchGroupTickets,
+  onSubmit,
 }: PaymentMethodProps) {
   return (
     <div className="p-8">
@@ -69,16 +71,6 @@ export default function PaymentMethod({
                   Thanh toán qua ZaloPay
                 </Label>
               </div>
-              {/* <div className="flex items-center space-x-2 bg-white border rounded-lg p-3 cursor-pointer hover:bg-stone-50 transition-colors">
-                <RadioGroupItem value="momo" id="momo" />
-                <Label
-                  htmlFor="momo"
-                  className="cursor-pointer flex items-center"
-                >
-                  <Wallet className="h-5 w-5 mr-2 text-gray-700" />
-                  Ví điện tử MoMo
-                </Label>
-              </div> */}
             </RadioGroup>
             <p className="text-sm text-red-500 mb-2">
               {form.formState.errors.paymentMethod?.message
@@ -182,9 +174,13 @@ export default function PaymentMethod({
           Quay lại
         </Button>
         <Button
-          type="submit"
+          type="button"
           className="bg-red-700 hover:bg-red-800"
           disabled={isLoading}
+          onClick={() => {
+            const formData = form.getValues();
+            onSubmit(formData);
+          }}
         >
           {isLoading ? (
             <>

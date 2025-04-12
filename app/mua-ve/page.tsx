@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -43,6 +43,15 @@ export default function TicketPurchasePage() {
     },
   });
 
+  // Update form values when user data changes
+  useEffect(() => {
+    if (user) {
+      form.setValue("fullName", user.fullName || "");
+      form.setValue("email", user.email || "");
+      form.setValue("phoneNumber", user.phoneNumber || "");
+    }
+  }, [user, form]);
+
   const watchAdultTickets = form.watch("adultTickets");
   const watchChildTickets = form.watch("childTickets");
   const watchSeniorTickets = form.watch("seniorTickets");
@@ -63,6 +72,7 @@ export default function TicketPurchasePage() {
 
   // Form submission handler
   const onSubmit = async (data: TicketFormValues) => {
+    console.log(data);
     if (step < 3) {
       setStep((prev) => prev + 1);
       return;
@@ -259,6 +269,7 @@ export default function TicketPurchasePage() {
                       watchChildTickets={watchChildTickets}
                       watchSeniorTickets={watchSeniorTickets}
                       watchGroupTickets={watchGroupTickets}
+                      onSubmit={onSubmit}
                     />
                   )}
                 </div>
