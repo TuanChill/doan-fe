@@ -179,6 +179,11 @@ export default function PointsHistory({ userData }: PointsHistoryProps) {
                 </div>
               </AnimatedSection>
             ))}
+            {pointsHistory?.length === 0 && (
+              <div className="text-center text-gray-500">
+                Không có lịch sử điểm
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -12,12 +12,17 @@ import {
   Mic,
   Volume2,
   Lightbulb,
+  LogIn,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Loading } from "@/components/common/loading";
 import { sendChatMessage, getChatHistory } from "@/request/chat";
 import { useSessionStore } from "@/stores/user-store";
 import { v4 as uuidv4 } from "uuid";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useUserStore } from "@/stores/user-store";
+import { APP_ROUTES } from "@/const/route";
+import { useRouter } from "next/navigation";
 
 // Inline AnimatedSection component to avoid import issues
 interface AnimatedSectionProps {
@@ -72,6 +77,8 @@ const formatTime = (date: Date) => {
 export default function AIAgentPage() {
   const [isMounted, setIsMounted] = useState(false);
   const { sessionId, setSessionId } = useSessionStore();
+  const { isAuthenticated } = useUserStore();
+  const router = useRouter();
 
   // Initial message with string timestamp instead of Date object
   const initialMessage = {
@@ -272,6 +279,11 @@ export default function AIAgentPage() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || !isMounted) return;
 
+    if (!isAuthenticated()) {
+      router.push(APP_ROUTES.LOGIN);
+      return;
+    }
+
     // Add user message with string timestamp
     const userMessage: Message = {
       role: "user",
@@ -377,6 +389,30 @@ export default function AIAgentPage() {
 
   return (
     <div className="min-h-screen bg-stone-50">
+      {/* Login Notice */}
+      {isMounted && !isAuthenticated() && (
+        <Alert className="bg-blue-50 border-blue-200 mb-4 mx-auto max-w-7xl mt-4">
+          <AlertDescription className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Bot className="h-5 w-5 mr-2 text-blue-600" />
+              <span>
+                Đăng nhập để được lưu lịch sử trò chuyện và nhận nhiều tính năng
+                hơn!
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-blue-600 text-blue-600 hover:bg-blue-100"
+              onClick={() => router.push(APP_ROUTES.LOGIN)}
+            >
+              <LogIn className="h-4 w-4 mr-2" />
+              Đăng nhập
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Hero Section */}
       <section className="bg-blue-600 text-white py-12">
         <div className="container mx-auto px-4">

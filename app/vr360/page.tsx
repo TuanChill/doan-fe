@@ -41,6 +41,7 @@ export default function VR360Page() {
                 <iframe
                   src={process.env.NEXT_PUBLIC_IFRAME_VR_TOUR}
                   className="w-full h-full"
+                  allowFullScreen
                 />
               </div>
             </div>

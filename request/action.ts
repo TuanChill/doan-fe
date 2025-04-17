@@ -3,7 +3,13 @@ import { API_ROUTES } from "@/const/api";
 
 export const getUserPointsHistory = async (userId: number) => {
     const params = {
-        user: userId,
+        filters: {
+            users_permissions_user: {
+              id: {
+                $eq: userId,
+              },
+            },
+        },
         pagination: {
             page: 1,
             pageSize: 10,
@@ -17,7 +23,6 @@ export const getUserPointsHistory = async (userId: number) => {
 
 export const getUserPointsHistoryUsed = async (userId: number) => {
     const params = {
-        user: userId,
         pagination: {
             page: 1,
             pageSize: 10,
@@ -26,6 +31,11 @@ export const getUserPointsHistoryUsed = async (userId: number) => {
             point: {
                 $lt: 0,
             },
+            users_permissions_user: {
+                id: {
+                  $eq: userId,
+                },
+              },
         },
         sort:["createdAt:desc"],
     }

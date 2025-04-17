@@ -55,10 +55,10 @@ export default function RegisterForm() {
 
     // Kiểm tra username
     if (!formData.username) {
-      newErrors.username = "Vui lòng nhập tên người dùng";
+      newErrors.username = "Vui lòng nhập tên đăng nhập";
       valid = false;
     } else if (formData.username.includes(" ")) {
-      newErrors.username = "Tên người dùng không được chứa khoảng trắng";
+      newErrors.username = "Tên đăng nhập không được chứa khoảng trắng";
       valid = false;
     }
 
@@ -168,7 +168,7 @@ export default function RegisterForm() {
         get(err, "response.data.error.message") ===
         "Email or Username are already taken"
       ) {
-        error("Email hoặc tên người dùng đã tồn tại");
+        error("Email hoặc tên đăng nhập đã tồn tại");
       } else {
         error("Đăng ký không thành công");
       }
@@ -185,13 +185,13 @@ export default function RegisterForm() {
             htmlFor="username"
             className="block text-sm font-medium text-gray-700"
           >
-            Tên người dùng
+            Tên đăng nhập
           </label>
           <input
             id="username"
             name="username"
             type="text"
-            placeholder="Nhập tên người dùng..."
+            placeholder="Nhập tên đăng nhập..."
             value={formData.username}
             onChange={handleChange}
             className={`mt-1 block w-full px-3 py-2 bg-white border ${

@@ -80,7 +80,7 @@ export default function ProfileEditForm({
             {...form.register("username")}
             onChange={(e) => {
               const value = e.target.value;
-              form.setValue("username", value.trim());
+              form.setValue("username", value);
             }}
             className="mt-1"
           />
@@ -99,7 +99,7 @@ export default function ProfileEditForm({
             className="mt-1"
             onChange={(e) => {
               const value = e.target.value;
-              form.setValue("fullName", value.trim());
+              form.setValue("fullName", value);
             }}
           />
           {form.formState.errors.fullName && (
@@ -118,7 +118,7 @@ export default function ProfileEditForm({
             className="mt-1"
             onChange={(e) => {
               const value = e.target.value;
-              form.setValue("email", value.trim());
+              form.setValue("email", value);
             }}
           />
           {form.formState.errors.email && (
@@ -136,7 +136,7 @@ export default function ProfileEditForm({
             className="mt-1"
             onChange={(e) => {
               const value = e.target.value;
-              form.setValue("phoneNumber", value.trim());
+              form.setValue("phoneNumber", value);
             }}
           />
           {form.formState.errors.phoneNumber && (
@@ -230,6 +230,7 @@ export default function ProfileEditForm({
         <textarea
           id="address"
           {...form.register("address")}
+          defaultValue={get(user, "address", "")}
           rows={3}
           className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-olive-800"
         ></textarea>

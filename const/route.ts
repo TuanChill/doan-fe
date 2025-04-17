@@ -17,7 +17,12 @@ export const APP_ROUTES = {
 export const PRIVATE_ROUTES = {
   PROFILE: "/profile",
   MUA_VE: "/mua-ve",
-  // AI_AGENT: "/ai-agent",
+  AI_AGENT: "/ai-agent",
   DOI_VE: "/doi-diem/ve",
+};
+
+// Routes that are accessible to everyone but should show a notification for non-logged in users
+export const PUBLIC_ACCESS_WITH_NOTIFICATION = {
+  AI_AGENT: "/ai-agent",
 };
 
