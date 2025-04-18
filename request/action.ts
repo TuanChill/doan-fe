@@ -4,7 +4,7 @@ import { API_ROUTES } from "@/const/api";
 export const getUserPointsHistory = async (userId: number) => {
     const params = {
         filters: {
-            users_permissions_user: {
+            user: {
               id: {
                 $eq: userId,
               },
@@ -31,7 +31,7 @@ export const getUserPointsHistoryUsed = async (userId: number) => {
             point: {
                 $lt: 0,
             },
-            users_permissions_user: {
+            user: {
                 id: {
                   $eq: userId,
                 },
