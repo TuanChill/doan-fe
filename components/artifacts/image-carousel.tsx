@@ -72,13 +72,14 @@ export default function ImageCarousel({
   // If there's only one image, just show it without carousel controls
   if (allImages.length <= 1) {
     return (
-      <div className="relative aspect-auto">
+      <div className="relative w-full h-auto rounded-lg overflow-hidden bg-gray-50">
         <Image
           src={mainImage}
           alt={altText}
-          className="object-contain"
-          width={800}
-          height={800}
+          className="object-cover w-full h-auto rounded-lg"
+          width={1000}
+          height={600}
+          priority
         />
       </div>
     );
@@ -86,27 +87,27 @@ export default function ImageCarousel({
 
   return (
     <div
-      className="relative min-h-[400px] overflow-hidden"
+      className="relative w-full rounded-lg overflow-hidden shadow-md bg-gray-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Images */}
-      <div className="relative h-full w-full">
+      <div className="relative aspect-[16/9] w-full">
         {allImages.map((image, index) => (
           <div
             key={index}
             className={cn(
-              "absolute inset-0 transition-opacity duration-500 max-w-[500px] max-h-[400px]",
+              "absolute inset-0 transition-opacity duration-500",
               index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
             )}
           >
             <Image
               src={image}
               alt={`${altText} - Hình ${index + 1}`}
-              className="object-contain"
-              width={500}
-              height={400}
-              layout="fixed"
+              className="object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+              priority={index === 0}
             />
           </div>
         ))}
@@ -116,7 +117,7 @@ export default function ImageCarousel({
       <Button
         variant="outline"
         size="icon"
-        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white border-none rounded-full h-8 w-8"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-sm border-none rounded-full h-10 w-10 transition-all hover:scale-110"
         onClick={(e) => {
           e.stopPropagation();
           prevSlide();
@@ -128,7 +129,7 @@ export default function ImageCarousel({
       <Button
         variant="outline"
         size="icon"
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/80 hover:bg-white border-none rounded-full h-8 w-8"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white shadow-sm border-none rounded-full h-10 w-10 transition-all hover:scale-110"
         onClick={(e) => {
           e.stopPropagation();
           nextSlide();
@@ -138,13 +139,15 @@ export default function ImageCarousel({
       </Button>
 
       {/* Indicators */}
-      <div className="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1">
+      <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-2">
         {allImages.map((_, index) => (
           <button
             key={index}
             className={cn(
-              "w-2 h-2 rounded-full transition-all",
-              index === currentIndex ? "bg-white w-4" : "bg-white/50"
+              "w-2.5 h-2.5 rounded-full transition-all shadow-sm",
+              index === currentIndex
+                ? "bg-white w-6"
+                : "bg-white/60 hover:bg-white/80"
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -156,10 +159,10 @@ export default function ImageCarousel({
       </div>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-20">
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10 z-20">
         <div
           className={cn(
-            "h-full bg-white/60 transition-all",
+            "h-full bg-white transition-all",
             isPaused ? "w-0" : ""
           )}
           style={{
@@ -175,7 +178,7 @@ export default function ImageCarousel({
       </div>
 
       {/* Current slide indicator */}
-      <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded z-20">
+      <div className="absolute top-3 right-3 bg-black/60 text-white text-xs font-medium px-2.5 py-1.5 rounded-full z-20">
         {currentIndex + 1} / {allImages.length}
       </div>
     </div>
