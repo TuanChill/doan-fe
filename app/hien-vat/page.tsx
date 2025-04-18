@@ -78,25 +78,15 @@ export default function ArtifactsPage() {
   const handleSearchExhibition = useDebouncedCallback(async () => {
     setIsLoading(true);
     try {
-      if (searchQuery.trim().length === 0) {
-        const response = await getExhibitList(
-          currentPage,
-          12,
-          selectedCategories
-        );
-        const artifactData = get(response, "data", []);
-        setArtifacts(artifactData);
-      } else {
-        const response = await searchExhibitions(
-          currentPage,
-          12,
-          searchQuery.trim(),
-          selectedCategories,
-          yearRange
-        );
-        const artifactData = get(response, "hits", []);
-        setArtifacts(artifactData);
-      }
+      const response = await searchExhibitions(
+        currentPage,
+        12,
+        searchQuery.trim(),
+        selectedCategories,
+        yearRange
+      );
+      const artifactData = get(response, "hits", []);
+      setArtifacts(artifactData);
     } catch (error) {
       console.error("Error fetching artifacts:", error);
     } finally {

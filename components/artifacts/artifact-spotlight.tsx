@@ -66,7 +66,13 @@ export default function ArtifactSpotlight({
             <div className="flex flex-wrap gap-3">
               <Button
                 className="bg-white text-gray-900 hover:bg-gray-100"
-                onClick={() => (window.location.href = `/hien-vat/${id}`)}
+                onClick={() =>
+                  (window.location.href = `/hien-vat/${get(
+                    artifact,
+                    "documentId",
+                    ""
+                  )}`)
+                }
               >
                 <Eye className="h-4 w-4 mr-2" /> Xem chi tiết
               </Button>

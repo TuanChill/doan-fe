@@ -114,10 +114,38 @@ export default function ArtifactDetailPage() {
 
   const handleDownloadImage = () => {
     const imageUrl = get(artifact, "image.url", "");
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = `${get(artifact, "name", "")}.jpg`;
-    link.click();
+
+    if (!imageUrl) {
+      alert("Không thể tải ảnh. Hình ảnh không có sẵn.");
+      return;
+    }
+
+    const fullImageUrl = `${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`;
+
+    // Use fetch to get the image as a blob and force download
+    fetch(fullImageUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        // Create a blob URL and force download
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `${get(artifact, "name", "hinh-anh")}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        // Clean up
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error("Error downloading image:", error);
+        alert("Không thể tải ảnh. Hình ảnh không có sẵn trên máy chủ.");
+      });
   };
 
   // Handle back navigation
