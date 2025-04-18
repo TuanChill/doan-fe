@@ -42,6 +42,7 @@ import { useUserStore } from "@/stores/user-store";
 import { useLoadingStore } from "@/stores/loading-store";
 import { pointToTicket } from "@/request/ticket";
 import { SnackbarTypes, useSnackBarStore } from "@/stores/snackbar-store";
+import { get } from "lodash";
 
 // Định nghĩa schema cho form
 const formSchema = z.object({
@@ -128,7 +129,13 @@ export default function RedeemPointsPage() {
       reload();
       // Chuyển hướng sau 3 giây
       setTimeout(() => {
-        router.push(`/mua-ve/mua-ve-thanh-cong?apptransid=${res?.transId}`);
+        router.push(
+          `/mua-ve/mua-ve-thanh-cong?apptransid=${get(
+            res,
+            "invoiceRes.transId",
+            ""
+          )}`
+        );
       }, 3000);
     } catch (err) {
       console.error("Error redeeming points:", err);
